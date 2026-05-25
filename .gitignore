@@ -1,6 +1,3 @@
-
-
-# Added by Claude Task Master
 # Logs
 logs
 *.log
@@ -8,13 +5,35 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 dev-debug.log
+
 # Dependency directories
 node_modules/
 .next/
 out/
+dist/
+
+# Build/test caches
+coverage/
+.cache/
+.vite/
+.turbo/
+
 # Environment variables
 .env
+.env.*
+.env.local
+.env.*.local
+!.env.example
+
+# Deployment metadata
+.vercel/
+
 # Editor directories and files
+.cursor/
+.gemini/
+.taskmaster/
+.windsurfrules
+GEMINI.md
 .idea
 .vscode
 *.suo
@@ -24,7 +43,5 @@ out/
 *.sw?
 # OS specific
 .DS_Store
-# Task files
-tasks.json
-tasks/ 
+**/.DS_Store
 scripts/prd.txt

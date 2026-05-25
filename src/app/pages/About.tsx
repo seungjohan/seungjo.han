@@ -1,6 +1,13 @@
+import SEO from '../components/SEO';
+
 export default function About() {
   return (
     <div className="max-w-2xl mx-auto px-8 md:px-12 py-20 md:py-28">
+      <SEO
+        title="About"
+        description="About Seungjo Han, a Seoul-based product manager and builder working across design, technology, and entrepreneurship."
+        path="/about"
+      />
 
       {/* ── Portrait ── */}
       <div className="mb-12">

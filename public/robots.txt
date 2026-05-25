@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://seungjohan.github.io/sitemap.xml

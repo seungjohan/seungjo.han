@@ -2,16 +2,7 @@ import { useParams, Link } from 'react-router';
 import { ArrowLeft } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PROJECTS } from '../data/projects';
-
-// ─── Meta table row ────────────────────────────────────────────────────────────
-function MetaRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex flex-col gap-0.5 py-4 border-b border-gray-100 last:border-0">
-      <span className="text-xs text-gray-400 uppercase tracking-wider">{label}</span>
-      <span className="text-sm text-gray-900">{value}</span>
-    </div>
-  );
-}
+import SEO from '../components/SEO';
 
 // ─── Numbered section ─────────────────────────────────────────────────────────
 function Section({
@@ -19,7 +10,6 @@ function Section({
 }: { title: string; id: string; children: React.ReactNode }) {
   return (
     <motion.div
-      id={id}
       className="py-10"
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -29,7 +19,7 @@ function Section({
       <h2
         id={id}
         className="text-gray-900 mb-5"
-        style={{ fontSize: '1.15rem', fontWeight: 500, letterSpacing: '-0.01em' }}
+        style={{ fontSize: '1.15rem', fontWeight: 500, letterSpacing: '-0.01em', scrollMarginTop: '100px' }}
       >
         {title}
       </h2>
@@ -88,7 +78,7 @@ function CaseContent({ slug }: { slug: string }) {
         </Section>
 
         <Section title="Process" id="process">
-          <p><strong>Weeks 1–2 · Discovery & Audit</strong></p>
+          <p><strong>Weeks 1–2 · Discovery &amp; Audit</strong></p>
           <p>
             Full audit of existing brand assets. Stakeholder interviews. Competitive landscape mapping. Identification
             of 120+ inconsistencies across touchpoints. Alignment on brand pillars and design principles.
@@ -126,6 +116,55 @@ function CaseContent({ slug }: { slug: string }) {
             The brand itself felt like a single company for the first time. And in a space where trust is
             everything, that coherence translated directly into user confidence.
           </p>
+        </Section>
+      </>
+    );
+  }
+
+  const project = PROJECTS.find(p => p.slug === slug);
+  if (project) {
+    return (
+      <>
+        <Section title="Problem" id="problem">
+          <p>{project.impact}</p>
+        </Section>
+        <Section title="TL;DR" id="tldr">
+          <p>
+            {project.title} was a {project.duration.toLowerCase()} effort where I served as {project.role.toLowerCase()}.
+            The work combined {project.techStack} across {project.platform.toLowerCase()} to turn a real market signal
+            into a sharper product or strategy.
+          </p>
+        </Section>
+        <Section title="Solution" id="solution">
+          <p>{project.whatIDid}</p>
+          <ul className="list-none space-y-2 pl-0">
+            {project.whatIDidBullets.map(item => (
+              <li key={item} className="flex gap-2">
+                <span className="text-gray-400">→</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </Section>
+        <Section title="Process" id="process">
+          <p>
+            The project moved through research, definition, prototype or strategy development, and real-world validation.
+            The important operating pattern was to keep the loop close to the market: interview people, build the smallest
+            credible version, test it, and use the response to decide the next move.
+          </p>
+          <p>
+            Team context: {project.team}. Timeline: {project.timeline}. Platform: {project.platform}.
+          </p>
+        </Section>
+        <Section title="Takeaway" id="takeaway">
+          <p>
+            This project reinforced that product work is less about having a polished first answer and more about creating
+            a learning system. The strongest decisions came after direct conversations with customers, users, partners, or
+            stakeholders made the real constraint visible.
+          </p>
+        </Section>
+        <Section title="Outcome" id="outcome">
+          <p>{project.outcome}</p>
         </Section>
       </>
     );
@@ -192,6 +231,13 @@ export default function ProjectCase() {
 
   return (
     <div className="bg-white">
+      <SEO
+        title={project.title}
+        description={project.description}
+        path={`/projects/${project.slug}`}
+        image={project.coverImage}
+      />
+
       {/* ── Back ── */}
       <div className="max-w-4xl mx-auto px-6 pt-10">
         <Link
@@ -219,57 +265,62 @@ export default function ProjectCase() {
         </div>
       </motion.div>
 
-      {/* ── Header + meta ── */}
+      {/* ── Header ── */}
       <div className="max-w-4xl mx-auto px-6 mt-10 mb-2">
         <motion.div
-          className="grid md:grid-cols-[1fr_280px] gap-12 items-start"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         >
-          {/* Title block */}
-          <div>
-            <div className="flex gap-2 mb-4">
-              {project.tags.map(t => (
-                <span
-                  key={t}
-                  className="text-xs text-gray-400 uppercase tracking-wider"
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-            <h1
-              className="text-gray-900 mb-4"
-              style={{
-                fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
-                fontWeight: 400,
-                lineHeight: 1.15,
-                letterSpacing: '-0.02em',
-              }}
-            >
-              {project.title}
-            </h1>
-            <p className="text-gray-500 leading-relaxed" style={{ fontSize: '1.05rem' }}>
-              {project.description}
-            </p>
+          {/* Tags */}
+          <div className="flex gap-3 mb-4">
+            {project.tags.map(t => (
+              <span key={t} className="text-xs text-gray-400 uppercase tracking-wider">{t}</span>
+            ))}
           </div>
 
-          {/* Meta card */}
-          <div className="rounded-xl border border-gray-100 px-6 divide-y divide-gray-100 md:mt-8">
-            <MetaRow label="Client" value={project.client} />
-            <MetaRow label="Role" value={project.role} />
-            <MetaRow label="Team" value={project.team} />
-            <MetaRow label="Timeline" value={project.timeline} />
-            <MetaRow label="Duration" value={project.duration} />
-            <MetaRow label="Platform" value={project.platform} />
-            <MetaRow label="Tech / Tools" value={project.techStack} />
+          {/* Title */}
+          <h1
+            className="text-gray-900 mb-4"
+            style={{
+              fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
+              fontWeight: 400,
+              lineHeight: 1.15,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            {project.title}
+          </h1>
+
+          {/* Description */}
+          <p className="text-gray-500 leading-relaxed mb-8" style={{ fontSize: '1.05rem' }}>
+            {project.description}
+          </p>
+
+          {/* Meta — inline, no border lines */}
+          <div className="flex flex-wrap gap-x-8 gap-y-4">
+            <div>
+              <p className="text-xs text-gray-400 uppercase tracking-wider mb-0.5">Role</p>
+              <p className="text-sm text-gray-900">{project.role}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 uppercase tracking-wider mb-0.5">Team</p>
+              <p className="text-sm text-gray-900">{project.team}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 uppercase tracking-wider mb-0.5">Duration</p>
+              <p className="text-sm text-gray-900">{project.duration}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 uppercase tracking-wider mb-0.5">Tools</p>
+              <p className="text-sm text-gray-900">{project.techStack}</p>
+            </div>
           </div>
         </motion.div>
       </div>
 
       {/* ── Case study content ── */}
-      <div className="max-w-4xl mx-auto px-6 pb-16">
+      <div className="max-w-4xl mx-auto px-6 pb-16 divide-y divide-gray-100">
         <CaseContent slug={slug!} />
       </div>
     </div>

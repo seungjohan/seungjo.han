@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Search, X, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { POSTS } from '../data/posts';
-import { PROJECTS } from '../data/projects';
 
 interface SearchModalProps {
   open: boolean;
@@ -15,26 +14,13 @@ export function SearchModal({ open, onClose }: SearchModalProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
-  const normalizedQuery = query.trim().toLowerCase();
-
-  const postResults = normalizedQuery.length > 0
+  const results = query.trim().length > 0
     ? POSTS.filter(p =>
         p.title.toLowerCase().includes(query.toLowerCase()) ||
         p.excerpt.toLowerCase().includes(query.toLowerCase()) ||
         p.tags.some(t => t.toLowerCase().includes(query.toLowerCase()))
       )
     : [];
-
-  const projectResults = normalizedQuery.length > 0
-    ? PROJECTS.filter(p =>
-        p.title.toLowerCase().includes(normalizedQuery) ||
-        p.client.toLowerCase().includes(normalizedQuery) ||
-        p.description.toLowerCase().includes(normalizedQuery) ||
-        p.tags.some(t => t.toLowerCase().includes(normalizedQuery))
-      )
-    : [];
-
-  const hasResults = postResults.length > 0 || projectResults.length > 0;
 
   useEffect(() => {
     if (open) {
@@ -56,8 +42,8 @@ export function SearchModal({ open, onClose }: SearchModalProps) {
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
 
-  const handleSelect = (path: string) => {
-    navigate(path);
+  const handleSelect = (slug: string) => {
+    navigate(`/blog/${slug}`);
     onClose();
   };
 
@@ -91,7 +77,7 @@ export function SearchModal({ open, onClose }: SearchModalProps) {
                 <input
                   ref={inputRef}
                   type="text"
-                  placeholder="Search posts, projects, topics..."
+                  placeholder="Search posts, topics…"
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                   className="flex-1 outline-none text-gray-900 placeholder-gray-400 bg-transparent"
@@ -103,83 +89,42 @@ export function SearchModal({ open, onClose }: SearchModalProps) {
               </div>
 
               {/* Results */}
-              {hasResults && (
-                <div className="max-h-96 overflow-y-auto">
-                  {postResults.length > 0 && (
-                    <section>
-                      <p className="px-5 pt-4 pb-2 text-[0.68rem] uppercase tracking-wider text-gray-400">
-                        Posts
-                      </p>
-                      <ul className="divide-y divide-gray-50">
-                        {postResults.map(post => (
-                          <li key={post.slug}>
-                            <button
-                              onClick={() => handleSelect(`/blog/${post.slug}`)}
-                              className="w-full text-left px-5 py-4 hover:bg-gray-50
-                                         flex items-start gap-4 transition-colors group"
-                            >
-                              <div className="flex-1 min-w-0">
-                                <p className="text-gray-900 group-hover:text-black truncate">
-                                  {post.title}
-                                </p>
-                                <p className="text-sm text-gray-500 truncate mt-0.5">
-                                  {post.date} · {post.readTime}
-                                </p>
-                              </div>
-                              <ArrowRight
-                                size={16}
-                                className="text-gray-300 group-hover:text-gray-500 flex-shrink-0 mt-1 transition-colors"
-                              />
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    </section>
-                  )}
-
-                  {projectResults.length > 0 && (
-                    <section>
-                      <p className="px-5 pt-4 pb-2 text-[0.68rem] uppercase tracking-wider text-gray-400">
-                        Projects
-                      </p>
-                      <ul className="divide-y divide-gray-50">
-                        {projectResults.map(project => (
-                          <li key={project.slug}>
-                            <button
-                              onClick={() => handleSelect(`/projects/${project.slug}`)}
-                              className="w-full text-left px-5 py-4 hover:bg-gray-50
-                                         flex items-start gap-4 transition-colors group"
-                            >
-                              <div className="flex-1 min-w-0">
-                                <p className="text-gray-900 group-hover:text-black truncate">
-                                  {project.title}
-                                </p>
-                                <p className="text-sm text-gray-500 truncate mt-0.5">
-                                  {project.client} · {project.year}
-                                </p>
-                              </div>
-                              <ArrowRight
-                                size={16}
-                                className="text-gray-300 group-hover:text-gray-500 flex-shrink-0 mt-1 transition-colors"
-                              />
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    </section>
-                  )}
-                </div>
+              {results.length > 0 && (
+                <ul className="max-h-80 overflow-y-auto divide-y divide-gray-50">
+                  {results.map(post => (
+                    <li key={post.slug}>
+                      <button
+                        onClick={() => handleSelect(post.slug)}
+                        className="w-full text-left px-5 py-4 hover:bg-gray-50
+                                   flex items-start gap-4 transition-colors group"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <p className="text-gray-900 group-hover:text-black truncate">
+                            {post.title}
+                          </p>
+                          <p className="text-sm text-gray-500 truncate mt-0.5">
+                            {post.date} · {post.readTime}
+                          </p>
+                        </div>
+                        <ArrowRight
+                          size={16}
+                          className="text-gray-300 group-hover:text-gray-500 flex-shrink-0 mt-1 transition-colors"
+                        />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
               )}
 
-              {normalizedQuery.length > 0 && !hasResults && (
+              {query.trim().length > 0 && results.length === 0 && (
                 <div className="px-5 py-8 text-center text-sm text-gray-400">
                   No results for "{query}"
                 </div>
               )}
 
-              {normalizedQuery.length === 0 && (
+              {query.trim().length === 0 && (
                 <div className="px-5 py-4 text-xs text-gray-400 flex items-center justify-between">
-                  <span>Search posts and projects</span>
+                  <span>Search across all posts</span>
                   <span className="flex items-center gap-1">
                     <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-gray-500">⌘</kbd>
                     <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-gray-500">K</kbd>
