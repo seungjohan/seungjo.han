@@ -1,2 +1,1 @@
-# seungjohan.github.io
-Repo for building my Portfolio and Blog
+# Personal website for Portfolio and Blog
