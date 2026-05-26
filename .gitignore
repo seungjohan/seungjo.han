@@ -45,3 +45,4 @@ GEMINI.md
 .DS_Store
 **/.DS_Store
 scripts/prd.txt
+dist/
