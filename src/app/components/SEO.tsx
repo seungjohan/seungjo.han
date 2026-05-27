@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 
 const SITE_NAME = 'Seungjo Han';
-const SITE_URL = 'https://seungjohan.github.io';
+const SITE_URL = 'https://seungjohan.vercel.app';
 const DEFAULT_DESCRIPTION =
   'Product manager and builder in Seoul, sharing selected work, startup lessons, and writing on product, design, and technology.';
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.svg`;
