@@ -9,22 +9,22 @@ import SEO from '../components/SEO';
 const PILLARS = [
   {
     label: 'Entrepreneur',
-    headline: 'I build to solve real problems.',
+    headline: 'I build to solve real problems',
     body: 'Founded a B2B2C startup from scratch. Validated, shipped, and iterated with real customers — not just mockups.',
   },
   {
     label: 'Technologist',
-    headline: 'I speak the language of code.',
+    headline: 'I speak the language of code',
     body: 'Software background in CS + entrepreneurship. I sit at the table with engineers and move at the speed of the team.',
   },
   {
     label: 'Global Builder',
-    headline: "I've shipped across three continents.",
+    headline: "I've shipped across three continents",
     body: 'Built products with teams in the US, Kazakhstan, and Europe. Comfortable in ambiguity, fast in alignment.',
   },
   {
     label: 'Hands-on Mindset',
-    headline: 'I act, not just advise.',
+    headline: 'I act, not just advise',
     body: 'I am curious about business opportunities, and solve problems through projects, meeting customers, and taking action.',
   },
 ];
