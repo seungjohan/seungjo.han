@@ -8,33 +8,22 @@ export interface Magazine {
 
 export const MAGAZINES: Magazine[] = [
   {
-    slug: 'product-thinking',
-    name: 'Product Thinking',
-    description: 'On building things that matter — from first principles to shipped features.',
-    cover: 'https://images.unsplash.com/photo-1613759007428-9d918fe2d36f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800&q=80',
+    slug: 'startup-stories',
+    name: 'Startup Stories',
+    description: 'On building from zero — prototyping, shipping, and learning from real customers.',
+    cover: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800&q=80',
     postSlugs: [
-      'on-simplicity-in-design',
-      'building-with-intention',
-      'notes-on-productive-workflows',
+      'designing-a-prototype-for-a-startup',
+      'developing-a-web-product-for-a-startup',
     ],
   },
   {
-    slug: 'tech-futures',
-    name: 'Tech Futures',
-    description: 'Exploring where technology is taking us, and what it means for the people who build it.',
-    cover: 'https://images.unsplash.com/photo-1655393001768-d946c97d6fd1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800&q=80',
+    slug: 'life-and-identity',
+    name: 'Life & Identity',
+    description: 'Personal stories about growth, self-discovery, and what it means to find your own color.',
+    cover: 'https://images.unsplash.com/photo-1583833008338-31a6657917ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800&q=80',
     postSlugs: [
-      'the-future-of-ai-in-creative-work',
-    ],
-  },
-  {
-    slug: 'creative-life',
-    name: 'Creative Life',
-    description: 'Notes on craft, culture, and the everyday practice of making.',
-    cover: 'https://images.unsplash.com/photo-1756211006426-41bc8b945c1b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800&q=80',
-    postSlugs: [
-      'the-art-of-constraints',
-      'lessons-from-korean-design',
+      'dokdo-security-police',
     ],
   },
 ];

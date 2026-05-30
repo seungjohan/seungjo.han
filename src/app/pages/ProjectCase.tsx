@@ -1,7 +1,9 @@
 import { useParams, Link } from 'react-router';
+import { useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PROJECTS } from '../data/projects';
+import { trackView } from '../utils/viewTracker';
 import SEO from '../components/SEO';
 
 // ─── Numbered section ─────────────────────────────────────────────────────────
@@ -121,55 +123,6 @@ function CaseContent({ slug }: { slug: string }) {
     );
   }
 
-  const project = PROJECTS.find(p => p.slug === slug);
-  if (project) {
-    return (
-      <>
-        <Section title="Problem" id="problem">
-          <p>{project.impact}</p>
-        </Section>
-        <Section title="TL;DR" id="tldr">
-          <p>
-            {project.title} was a {project.duration.toLowerCase()} effort where I served as {project.role.toLowerCase()}.
-            The work combined {project.techStack} across {project.platform.toLowerCase()} to turn a real market signal
-            into a sharper product or strategy.
-          </p>
-        </Section>
-        <Section title="Solution" id="solution">
-          <p>{project.whatIDid}</p>
-          <ul className="list-none space-y-2 pl-0">
-            {project.whatIDidBullets.map(item => (
-              <li key={item} className="flex gap-2">
-                <span className="text-gray-400">→</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </Section>
-        <Section title="Process" id="process">
-          <p>
-            The project moved through research, definition, prototype or strategy development, and real-world validation.
-            The important operating pattern was to keep the loop close to the market: interview people, build the smallest
-            credible version, test it, and use the response to decide the next move.
-          </p>
-          <p>
-            Team context: {project.team}. Timeline: {project.timeline}. Platform: {project.platform}.
-          </p>
-        </Section>
-        <Section title="Takeaway" id="takeaway">
-          <p>
-            This project reinforced that product work is less about having a polished first answer and more about creating
-            a learning system. The strongest decisions came after direct conversations with customers, users, partners, or
-            stakeholders made the real constraint visible.
-          </p>
-        </Section>
-        <Section title="Outcome" id="outcome">
-          <p>{project.outcome}</p>
-        </Section>
-      </>
-    );
-  }
-
   // Generic fallback
   return (
     <>
@@ -217,6 +170,10 @@ function CaseContent({ slug }: { slug: string }) {
 export default function ProjectCase() {
   const { slug } = useParams<{ slug: string }>();
   const project = PROJECTS.find(p => p.slug === slug);
+
+  useEffect(() => {
+    if (slug) trackView(slug, 'project');
+  }, [slug]);
 
   if (!project) {
     return (

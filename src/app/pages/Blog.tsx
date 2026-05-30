@@ -1,9 +1,11 @@
-import { Link, useSearchParams, useNavigate } from 'react-router';
-import { POSTS } from '../data/posts';
+import { useState, useEffect } from 'react';
+import { useSearchParams, useNavigate } from 'react-router';
+import { POSTS, type Post } from '../data/posts';
 import { motion } from 'motion/react';
+import { getDraftPosts } from '../utils/draftStore';
 import SEO from '../components/SEO';
 
-const ALL_TAGS = ['Design', 'Technology', 'Culture', 'Creativity', 'Product', 'Startup', 'Life', 'Korea'];
+const ALL_TAGS = ['Startup', 'Technology', 'Product', 'Design', 'Life', 'Korea', 'Identity'];
 
 // "April 15, 2026" → "Apr 15, 2026"
 function formatDate(dateStr: string) {
@@ -16,6 +18,13 @@ export default function Blog() {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedTag = searchParams.get('tag');
   const navigate = useNavigate();
+  const [allPosts, setAllPosts] = useState<Post[]>(POSTS);
+
+  useEffect(() => {
+    const drafts = getDraftPosts();
+    const draftSlugs = new Set(drafts.map(d => d.slug));
+    setAllPosts([...POSTS.filter(p => !draftSlugs.has(p.slug)), ...drafts]);
+  }, []);
 
   const setTag = (tag: string | null) => {
     if (tag) setSearchParams({ tag });
@@ -23,8 +32,8 @@ export default function Blog() {
   };
 
   const filtered = selectedTag
-    ? POSTS.filter(p => p.tags.includes(selectedTag))
-    : POSTS;
+    ? allPosts.filter(p => p.tags.includes(selectedTag))
+    : allPosts;
 
   return (
     <section className="max-w-3xl mx-auto px-6 py-16 md:py-24">
@@ -69,7 +78,7 @@ export default function Blog() {
 
       {/* Post list */}
       <div className="divide-y divide-gray-100">
-        {filtered.map((post, i) => {
+        {filtered.map((post: Post, i: number) => {
           return (
             <motion.article
               key={post.slug}

@@ -4,6 +4,7 @@ import { ArrowRight, Mail, Linkedin } from 'lucide-react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { PROJECTS, type Project } from '../data/projects';
+import { getDraftProjects } from '../utils/draftStore';
 import SEO from '../components/SEO';
 
 // ─── Top stats (hero) ─────────────────────────────────────────────────────────
@@ -35,7 +36,7 @@ const SKILLS: { category: string; items: string[] }[] = [
   },
   {
     category: 'Language',
-    items: ['Korean (Native)', 'English (Fluent)'],
+    items: ['Korean (Native)', 'English (Fluent)', 'Spanish (Conversational)', 'French (Beginner)'],
   },
   {
     category: 'Analytics',
@@ -211,6 +212,13 @@ function ProjectCard({ project, selectedTag, onTagClick, index }: {
 export default function Projects() {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedTag = searchParams.get('tag');
+  const [allProjects, setAllProjects] = useState<Project[]>(PROJECTS);
+
+  useEffect(() => {
+    const drafts = getDraftProjects();
+    const draftSlugs = new Set(drafts.map(d => d.slug));
+    setAllProjects([...PROJECTS.filter(p => !draftSlugs.has(p.slug)), ...drafts]);
+  }, []);
 
   const setTag = (tag: string | null) => {
     if (tag) setSearchParams({ tag });
@@ -218,8 +226,8 @@ export default function Projects() {
   };
 
   const filtered = selectedTag
-    ? PROJECTS.filter(p => p.tags.includes(selectedTag))
-    : PROJECTS;
+    ? allProjects.filter(p => p.tags.includes(selectedTag))
+    : allProjects;
 
   return (
     <section className="max-w-4xl mx-auto px-6">

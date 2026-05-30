@@ -14,6 +14,7 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminPosts from "./pages/admin/AdminPosts";
 import AdminProjects from "./pages/admin/AdminProjects";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
 
 export const router = createBrowserRouter([
   // ── Public site ──────────────────────────────────────────────────────────────
@@ -35,16 +36,13 @@ export const router = createBrowserRouter([
   // ── Admin ─────────────────────────────────────────────────────────────────────
   {
     path: "/admin",
+    Component: AdminLayout,
     children: [
-      { index: true, Component: AdminLogin },
-      {
-        Component: AdminLayout,
-        children: [
-          { path: "dashboard", Component: AdminDashboard },
-          { path: "posts",     Component: AdminPosts },
-          { path: "projects",  Component: AdminProjects },
-        ],
-      },
+      { index: true,           Component: AdminLogin },
+      { path: "dashboard",     Component: AdminDashboard },
+      { path: "posts",         Component: AdminPosts },
+      { path: "projects",      Component: AdminProjects },
+      { path: "analytics",     Component: AdminAnalytics },
     ],
   },
 ]);

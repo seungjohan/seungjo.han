@@ -1,23 +1,27 @@
-import { useEffect } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router';
-import { LayoutDashboard, FileText, Briefcase, LogOut, ExternalLink } from 'lucide-react';
+import { LayoutDashboard, FileText, Briefcase, BarChart2, LogOut, ExternalLink } from 'lucide-react';
 
 const NAV = [
   { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/admin/posts',     label: 'Posts',     icon: FileText },
   { to: '/admin/projects',  label: 'Projects',  icon: Briefcase },
+  { to: '/admin/analytics', label: 'Analytics', icon: BarChart2 },
 ];
 
 export default function AdminLayout() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const navigate  = useNavigate();
+  const location  = useLocation();
 
-  // Auth guard
-  useEffect(() => {
-    if (localStorage.getItem('adminAuth') !== 'true') {
-      navigate('/admin');
-    }
-  }, [navigate]);
+  // Login page renders without sidebar
+  if (location.pathname === '/admin') {
+    return <Outlet />;
+  }
+
+  // Auth guard for panel routes
+  if (localStorage.getItem('adminAuth') !== 'true') {
+    navigate('/admin', { replace: true });
+    return null;
+  }
 
   const logout = () => {
     localStorage.removeItem('adminAuth');
