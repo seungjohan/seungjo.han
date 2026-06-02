@@ -10,10 +10,12 @@ import { getDraftPosts } from '../utils/draftStore';
 import SEO from '../components/SEO';
 import webProductMarkdown from '../../imports/pasted_text/pasted-attachment.txt?raw';
 import prototypeMarkdown from '../../imports/pasted_text/prototyping-startup-ideas.md?raw';
+import colorfulLifeText from '../../imports/pasted_text/i-want-my-life-to-be-colorful.txt?raw';
 
 const SOURCE_MARKDOWN: Record<string, string> = {
   'webeing-product-development': webProductMarkdown,
   'prototyping-startup-ideas': prototypeMarkdown,
+  'i-want-my-life-to-be-colorful': colorfulLifeText,
 };
 
 // "April 15, 2026" → "Apr 15, 2026"
@@ -24,11 +26,47 @@ function formatDate(dateStr: string) {
 }
 
 // ─── Anchor heading ───────────────────────────────────────────────────────────
+function copyAnchorLink(id: string) {
+  const hashUrl = `${window.location.origin}${window.location.pathname}#${id}`;
+  navigator.clipboard.writeText(hashUrl)
+    .then(() => {
+      toast.success('Copied link to clipboard', { position: 'bottom-left' });
+    })
+    .catch(() => {});
+}
+
+function AnchorHeading({
+  level,
+  id,
+  children,
+}: {
+  level: 2 | 3 | 4;
+  id: string;
+  children: React.ReactNode;
+}) {
+  const Tag = `h${level}` as const;
+
+  return (
+    <Tag id={id} className="anchor-heading" style={{ scrollMarginTop: '100px' }}>
+      <a
+        href={`#${id}`}
+        aria-label={`Link to ${id}`}
+        onClick={e => {
+          e.preventDefault();
+          copyAnchorLink(id);
+        }}
+      >
+        {children}
+      </a>
+    </Tag>
+  );
+}
+
 function AnchorH2({ id, children }: { id: string; children: React.ReactNode }) {
   return (
-    <h2 id={id} style={{ scrollMarginTop: '100px' }}>
+    <AnchorHeading level={2} id={id}>
       {children}
-    </h2>
+    </AnchorHeading>
   );
 }
 
@@ -36,7 +74,7 @@ function slugify(value: string) {
   return value
     .toLowerCase()
     .replace(/['"]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/[^\p{L}\p{N}]+/gu, '-')
     .replace(/^-+|-+$/g, '');
 }
 
@@ -44,6 +82,19 @@ function stripMarkdownHeader(markdown: string) {
   const lines = markdown.split('\n');
   const dividerIndex = lines.findIndex(line => line.trim() === '---');
   return dividerIndex >= 0 ? lines.slice(dividerIndex + 1).join('\n').trim() : markdown.trim();
+}
+
+function stripDuplicatePageHeader(markdown: string, post: Post) {
+  const lines = markdown.split('\n');
+  const title = post.title.trim().replace(/\.$/, '');
+  const first = lines[0]?.trim().replace(/\.$/, '');
+  const second = lines[1]?.trim();
+
+  if (first === title && second === post.subtitle.trim()) {
+    return lines.slice(2).join('\n').trim();
+  }
+
+  return markdown;
 }
 
 function escapeHtml(value: string) {
@@ -64,12 +115,84 @@ function renderInlineMarkdown(value: string) {
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer">$1</a>');
 }
 
-function MarkdownImage({ src, alt, fileName }: { src: string; alt: string; fileName: string }) {
+type BlogImageSize = 'small' | 'medium' | 'wide';
+type TextSize = 'small' | 'regular' | 'large' | 'xlarge';
+
+function parseImageLabel(value: string, fallback: string): { alt: string; size: BlogImageSize } {
+  const parts = value.split('|').map(part => part.trim()).filter(Boolean);
+  const sizePart = parts.find(part => /^size=(small|medium|wide)$/i.test(part));
+  const size = sizePart?.split('=')[1]?.toLowerCase() as BlogImageSize | undefined;
+  const alt = parts.filter(part => !/^size=/i.test(part)).join(' | ') || fallback;
+
+  return { alt, size: size || 'medium' };
+}
+
+function isRemoteUrl(value: string) {
+  return /^https?:\/\//i.test(value);
+}
+
+function parseImageBlock(block: string, post: Post, imageIndex: number) {
+  const imageMatch = block.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+  const textImageMatch = block.match(/^📷\s+\[Image:\s*([^\]]+)\]$/);
+  const brunchImageMatch = block.match(/^.*Image(?::\s*([^†]+))?.*brunch\.co\.kr.*$/);
+
+  if (!imageMatch && !textImageMatch && !brunchImageMatch) return null;
+
+  const fileName = `${slugify(post.title)}_${imageIndex}.jpg`;
+  const { alt, size } = parseImageLabel(
+    imageMatch?.[1] || textImageMatch?.[1] || brunchImageMatch?.[1] || '',
+    post.title
+  );
+  const rawSrc = imageMatch?.[2]?.trim();
+  const src = rawSrc && isRemoteUrl(rawSrc) ? rawSrc : `/blog-images/${fileName}`;
+
+  return { src, alt, fileName, size };
+}
+
+function parseCaptionBlock(block: string) {
+  const trimmed = block.trim();
+  const captionMatch = trimmed.match(/^\*([^*]+)\*$/s);
+  if (!captionMatch) return null;
+
+  return captionMatch[1].trim();
+}
+
+function parseTextSizeBlock(block: string): { size: TextSize; content: string } {
+  const match = block.match(/^\{size=(small|regular|large|xlarge)\}\s*([\s\S]*)$/i);
+  if (!match) return { size: 'regular', content: block };
+
+  return {
+    size: match[1].toLowerCase() as TextSize,
+    content: match[2].trim(),
+  };
+}
+
+function getFirstRemoteMarkdownImage(markdown?: string) {
+  const match = markdown?.match(/!\[[^\]]*\]\((https?:\/\/[^)]+)\)/i);
+  return match?.[1];
+}
+
+function normalizeBrunchHeading(value: string) {
+  const heading = value.trim().replace(/\\([<>])/g, '$1');
+  return heading === '<index>' ? 'index' : heading.replace(/^<(.+)>$/, '$1');
+}
+
+function MarkdownImage({
+  src,
+  alt,
+  fileName,
+  size,
+}: {
+  src: string;
+  alt: string;
+  fileName: string;
+  size: BlogImageSize;
+}) {
   const [missing, setMissing] = useState(false);
 
   if (missing) {
     return (
-      <figure className="missing-image">
+      <figure className={`blog-image blog-image-${size} missing-image`}>
         <div>
           <span>{fileName}</span>
           <small>Place this image in public/blog-images</small>
@@ -79,17 +202,53 @@ function MarkdownImage({ src, alt, fileName }: { src: string; alt: string; fileN
   }
 
   return (
-    <figure>
+    <figure className={`blog-image blog-image-${size}`}>
       <img src={src} alt={alt} onError={() => setMissing(true)} />
+    </figure>
+  );
+}
+
+function MarkdownImageGroup({
+  images,
+  caption,
+}: {
+  images: Array<{ src: string; alt: string; fileName: string; size: BlogImageSize }>;
+  caption?: string;
+}) {
+  const rowSize = images.some(image => image.size === 'wide') ? 'wide' : images.some(image => image.size === 'small') ? 'small' : 'medium';
+
+  return (
+    <figure className={`blog-image-group blog-image-group-${rowSize}`}>
+      <div className="blog-image-row" style={{ ['--image-count' as string]: images.length }}>
+        {images.map((image, index) => (
+          <MarkdownImage
+            key={`${image.fileName}-${index}`}
+            src={image.src}
+            alt={image.alt}
+            fileName={image.fileName}
+            size={image.size}
+          />
+        ))}
+      </div>
+      {caption && (
+        <figcaption dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(caption) }} />
+      )}
     </figure>
   );
 }
 
 function CoverImage({ post }: { post: Post }) {
   const [missing, setMissing] = useState(false);
+  const fallbackImage = getFirstRemoteMarkdownImage(post.sourceMarkdown ? SOURCE_MARKDOWN[post.sourceMarkdown] : undefined);
+  const [displaySrc, setDisplaySrc] = useState(post.coverImage || fallbackImage);
   const fileName = post.coverImage?.split('/').pop() || `${slugify(post.title)}_1.jpg`;
 
-  if (!post.coverImage) return null;
+  useEffect(() => {
+    setMissing(false);
+    setDisplaySrc(post.coverImage || fallbackImage);
+  }, [fallbackImage, post.coverImage]);
+
+  if (!displaySrc) return null;
 
   if (missing) {
     return (
@@ -105,84 +264,136 @@ function CoverImage({ post }: { post: Post }) {
   return (
     <div className="rounded-xl overflow-hidden mb-10">
       <img
-        src={post.coverImage}
+        src={displaySrc}
         alt={post.title}
         className="w-full aspect-[16/9] object-cover"
-        onError={() => setMissing(true)}
+        onError={() => {
+          if (displaySrc !== fallbackImage && fallbackImage) {
+            setDisplaySrc(fallbackImage);
+            return;
+          }
+          setMissing(true);
+        }}
       />
     </div>
   );
 }
 
 function MarkdownContent({ markdown, post }: { markdown: string; post: Post }) {
-  const content = stripMarkdownHeader(markdown);
-  const blocks = content.split(/\n{2,}/).map(block => block.trim()).filter(Boolean);
+  const content = stripDuplicatePageHeader(stripMarkdownHeader(markdown), post);
+  const blocks = (content.includes('\n\n') ? content.split(/\n{2,}/) : content.split('\n'))
+    .map(block => block.trim())
+    .filter(Boolean);
   let imageIndex = 0;
+  const rendered: React.ReactNode[] = [];
 
-  return (
-    <div className="prose-content">
-      {blocks.map((block, i) => {
-        if (block === '---') return <hr key={i} />;
+  for (let i = 0; i < blocks.length; i += 1) {
+    const block = blocks[i];
 
-        const imageMatch = block.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
-        if (imageMatch) {
-          imageIndex += 1;
-          const fileName = `${slugify(post.title)}_${imageIndex}.jpg`;
-          return (
-            <MarkdownImage
-              key={i}
-              src={`/blog-images/${fileName}`}
-              alt={imageMatch[1] || post.title}
-              fileName={fileName}
+    if (block === '---' || block === '* * *') {
+      rendered.push(<hr key={i} />);
+      continue;
+    }
+
+    const images: Array<{ src: string; alt: string; fileName: string; size: BlogImageSize }> = [];
+    let cursor = i;
+    while (cursor < blocks.length) {
+      const nextImage = parseImageBlock(blocks[cursor], post, imageIndex + 1);
+      if (!nextImage) break;
+      imageIndex += 1;
+      images.push(nextImage);
+      cursor += 1;
+    }
+
+    if (images.length > 0) {
+      const caption = cursor < blocks.length ? parseCaptionBlock(blocks[cursor]) : null;
+      if (caption) cursor += 1;
+      rendered.push(<MarkdownImageGroup key={i} images={images} caption={caption || undefined} />);
+      i = cursor - 1;
+      continue;
+    }
+
+    const standaloneCaption = parseCaptionBlock(block);
+    if (standaloneCaption) {
+      rendered.push(
+        <figcaption
+          key={i}
+          className="blog-standalone-caption"
+          dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(standaloneCaption) }}
+        />
+      );
+      continue;
+    }
+
+    if (block.startsWith('## ')) {
+      const title = block.replace(/^##\s+/, '');
+      rendered.push(
+        <AnchorHeading key={i} level={2} id={slugify(title.replace(/\\</g, '').replace(/\\>/g, ''))}>
+          <span dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(title) }} />
+        </AnchorHeading>
+      );
+      continue;
+    }
+
+    if (block.startsWith('### ')) {
+      const title = normalizeBrunchHeading(block.replace(/^###\s+/, ''));
+      rendered.push(
+        <AnchorHeading key={i} level={3} id={slugify(title)}>
+          <span dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(title) }} />
+        </AnchorHeading>
+      );
+      continue;
+    }
+
+    if (block.startsWith('#### ')) {
+      const title = normalizeBrunchHeading(block.replace(/^####\s+/, ''));
+      rendered.push(
+        <AnchorHeading key={i} level={4} id={slugify(title)}>
+          <span dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(title) }} />
+        </AnchorHeading>
+      );
+      continue;
+    }
+
+    if (/^cite/.test(block) || /^keyword$/i.test(block)) continue;
+
+    if (block.startsWith('>')) {
+      const lines = block.split('\n').map(line => line.replace(/^>\s?/, '')).filter(Boolean);
+      rendered.push(
+        <blockquote key={i}>
+          {lines.map((line, lineIndex) => (
+            <p key={lineIndex} dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(line) }} />
+          ))}
+        </blockquote>
+      );
+      continue;
+    }
+
+    if (/^- /.test(block)) {
+      rendered.push(
+        <ul key={i}>
+          {block.split('\n').map((line, lineIndex) => (
+            <li
+              key={lineIndex}
+              dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(line.replace(/^- /, '')) }}
             />
-          );
-        }
+          ))}
+        </ul>
+      );
+      continue;
+    }
 
-        if (block.startsWith('## ')) {
-          const title = block.replace(/^##\s+/, '');
-          return (
-            <AnchorH2 key={i} id={slugify(title.replace(/\\</g, '').replace(/\\>/g, ''))}>
-              <span dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(title) }} />
-            </AnchorH2>
-          );
-        }
+    const sizedBlock = parseTextSizeBlock(block);
+    rendered.push(
+      <p
+        key={i}
+        className={`blog-text-${sizedBlock.size}`}
+        dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(sizedBlock.content.replace(/\n/g, '<br />')) }}
+      />
+    );
+  }
 
-        if (block.startsWith('### ')) {
-          return (
-            <h3 key={i} dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(block.replace(/^###\s+/, '')) }} />
-          );
-        }
-
-        if (block.startsWith('>')) {
-          const lines = block.split('\n').map(line => line.replace(/^>\s?/, '')).filter(Boolean);
-          return (
-            <blockquote key={i}>
-              {lines.map((line, lineIndex) => (
-                <p key={lineIndex} dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(line) }} />
-              ))}
-            </blockquote>
-          );
-        }
-
-        if (/^- /.test(block)) {
-          return (
-            <ul key={i}>
-              {block.split('\n').map((line, lineIndex) => (
-                <li
-                  key={lineIndex}
-                  dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(line.replace(/^- /, '')) }}
-                />
-              ))}
-            </ul>
-          );
-        }
-
-        return (
-          <p key={i} dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(block.replace(/\n/g, '<br />')) }} />
-        );
-      })}
-    </div>
-  );
+  return <div className="prose-content">{rendered}</div>;
 }
 
 // ─── Post body content ────────────────────────────────────────────────────────
@@ -656,6 +867,7 @@ export default function BlogPost() {
 
         {/* Title */}
         <h1
+          id={slugify(post.title)}
           className="text-gray-900 mb-4"
           style={{
             fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
@@ -664,7 +876,16 @@ export default function BlogPost() {
             letterSpacing: '-0.02em',
           }}
         >
-          {post.title}
+          <a
+            className="article-title-anchor"
+            href={`#${slugify(post.title)}`}
+            onClick={e => {
+              e.preventDefault();
+              copyAnchorLink(slugify(post.title));
+            }}
+          >
+            {post.title}
+          </a>
         </h1>
 
         {/* Subtitle */}
@@ -709,31 +930,64 @@ export default function BlogPost() {
 
         {/* Body */}
         <style>{`
+          .prose-content {
+            --blog-body-size: 1.05rem;
+            --blog-line-height: 1.8;
+          }
+          .prose-content .blog-text-small {
+            --blog-body-size: 0.96rem;
+            --blog-line-height: 1.72;
+          }
+          .prose-content .blog-text-large {
+            --blog-body-size: 1.16rem;
+            --blog-line-height: 1.86;
+          }
+          .prose-content .blog-text-xlarge {
+            --blog-body-size: 1.28rem;
+            --blog-line-height: 1.92;
+          }
           .prose-content p {
             color: #374151;
-            line-height: 1.8;
+            line-height: var(--blog-line-height);
             margin-bottom: 1.4rem;
-            font-size: 1.05rem;
+            font-size: var(--blog-body-size);
           }
           .prose-content h2 {
-            font-size: 1.25rem;
-            font-weight: 500;
+            font-size: 1.625rem;
+            font-weight: 700;
             color: #111827;
             margin-top: 2.5rem;
             margin-bottom: 1rem;
             letter-spacing: -0.01em;
           }
           .prose-content h3 {
-            font-size: 1.05rem;
-            font-weight: 500;
+            font-size: 1.35rem;
+            font-weight: 700;
             color: #111827;
             margin-top: 2rem;
             margin-bottom: 0.75rem;
+          }
+          .prose-content h4 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #111827;
+            margin-top: 1.5rem;
+            margin-bottom: 0.65rem;
+          }
+          .article-title-anchor {
+            color: inherit;
+            text-decoration: none;
+            font-weight: 700;
           }
           .prose-content a {
             color: #111827;
             text-decoration: underline;
             text-underline-offset: 3px;
+          }
+          .prose-content .anchor-heading a {
+            color: inherit;
+            text-decoration: none;
+            font-weight: 700;
           }
           .prose-content blockquote {
             border-left: 2px solid #e5e7eb;
@@ -751,17 +1005,55 @@ export default function BlogPost() {
           }
           .prose-content li {
             color: #374151;
-            line-height: 1.8;
+            line-height: var(--blog-line-height);
             margin-bottom: 0.55rem;
-            font-size: 1.05rem;
+            font-size: var(--blog-body-size);
           }
-          .prose-content figure {
+          .prose-content figcaption,
+          .prose-content .blog-standalone-caption {
+            color: #6b7280;
+            font-size: calc(var(--blog-body-size) * 0.82);
+            line-height: 1.55;
+            text-align: center;
+            margin: 0.65rem auto 1.75rem;
+            max-width: 42rem;
+          }
+          .prose-content .blog-image-group {
             margin: 2rem 0;
           }
-          .prose-content figure img {
+          .prose-content .blog-image-row {
+            display: grid;
+            grid-template-columns: repeat(var(--image-count), minmax(0, 1fr));
+            gap: 0.75rem;
+            align-items: start;
+          }
+          .prose-content .blog-image {
+            margin: 2rem 0;
+          }
+          .prose-content .blog-image-row .blog-image {
+            margin: 0;
+          }
+          .prose-content .blog-image img {
             width: 100%;
             border-radius: 0.75rem;
             border: 1px solid #f3f4f6;
+            display: block;
+          }
+          .prose-content .blog-image-small {
+            max-width: 28rem;
+            margin-left: auto;
+            margin-right: auto;
+          }
+          .prose-content .blog-image-medium {
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+          }
+          .prose-content .blog-image-wide {
+            width: min(92vw, 56rem);
+            max-width: none;
+            margin-left: 50%;
+            transform: translateX(-50%);
           }
           .prose-content .missing-image {
             border: 1px dashed #d1d5db;
@@ -773,6 +1065,9 @@ export default function BlogPost() {
             justify-content: center;
             text-align: center;
             padding: 1rem;
+          }
+          .prose-content .missing-image.blog-image-wide {
+            max-width: none;
           }
           .prose-content .missing-image span {
             display: block;
@@ -821,6 +1116,11 @@ export default function BlogPost() {
           }
           .prose-content em { font-style: italic; }
           .prose-content strong { font-weight: 600; color: #111827; }
+          @media (max-width: 640px) {
+            .prose-content .blog-image-row {
+              grid-template-columns: 1fr;
+            }
+          }
         `}</style>
         <PostContent post={post} />
 

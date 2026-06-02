@@ -232,33 +232,29 @@ export default function Home() {
             >
               <Link
                 to={`/projects/${project.slug}`}
-                className="group flex items-center justify-between py-5 gap-6"
+                className="group flex items-start justify-between py-5 gap-6"
               >
-                <div className="flex items-center gap-5 min-w-0">
-                  {/* Thumbnail */}
-                  <div className="w-14 h-10 rounded-md overflow-hidden flex-shrink-0 bg-gray-100">
-                    <img
-                      src={project.coverImage}
-                      alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="min-w-0">
-                    <p
-                      className="text-gray-900 group-hover:text-black transition-colors"
-                      style={{ fontSize: '0.95rem', fontWeight: 400 }}
-                    >
-                      {project.title}
-                    </p>
-                    <p className="text-gray-400 mt-0.5" style={{ fontSize: '0.8rem' }}>
-                      {project.client} · {project.year}
-                    </p>
-                  </div>
+                <div className="min-w-0 flex-1">
+                  <p
+                    className="text-gray-900 group-hover:text-black transition-colors mb-1"
+                    style={{ fontSize: '0.95rem', fontWeight: 400 }}
+                  >
+                    {project.title}
+                  </p>
+                  <p className="text-gray-400 line-clamp-1" style={{ fontSize: '0.8rem' }}>
+                    {project.description}
+                  </p>
                 </div>
-                <ArrowRight
-                  size={14}
-                  className="text-gray-300 group-hover:text-black flex-shrink-0 transition-colors"
-                />
+                <div className="flex items-center gap-5 flex-shrink-0">
+                  <div className="text-right">
+                    <p className="text-xs text-gray-300">{project.year}</p>
+                    <p className="text-xs text-gray-300 mt-0.5">{project.client}</p>
+                  </div>
+                  <ArrowRight
+                    size={14}
+                    className="text-gray-300 group-hover:text-black transition-colors"
+                  />
+                </div>
               </Link>
             </motion.div>
           ))}

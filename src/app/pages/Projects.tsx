@@ -2,7 +2,7 @@ import { Link, useSearchParams } from 'react-router';
 import { motion } from 'motion/react';
 import { ArrowRight, Mail, Linkedin } from 'lucide-react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { PROJECTS, type Project } from '../data/projects';
 import { getDraftProjects } from '../utils/draftStore';
 import SEO from '../components/SEO';
@@ -20,9 +20,6 @@ const BOTTOM_STATS = [
   { number: '88%', label: 'Engineering Team Retention Rate' },
   { number: '5',   label: 'App Stores Shipped Simultaneously' },
 ];
-
-// ─── Keyword tags ─────────────────────────────────────────────────────────────
-const KEYWORDS = ['Entrepreneurship', 'Technology', 'Hands-on', 'Global'];
 
 // ─── Skill set ────────────────────────────────────────────────────────────────
 const SKILLS: { category: string; items: string[] }[] = [
@@ -49,9 +46,9 @@ const SKILLS: { category: string; items: string[] }[] = [
 ];
 
 // ─── Image cycling card ───────────────────────────────────────────────────────
-function ProjectCard({ project, selectedTag, onTagClick, index }: {
+function ProjectCard({ project, selectedTags, onTagClick, index }: {
   project: Project;
-  selectedTag: string | null;
+  selectedTags: string[];
   onTagClick: (tag: string) => void;
   index: number;
 }) {
@@ -77,11 +74,13 @@ function ProjectCard({ project, selectedTag, onTagClick, index }: {
 
   return (
     <motion.div
+      id={`project-${project.slug}`}
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.55, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
       className="border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 transition-colors"
+      style={{ scrollMarginTop: '90px' }}
     >
       {/* Cover image — cycling */}
       <Link to={`/projects/${project.slug}`} className="group block">
@@ -150,7 +149,7 @@ function ProjectCard({ project, selectedTag, onTagClick, index }: {
               key={tag}
               onClick={() => onTagClick(tag)}
               className={`px-3 py-1 rounded-full text-xs transition-colors border ${
-                selectedTag === tag
+                selectedTags.includes(tag)
                   ? 'bg-black text-white border-black'
                   : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400 hover:text-gray-900'
               }`}
@@ -211,7 +210,7 @@ function ProjectCard({ project, selectedTag, onTagClick, index }: {
 // ─── Main Projects page ───────────────────────────────────────────────────────
 export default function Projects() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const selectedTag = searchParams.get('tag');
+  const selectedTags = searchParams.getAll('tag');
   const [allProjects, setAllProjects] = useState<Project[]>(PROJECTS);
 
   useEffect(() => {
@@ -220,14 +219,23 @@ export default function Projects() {
     setAllProjects([...PROJECTS.filter(p => !draftSlugs.has(p.slug)), ...drafts]);
   }, []);
 
-  const setTag = (tag: string | null) => {
-    if (tag) setSearchParams({ tag });
-    else setSearchParams({});
+  const setTag = (tag: string) => {
+    const nextTags = selectedTags.includes(tag)
+      ? selectedTags.filter(selected => selected !== tag)
+      : [...selectedTags, tag];
+
+    const nextParams = new URLSearchParams();
+    nextTags.forEach(selected => nextParams.append('tag', selected));
+    setSearchParams(nextParams);
   };
 
-  const filtered = selectedTag
-    ? allProjects.filter(p => p.tags.includes(selectedTag))
+  const filtered = selectedTags.length > 0
+    ? allProjects.filter(project => selectedTags.every(tag => project.tags.includes(tag)))
     : allProjects;
+  const projectKeywords = useMemo(
+    () => Array.from(new Set(allProjects.flatMap(project => project.tags))).sort((a, b) => a.localeCompare(b)),
+    [allProjects]
+  );
 
   return (
     <section className="max-w-4xl mx-auto px-6">
@@ -337,6 +345,34 @@ export default function Projects() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════
+          PROJECT SUMMARY LINKS
+      ══════════════════════════════════════════════════════════════════ */}
+      <div className="pb-10">
+        <motion.div
+          className="flex flex-col gap-4"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-30px' }}
+          transition={{ duration: 0.5, delay: 0.04 }}
+        >
+          {allProjects.map(project => (
+            <a
+              key={project.slug}
+              href={`#project-${project.slug}`}
+              className="group grid gap-1 sm:grid-cols-[12rem_1fr] sm:gap-6"
+            >
+              <span className="block text-gray-900 group-hover:underline underline-offset-4" style={{ fontSize: '0.92rem', fontWeight: 500 }}>
+                {project.title}
+              </span>
+              <span className="block text-gray-500 leading-relaxed group-hover:text-gray-700 transition-colors" style={{ fontSize: '0.82rem' }}>
+                {project.description}
+              </span>
+            </a>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════════════
           KEYWORD TAGS
       ══════════════════════════════════════════════════════════════════ */}
       <div className="pb-12">
@@ -347,34 +383,22 @@ export default function Projects() {
           viewport={{ once: true, margin: '-30px' }}
           transition={{ duration: 0.5, delay: 0.08 }}
         >
-          {KEYWORDS.map(kw => (
-            <span
+          {projectKeywords.map(kw => (
+            <button
               key={kw}
-              className="px-4 py-1.5 rounded-full border border-gray-200 text-gray-500"
+              onClick={() => setTag(kw)}
+              className={`px-4 py-1.5 rounded-full border transition-colors ${
+                selectedTags.includes(kw)
+                  ? 'bg-black text-white border-black'
+                  : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400 hover:text-gray-900'
+              }`}
               style={{ fontSize: '0.8rem' }}
             >
               {kw}
-            </span>
+            </button>
           ))}
         </motion.div>
       </div>
-
-      {/* ══════════════════════════════════════════════════════════════════
-          ACTIVE FILTER INDICATOR
-      ══════════════════════════════════════════════════════════════════ */}
-      {selectedTag && (
-        <div className="flex items-center gap-3 mb-8">
-          <span className="text-sm text-gray-500">
-            Filtering by <span className="text-gray-900">{selectedTag}</span>
-          </span>
-          <button
-            onClick={() => setTag(null)}
-            className="text-xs text-gray-400 hover:text-black underline underline-offset-4 transition-colors"
-          >
-            Clear
-          </button>
-        </div>
-      )}
 
       {/* ══════════════════════════════════════════════════════════════════
           PROJECT LIST
@@ -384,8 +408,8 @@ export default function Projects() {
           <ProjectCard
             key={project.slug}
             project={project}
-            selectedTag={selectedTag}
-            onTagClick={tag => setTag(tag === selectedTag ? null : tag)}
+            selectedTags={selectedTags}
+            onTagClick={setTag}
             index={i}
           />
         ))}
@@ -393,10 +417,10 @@ export default function Projects() {
         {filtered.length === 0 && (
           <div className="py-20 text-center">
             <p className="text-gray-400 mb-3" style={{ fontSize: '0.95rem' }}>
-              No projects tagged <span className="text-gray-600">{selectedTag}</span>.
+              No projects match the selected keywords.
             </p>
             <button
-              onClick={() => setTag(null)}
+              onClick={() => setSearchParams({})}
               className="text-sm text-black underline underline-offset-4"
             >
               Clear filter

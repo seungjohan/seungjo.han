@@ -13,6 +13,17 @@ export interface Post {
 
 export const POSTS: Post[] = [
   {
+    slug: 'i-want-my-life-to-be-colorful',
+    title: 'I Want My Life to Be Colorful',
+    subtitle: 'Breaking free from a fluctuating sense of self-worth, knocking on the doors of the world, and learning to be honest with myself.',
+    date: 'February 6, 2026',
+    readTime: '30 min read',
+    tags: ['Life', 'Identity', 'Travel'],
+    excerpt: 'A personal reflection on travel, Dokdo, cold emails, startups, languages, kindness, music, and choosing a colorful life.',
+    coverImage: '/blog-images/i-want-my-life-to-be-colorful_1.jpg',
+    sourceMarkdown: 'i-want-my-life-to-be-colorful',
+  },
+  {
     slug: 'developing-a-web-product-for-a-startup',
     title: 'Developing a Web Product for an Early-stage Startup from scratch',
     subtitle: 'You need to know software development to build your ideas into products.',

@@ -16,7 +16,7 @@ export function AnchorNav() {
   // Scan DOM for headings whenever route changes
   useEffect(() => {
     const scan = () => {
-      const els = document.querySelectorAll('h2[id], h3[id]');
+      const els = document.querySelectorAll('article h2[id], article h3[id], article h4[id]');
       const found: Anchor[] = Array.from(els).map(el => ({
         id: el.id,
         text: el.textContent?.trim() || '',
@@ -69,7 +69,7 @@ export function AnchorNav() {
     <AnimatePresence>
       <motion.nav
         className="fixed right-6 top-1/2 -translate-y-1/2 z-30
-                   hidden xl:flex flex-col gap-3 max-w-[160px]"
+                   hidden xl:flex flex-col gap-2.5 max-w-[210px]"
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: 20 }}
@@ -84,10 +84,13 @@ export function AnchorNav() {
             <button
               key={anchor.id}
               onClick={() => scrollTo(anchor.id)}
-              className={`relative pl-4 text-left transition-colors duration-200 leading-snug
-                ${anchor.level === 3 ? 'pl-6' : 'pl-4'}
+              className={`relative text-left transition-colors duration-200 leading-snug
+                ${anchor.level === 1 ? 'pl-4' : ''}
+                ${anchor.level === 2 ? 'pl-6' : ''}
+                ${anchor.level === 3 ? 'pl-9' : ''}
+                ${anchor.level >= 4 ? 'pl-12' : ''}
                 ${isActive ? 'text-black' : 'text-gray-400 hover:text-gray-600'}`}
-              style={{ fontSize: '0.72rem' }}
+              style={{ fontSize: anchor.level === 1 ? '0.76rem' : '0.72rem' }}
             >
               {/* Active dot */}
               <motion.span
@@ -97,7 +100,9 @@ export function AnchorNav() {
                 animate={{ opacity: isActive ? 1 : 0, scale: isActive ? 1 : 0 }}
                 transition={{ duration: 0.2 }}
               />
-              {anchor.text}
+              <span className="block max-w-[180px] truncate">
+                {anchor.text}
+              </span>
             </button>
           );
         })}

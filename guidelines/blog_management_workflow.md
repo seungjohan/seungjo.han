@@ -52,18 +52,50 @@ Current static workflow:
 
 1. Add the new post object to `POSTS` in `src/app/data/posts.ts`.
 2. Put the newest post first unless a different editorial order is intentional.
-3. Run `npm run dev`.
-4. Check `/blog`.
-5. Open `/blog/your-url-safe-slug`.
-6. Check tag filtering from the blog list.
-7. Check related posts on the post page.
-8. Check global search.
-9. Copy the current page link and test it in a new tab.
-10. Run `npm run build` before publishing.
+3. Put local blog images in `public/blog-images`.
+4. Run `npm run dev`.
+5. Check `/blog`.
+6. Open `/blog/your-url-safe-slug`.
+7. Check tag filtering from the blog list.
+8. Check related posts on the post page.
+9. Check global search.
+10. Copy the current page link and test it in a new tab.
+11. Run `npm run build` before publishing.
 
 For now, do not create `src/content/blog` or MDX files unless the project has been upgraded to an MDX pipeline.
 
-## 4. Publishing Workflow
+## 4. Image Sizing
+
+Body images are stored in `public/blog-images` and referenced by title slug plus order, for example:
+
+```text
+public/blog-images/i-want-my-life-to-be-colorful_1.jpg
+public/blog-images/i-want-my-life-to-be-colorful_2.jpg
+```
+
+The image order follows the order of image markers in the post text. Size is controlled inside the post text.
+
+Markdown image syntax:
+
+```md
+![Cycling route | size=wide](https://example.com/original-image.jpg)
+```
+
+Plain pasted image placeholder syntax:
+
+```text
+📷 [Image: cycling / national bike route | size=wide]
+```
+
+Supported sizes:
+
+- `size=small`: compact centered image for portrait, low-resolution, or supporting images.
+- `size=medium`: article-column width. This is the default and should be used for most images.
+- `size=wide`: wider than the text column on desktop, similar to the Brunch article image treatment; use it for landscapes, screenshots, maps, and visual moments that need emphasis.
+
+If no size is written, the post uses `size=medium`.
+
+## 5. Publishing Workflow
 
 Use this release flow for each post:
 
@@ -76,7 +108,7 @@ Use this release flow for each post:
 7. Open the live post URL.
 8. Share only after the live page, social preview, and canonical URL are correct.
 
-## 5. SEO Checklist Per Post
+## 6. SEO Checklist Per Post
 
 Before sharing a post:
 
@@ -89,7 +121,7 @@ Before sharing a post:
 - Social preview image exists if the page supports Open Graph images.
 - The post appears in sitemap/RSS if those features are implemented.
 
-## 6. Dashboard Routine After Deployment
+## 7. Dashboard Routine After Deployment
 
 Weekly review:
 
@@ -108,7 +140,7 @@ Monthly review:
 - Check broken links.
 - Export/backup subscriber or comment data if those systems exist.
 
-## 7. When to Upgrade the Blog System
+## 8. When to Upgrade the Blog System
 
 Stay with static TypeScript if:
 

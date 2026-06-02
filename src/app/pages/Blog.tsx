@@ -5,7 +5,7 @@ import { motion } from 'motion/react';
 import { getDraftPosts } from '../utils/draftStore';
 import SEO from '../components/SEO';
 
-const ALL_TAGS = ['Startup', 'Technology', 'Product', 'Design', 'Life', 'Korea', 'Identity'];
+const ALL_TAGS = ['Startup', 'Technology', 'Product', 'Design', 'Life', 'Korea', 'Identity', 'Travel'];
 
 // "April 15, 2026" → "Apr 15, 2026"
 function formatDate(dateStr: string) {
@@ -16,7 +16,7 @@ function formatDate(dateStr: string) {
 
 export default function Blog() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const selectedTag = searchParams.get('tag');
+  const selectedTags = searchParams.getAll('tag');
   const navigate = useNavigate();
   const [allPosts, setAllPosts] = useState<Post[]>(POSTS);
 
@@ -26,13 +26,18 @@ export default function Blog() {
     setAllPosts([...POSTS.filter(p => !draftSlugs.has(p.slug)), ...drafts]);
   }, []);
 
-  const setTag = (tag: string | null) => {
-    if (tag) setSearchParams({ tag });
-    else setSearchParams({});
+  const toggleTag = (tag: string) => {
+    const nextTags = selectedTags.includes(tag)
+      ? selectedTags.filter(selected => selected !== tag)
+      : [...selectedTags, tag];
+
+    const nextParams = new URLSearchParams();
+    nextTags.forEach(selected => nextParams.append('tag', selected));
+    setSearchParams(nextParams);
   };
 
-  const filtered = selectedTag
-    ? allPosts.filter(p => p.tags.includes(selectedTag))
+  const filtered = selectedTags.length > 0
+    ? allPosts.filter(p => selectedTags.every(tag => p.tags.includes(tag)))
     : allPosts;
 
   return (
@@ -52,9 +57,9 @@ export default function Blog() {
       {/* Tag filter */}
       <div className="mb-12 flex flex-wrap gap-2">
         <button
-          onClick={() => setTag(null)}
+          onClick={() => setSearchParams({})}
           className={`px-4 py-1.5 rounded-full text-sm transition-colors border ${
-            !selectedTag
+            selectedTags.length === 0
               ? 'bg-black text-white border-black'
               : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
           }`}
@@ -64,9 +69,9 @@ export default function Blog() {
         {ALL_TAGS.map(tag => (
           <button
             key={tag}
-            onClick={() => setTag(tag)}
+            onClick={() => toggleTag(tag)}
             className={`px-4 py-1.5 rounded-full text-sm transition-colors border ${
-              selectedTag === tag
+              selectedTags.includes(tag)
                 ? 'bg-black text-white border-black'
                 : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
             }`}
@@ -112,7 +117,7 @@ export default function Blog() {
                       {post.tags.slice(0, 3).map(tag => (
                         <button
                           key={tag}
-                          onClick={e => { e.stopPropagation(); setTag(tag); }}
+                          onClick={e => { e.stopPropagation(); toggleTag(tag); }}
                           className="text-xs text-gray-400 hover:text-black transition-colors"
                         >
                           {tag}

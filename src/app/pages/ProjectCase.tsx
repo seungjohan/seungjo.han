@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router';
-import { useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PROJECTS } from '../data/projects';
 import { trackView } from '../utils/viewTracker';
@@ -170,10 +170,24 @@ function CaseContent({ slug }: { slug: string }) {
 export default function ProjectCase() {
   const { slug } = useParams<{ slug: string }>();
   const project = PROJECTS.find(p => p.slug === slug);
+  const [imgIndex, setImgIndex] = useState(0);
 
   useEffect(() => {
     if (slug) trackView(slug, 'project');
   }, [slug]);
+
+  useEffect(() => {
+    setImgIndex(0);
+  }, [slug]);
+
+  useEffect(() => {
+    const imageCount = project?.images?.length ?? 0;
+    if (imageCount <= 1) return;
+    const id = setInterval(() => {
+      setImgIndex(i => (i + 1) % imageCount);
+    }, 2000);
+    return () => clearInterval(id);
+  }, [project?.images]);
 
   if (!project) {
     return (
@@ -213,12 +227,47 @@ export default function ProjectCase() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className="rounded-2xl overflow-hidden">
-          <img
-            src={project.coverImage}
-            alt={project.title}
-            className="w-full aspect-[16/7] object-cover"
-          />
+        <div className="rounded-2xl overflow-hidden relative" style={{ aspectRatio: '16/7' }}>
+          {project.images.map((src, i) => (
+            <img
+              key={`${src}-${i}`}
+              src={src}
+              alt={project.title}
+              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+              style={{ opacity: i === imgIndex ? 1 : 0 }}
+            />
+          ))}
+          {project.images.length > 1 && (
+            <>
+              <button
+                onClick={() => setImgIndex(i => (i - 1 + project.images.length) % project.images.length)}
+                className="absolute left-3 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 text-white transition-all duration-200"
+                aria-label="Previous image"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                onClick={() => setImgIndex(i => (i + 1) % project.images.length)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-black/20 hover:bg-black/40 text-white transition-all duration-200"
+                aria-label="Next image"
+              >
+                <ChevronRight size={16} />
+              </button>
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                {project.images.map((_, i) => (
+                  <span
+                    key={i}
+                    className="block rounded-full transition-all duration-300"
+                    style={{
+                      width: i === imgIndex ? 18 : 6,
+                      height: 6,
+                      backgroundColor: i === imgIndex ? 'white' : 'rgba(255,255,255,0.45)',
+                    }}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </motion.div>
 
@@ -254,21 +303,21 @@ export default function ProjectCase() {
             {project.description}
           </p>
 
-          {/* Meta — inline, no border lines */}
-          <div className="flex flex-wrap gap-x-8 gap-y-4">
-            <div>
+          {/* Meta */}
+          <div className="grid gap-4 max-w-2xl">
+            <div className="grid gap-2 sm:grid-cols-[7rem_1fr]">
               <p className="text-xs text-gray-400 uppercase tracking-wider mb-0.5">Role</p>
               <p className="text-sm text-gray-900">{project.role}</p>
             </div>
-            <div>
+            <div className="grid gap-2 sm:grid-cols-[7rem_1fr]">
               <p className="text-xs text-gray-400 uppercase tracking-wider mb-0.5">Team</p>
               <p className="text-sm text-gray-900">{project.team}</p>
             </div>
-            <div>
+            <div className="grid gap-2 sm:grid-cols-[7rem_1fr]">
               <p className="text-xs text-gray-400 uppercase tracking-wider mb-0.5">Duration</p>
               <p className="text-sm text-gray-900">{project.duration}</p>
             </div>
-            <div>
+            <div className="grid gap-2 sm:grid-cols-[7rem_1fr]">
               <p className="text-xs text-gray-400 uppercase tracking-wider mb-0.5">Tools</p>
               <p className="text-sm text-gray-900">{project.techStack}</p>
             </div>
@@ -277,7 +326,7 @@ export default function ProjectCase() {
       </div>
 
       {/* ── Case study content ── */}
-      <div className="max-w-4xl mx-auto px-6 pb-16 divide-y divide-gray-100">
+      <div className="max-w-4xl mx-auto px-6 pb-16">
         <CaseContent slug={slug!} />
       </div>
     </div>

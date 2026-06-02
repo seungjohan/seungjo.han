@@ -41,6 +41,7 @@ GEMINI.md
 *.njsproj
 *.sln
 *.sw?
+./public/
 # OS specific
 .DS_Store
 **/.DS_Store
