@@ -258,7 +258,7 @@ export default function Projects() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          Senior Product Manager Portfolio
+          Product Manager Portfolio
         </motion.p>
 
         {/* Headline */}

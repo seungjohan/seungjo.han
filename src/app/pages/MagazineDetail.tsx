@@ -115,7 +115,7 @@ export default function MagazineDetail() {
                   {post.title}
                 </p>
                 <p className="text-gray-400 mt-0.5" style={{ fontSize: '0.8rem' }}>
-                  {formatDate(post.date)} · {post.readTime}
+                  {formatDate(post.date)}
                 </p>
               </div>
 

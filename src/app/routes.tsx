@@ -7,8 +7,6 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Projects from "./pages/Projects";
 import ProjectCase from "./pages/ProjectCase";
-import Magazine from "./pages/Magazine";
-import MagazineDetail from "./pages/MagazineDetail";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -28,8 +26,6 @@ export const router = createBrowserRouter([
       { path: "blog/:slug",       Component: BlogPost },
       { path: "projects",         Component: Projects },
       { path: "projects/:slug",   Component: ProjectCase },
-      { path: "magazine",         Component: Magazine },
-      { path: "magazine/:slug",   Component: MagazineDetail },
       { path: "*",                Component: NotFound },
     ],
   },

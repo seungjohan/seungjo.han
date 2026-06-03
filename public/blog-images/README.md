@@ -9,6 +9,7 @@ Images are referenced by the post title slug and image order:
 - `i-want-my-life-to-be-colorful_1.jpg`
 - `i-want-my-life-to-be-colorful_2.jpg`
 - `im-a-proud-dokdo-security-police-of-korea_1.jpg`
+- `im-a-proud-dokdo-security-police-of-korea_2.jpg`
 
 Use the same pattern for later pasted Substack posts: `post-title-slug_1.jpg`, `post-title-slug_2.jpg`, and so on.
 

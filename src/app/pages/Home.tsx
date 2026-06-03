@@ -50,8 +50,8 @@ export default function Home() {
   return (
     <div>
       <SEO
-        title="Seungjo Han - Product Manager, Seoul"
-        description="Product manager and builder in Seoul with selected work across startups, product strategy, software, and global market research."
+        title="Seungjo Han - Product Manager, Republic of Korea"
+        description="Product manager and builder in Korea with selected work across startups, product strategy, software, and global market research."
       />
 
       {/* ══════════════════════════════════════════════════════════════════
@@ -66,7 +66,7 @@ export default function Home() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          Product Manager · Seoul
+          Product Manager · Republic of Korea
         </motion.p>
 
         {/* Primary statement — the largest text on the page */}
@@ -93,7 +93,7 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
         >
-          Senior PM obsessed with shipping things that actually matter —
+          Product Manager obsessed with shipping things that actually matter —
           across mobile, payments, and platforms, with 10M+ users impacted.
         </motion.p>
 

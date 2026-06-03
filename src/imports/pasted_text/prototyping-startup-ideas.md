@@ -159,11 +159,11 @@ This led to many discussions during the design and software development stages, 
 
 When developing the product, we asked ourselves multiple questions:
 
-> - How to best optimize the user experience?
-> - What obstacles might appear that could prevent us from meeting user needs?
-> - Is our chosen problem-solving approach the most efficient?
-> - Is there an umbrella solution that could generalize the needs of small business owners with diverse issues?
-> - What are the genuine reasons for users to feel the necessity of our product, and which things are we delivering to them?
+- How to best optimize the user experience?
+- What obstacles might appear that could prevent us from meeting user needs?
+- Is our chosen problem-solving approach the most efficient?
+- Is there an umbrella solution that could generalize the needs of small business owners with diverse issues?
+- What are the genuine reasons for users to feel the necessity of our product, and which things are we delivering to them?
 
 Instead of doing paperwork only, I concentrated on **conducting interviews** with as many different types of people as possible, even helping out at their shops while running the service, to better understand their needs. I tried to reflect on these insights when developing the prototype. By listening to their stories and hearing about their real needs, which often differed from what I had originally expected, I worked hard to create a product that truly satisfied their requirements. After decisions and revisions, the product I envisioned was finally born.
 

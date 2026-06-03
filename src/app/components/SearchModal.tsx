@@ -103,7 +103,7 @@ export function SearchModal({ open, onClose }: SearchModalProps) {
                             {post.title}
                           </p>
                           <p className="text-sm text-gray-500 truncate mt-0.5">
-                            {post.date} · {post.readTime}
+                            {post.date}
                           </p>
                         </div>
                         <ArrowRight

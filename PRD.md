@@ -439,7 +439,7 @@ Card structure:
                         inactive: bg-white text-gray-500 border-gray-200 hover:border-gray-400
                         onClick: setTag(tag === selectedTag ? null : tag)  ← toggle
 
-  [Title]                                          [View case study →]
+  [Title]                                          [View project →]
   [client · year]   ← text-xs text-gray-400
 
   📝 IMPACT          ← text-gray-400 uppercase 0.68rem; NO border-t above

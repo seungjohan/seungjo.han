@@ -11,7 +11,6 @@ const NAV_LINKS = [
   { to: '/about',    label: 'About' },
   { to: '/projects', label: 'Projects' },
   { to: '/blog',     label: 'Blog' },
-  { to: '/magazine', label: 'Magazine' },
 ];
 
 const FOOTER_PAGES = [
@@ -19,7 +18,6 @@ const FOOTER_PAGES = [
   { to: '/about',    label: 'About' },
   { to: '/projects', label: 'Projects' },
   { to: '/blog',     label: 'Blog' },
-  { to: '/magazine', label: 'Magazine' },
 ];
 
 const FOOTER_CONNECT = [

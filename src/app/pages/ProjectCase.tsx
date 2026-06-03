@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router';
 import { useEffect, useState } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PROJECTS } from '../data/projects';
 import { trackView } from '../utils/viewTracker';
@@ -171,6 +171,7 @@ export default function ProjectCase() {
   const { slug } = useParams<{ slug: string }>();
   const project = PROJECTS.find(p => p.slug === slug);
   const [imgIndex, setImgIndex] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (slug) trackView(slug, 'project');
@@ -233,8 +234,9 @@ export default function ProjectCase() {
               key={`${src}-${i}`}
               src={src}
               alt={project.title}
-              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 cursor-zoom-in"
               style={{ opacity: i === imgIndex ? 1 : 0 }}
+              onClick={() => setLightboxIndex(i)}
             />
           ))}
           {project.images.length > 1 && (
@@ -329,6 +331,53 @@ export default function ProjectCase() {
       <div className="max-w-4xl mx-auto px-6 pb-16">
         <CaseContent slug={slug!} />
       </div>
+
+      {lightboxIndex !== null && (
+        <div
+          className="fixed inset-0 z-[120] bg-black/85 flex items-center justify-center p-6 cursor-zoom-out"
+          onClick={() => setLightboxIndex(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <button
+            className="absolute top-5 right-5 text-white/90 hover:text-white cursor-pointer"
+            onClick={() => setLightboxIndex(null)}
+            aria-label="Close image"
+          >
+            <X size={24} />
+          </button>
+          {project.images.length > 1 && (
+            <>
+              <button
+                className="absolute left-5 top-1/2 -translate-y-1/2 text-white/90 hover:text-white"
+                aria-label="Previous image"
+                onClick={e => {
+                  e.stopPropagation();
+                  setLightboxIndex(i => i === null ? 0 : (i - 1 + project.images.length) % project.images.length);
+                }}
+              >
+                <ChevronLeft size={28} />
+              </button>
+              <button
+                className="absolute right-5 top-1/2 -translate-y-1/2 text-white/90 hover:text-white"
+                aria-label="Next image"
+                onClick={e => {
+                  e.stopPropagation();
+                  setLightboxIndex(i => i === null ? 0 : (i + 1) % project.images.length);
+                }}
+              >
+                <ChevronRight size={28} />
+              </button>
+            </>
+          )}
+          <img
+            src={project.images[lightboxIndex]}
+            alt={project.title}
+            className="max-w-full max-h-full object-contain rounded-md cursor-zoom-out"
+            onClick={() => setLightboxIndex(null)}
+          />
+        </div>
+      )}
     </div>
   );
 }

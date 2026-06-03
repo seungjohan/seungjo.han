@@ -167,6 +167,47 @@ Use these checkpoints together before moving to the next phase:
 - Deployment confirmed: host, domain, build command, environment variables.
 - Operations confirmed: blog publishing workflow, analytics dashboard routine, backups, rollback.
 
-## 5. Next Step
+## 5. Editing Project Pages (images and copy)
+
+Each project lives in `src/app/data/projects.ts`. The detail page at `/projects/{slug}` reads from that file plus optional case-study sections in `src/app/pages/ProjectCase.tsx`.
+
+### Hero images (carousel + lightbox)
+
+In `projects.ts`, for each project object:
+
+- `coverImage` — used on the projects list card and social preview.
+- `images` — array of image URLs shown in the hero carousel on the detail page. Order matters: first image shows first; the carousel auto-advances every 2 seconds when there is more than one image.
+
+To use your own files instead of external URLs:
+
+1. Put files in `public/project-images/` (create the folder if needed), for example `public/project-images/webeing_1.jpg`.
+2. Reference them as `/project-images/webeing_1.jpg` in `coverImage` and `images`.
+
+To add or replace images, edit the `images` array for that slug and save. Click any hero image on the live page to enlarge; click again (zoom-out cursor) to close.
+
+### Short copy (title, summary, meta, list page)
+
+Still in `projects.ts`:
+
+- `title`, `description` — headline and intro on the detail page.
+- `role`, `team`, `duration`, `techStack` — meta grid under the title.
+- `impact`, `whatIDid`, `whatIDidBullets`, `outcome` — used on the expanded project panel on `/projects`, not in the long case-study body today.
+
+### Long case-study body (Problem, Solution, Process, …)
+
+The sections below the hero are defined in `ProjectCase.tsx` inside `CaseContent({ slug })`.
+
+- Only `brand-identity-system` has custom sections today.
+- Every other slug uses the generic placeholder sections (`Problem`, `TL;DR`, `Solution`, …).
+
+To customize a project’s story:
+
+1. Open `src/app/pages/ProjectCase.tsx`.
+2. Add a branch such as `if (slug === 'webeing') { return ( <> … </> ); }` before the generic fallback, mirroring the `brand-identity-system` block.
+3. Use the existing `<Section title="…" id="…">` component for each block.
+
+After edits, run `npm run dev` and open `/projects/your-slug` to preview.
+
+## 6. Next Step
 
 Recommended next project step: keep the current v1 static, add production SEO foundations and deployment readiness, then deploy. After traffic and writing cadence are real, decide whether MDX, CMS, comments, or subscriptions are worth the added backend complexity.

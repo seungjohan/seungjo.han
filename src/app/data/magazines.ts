@@ -9,7 +9,7 @@ export interface Magazine {
 export const MAGAZINES: Magazine[] = [
   {
     slug: 'startup-stories',
-    name: 'Startup Stories',
+    name: 'A Shout to the World: Startup',
     description: 'On building from zero — prototyping, shipping, and learning from real customers.',
     cover: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800&q=80',
     postSlugs: [
@@ -18,11 +18,12 @@ export const MAGAZINES: Magazine[] = [
     ],
   },
   {
-    slug: 'life-and-identity',
-    name: 'Life & Identity',
+    slug: 'whats-your-life-like',
+    name: "What's your life like?",
     description: 'Personal stories about growth, self-discovery, and what it means to find your own color.',
     cover: 'https://images.unsplash.com/photo-1583833008338-31a6657917ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800&q=80',
     postSlugs: [
+      'i-want-my-life-to-be-colorful',
       'dokdo-security-police',
     ],
   },

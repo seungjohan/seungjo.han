@@ -1,21 +1,22 @@
 import { useParams, Link, useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { ArrowLeft, Link2 } from 'lucide-react';
+import { ArrowLeft, Link2, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { POSTS, type Post } from '../data/posts';
-import { getMagazineForPost, getPositionInMagazine } from '../data/magazines';
 import { trackView, trackShare } from '../utils/viewTracker';
 import { getDraftPosts } from '../utils/draftStore';
 import SEO from '../components/SEO';
-import webProductMarkdown from '../../imports/pasted_text/pasted-attachment.txt?raw';
+import webProductMarkdown from '../../imports/pasted_text/Developing a Web Product for an Early-stage Startup from scratch.md?raw';
 import prototypeMarkdown from '../../imports/pasted_text/prototyping-startup-ideas.md?raw';
-import colorfulLifeText from '../../imports/pasted_text/i-want-my-life-to-be-colorful.txt?raw';
+import colorfulLifeText from '../../imports/pasted_text/i-want-my-life-to-be-colorful.md?raw';
+import dokdoMarkdown from '../../imports/pasted_text/im-a-proud-dokdo-security-police-of-korea.md?raw';
 
 const SOURCE_MARKDOWN: Record<string, string> = {
   'webeing-product-development': webProductMarkdown,
   'prototyping-startup-ideas': prototypeMarkdown,
   'i-want-my-life-to-be-colorful': colorfulLifeText,
+  'im-a-proud-dokdo-security-police-of-korea': dokdoMarkdown,
 };
 
 // "April 15, 2026" → "Apr 15, 2026"
@@ -48,18 +49,39 @@ function AnchorHeading({
 
   return (
     <Tag id={id} className="anchor-heading" style={{ scrollMarginTop: '100px' }}>
-      <a
-        href={`#${id}`}
-        aria-label={`Link to ${id}`}
-        onClick={e => {
-          e.preventDefault();
-          copyAnchorLink(id);
-        }}
-      >
-        {children}
-      </a>
+      <span className="anchor-heading-row">
+        <button
+          type="button"
+          className="anchor-link-chip"
+          aria-label="Copy link to section"
+          onClick={() => copyAnchorLink(id)}
+        >
+          <Link2 size={15} strokeWidth={2} />
+        </button>
+        <a
+          href={`#${id}`}
+          className="anchor-heading-text"
+          onClick={e => {
+            e.preventDefault();
+            copyAnchorLink(id);
+          }}
+        >
+          {children}
+        </a>
+      </span>
     </Tag>
   );
+}
+
+function formatIndexLinkLabel(title: string) {
+  const dotIndex = title.indexOf('.');
+  if (dotIndex < 0) {
+    return { lead: title, rest: '' };
+  }
+  return {
+    lead: title.slice(0, dotIndex + 1),
+    rest: title.slice(dotIndex + 1),
+  };
 }
 
 function AnchorH2({ id, children }: { id: string; children: React.ReactNode }) {
@@ -111,12 +133,15 @@ function renderInlineMarkdown(value: string) {
     .replace(/\\_/g, '_')
     .replace(/`([^`]+)`/g, '<code>$1</code>')
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/__([^_]+)__/g, '<strong>$1</strong>')
+    .replace(/(?<![\w*])_([^_\n]+?)_(?![\w*])/g, '<em>$1</em>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer">$1</a>');
 }
 
 type BlogImageSize = 'small' | 'medium' | 'wide';
 type TextSize = 'small' | 'regular' | 'large' | 'xlarge';
+type QuoteStyle = 'normal' | 'line' | 'box' | 'marks';
 
 function parseImageLabel(value: string, fallback: string): { alt: string; size: BlogImageSize } {
   const parts = value.split('|').map(part => part.trim()).filter(Boolean);
@@ -144,7 +169,13 @@ function parseImageBlock(block: string, post: Post, imageIndex: number) {
     post.title
   );
   const rawSrc = imageMatch?.[2]?.trim();
-  const src = rawSrc && isRemoteUrl(rawSrc) ? rawSrc : `/blog-images/${fileName}`;
+  const src = rawSrc
+    ? isRemoteUrl(rawSrc)
+      ? rawSrc
+      : rawSrc.startsWith('/')
+        ? rawSrc
+        : `/blog-images/${fileName}`
+    : `/blog-images/${fileName}`;
 
   return { src, alt, fileName, size };
 }
@@ -167,9 +198,9 @@ function parseTextSizeBlock(block: string): { size: TextSize; content: string } 
   };
 }
 
-function getFirstRemoteMarkdownImage(markdown?: string) {
-  const match = markdown?.match(/!\[[^\]]*\]\((https?:\/\/[^)]+)\)/i);
-  return match?.[1];
+function parseQuoteStyleBlock(block: string): QuoteStyle | null {
+  const match = block.match(/^\{quote=(normal|line|box|marks)\}$/i);
+  return match ? match[1].toLowerCase() as QuoteStyle : null;
 }
 
 function normalizeBrunchHeading(value: string) {
@@ -182,11 +213,13 @@ function MarkdownImage({
   alt,
   fileName,
   size,
+  onOpen,
 }: {
   src: string;
   alt: string;
   fileName: string;
   size: BlogImageSize;
+  onOpen: (src: string, alt: string) => void;
 }) {
   const [missing, setMissing] = useState(false);
 
@@ -203,7 +236,13 @@ function MarkdownImage({
 
   return (
     <figure className={`blog-image blog-image-${size}`}>
-      <img src={src} alt={alt} onError={() => setMissing(true)} />
+      <img
+        src={src}
+        alt={alt}
+        onError={() => setMissing(true)}
+        onClick={() => onOpen(src, alt)}
+        className="cursor-zoom-in"
+      />
     </figure>
   );
 }
@@ -211,11 +250,31 @@ function MarkdownImage({
 function MarkdownImageGroup({
   images,
   caption,
+  onOpen,
 }: {
   images: Array<{ src: string; alt: string; fileName: string; size: BlogImageSize }>;
   caption?: string;
+  onOpen: (src: string, alt: string) => void;
 }) {
   const rowSize = images.some(image => image.size === 'wide') ? 'wide' : images.some(image => image.size === 'small') ? 'small' : 'medium';
+
+  if (images.length === 1) {
+    const image = images[0];
+    return (
+      <figure className={`blog-image-group blog-image-group-${rowSize}`}>
+        <MarkdownImage
+          src={image.src}
+          alt={image.alt}
+          fileName={image.fileName}
+          size={image.size}
+          onOpen={onOpen}
+        />
+        {caption && (
+          <figcaption dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(caption) }} />
+        )}
+      </figure>
+    );
+  }
 
   return (
     <figure className={`blog-image-group blog-image-group-${rowSize}`}>
@@ -227,6 +286,7 @@ function MarkdownImageGroup({
             alt={image.alt}
             fileName={image.fileName}
             size={image.size}
+            onOpen={onOpen}
           />
         ))}
       </div>
@@ -237,62 +297,41 @@ function MarkdownImageGroup({
   );
 }
 
-function CoverImage({ post }: { post: Post }) {
-  const [missing, setMissing] = useState(false);
-  const fallbackImage = getFirstRemoteMarkdownImage(post.sourceMarkdown ? SOURCE_MARKDOWN[post.sourceMarkdown] : undefined);
-  const [displaySrc, setDisplaySrc] = useState(post.coverImage || fallbackImage);
-  const fileName = post.coverImage?.split('/').pop() || `${slugify(post.title)}_1.jpg`;
-
-  useEffect(() => {
-    setMissing(false);
-    setDisplaySrc(post.coverImage || fallbackImage);
-  }, [fallbackImage, post.coverImage]);
-
-  if (!displaySrc) return null;
-
-  if (missing) {
-    return (
-      <div className="rounded-xl overflow-hidden mb-10">
-        <div className="cover-missing-image">
-          <span>{fileName}</span>
-          <small>Place this image in public/blog-images</small>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="rounded-xl overflow-hidden mb-10">
-      <img
-        src={displaySrc}
-        alt={post.title}
-        className="w-full aspect-[16/9] object-cover"
-        onError={() => {
-          if (displaySrc !== fallbackImage && fallbackImage) {
-            setDisplaySrc(fallbackImage);
-            return;
-          }
-          setMissing(true);
-        }}
-      />
-    </div>
-  );
-}
-
-function MarkdownContent({ markdown, post }: { markdown: string; post: Post }) {
+function MarkdownContent({
+  markdown,
+  post,
+  onOpenImage,
+}: {
+  markdown: string;
+  post: Post;
+  onOpenImage: (src: string, alt: string) => void;
+}) {
   const content = stripDuplicatePageHeader(stripMarkdownHeader(markdown), post);
   const blocks = (content.includes('\n\n') ? content.split(/\n{2,}/) : content.split('\n'))
     .map(block => block.trim())
     .filter(Boolean);
   let imageIndex = 0;
   const rendered: React.ReactNode[] = [];
+  let isIndexSection = false;
+  let pendingQuoteStyle: QuoteStyle = 'normal';
 
   for (let i = 0; i < blocks.length; i += 1) {
-    const block = blocks[i];
+    let block = blocks[i];
 
     if (block === '---' || block === '* * *') {
-      rendered.push(<hr key={i} />);
       continue;
+    }
+
+    const sameBlockQuoteStyle = block.match(/^\{quote=(normal|line|box|marks)\}\s*\n([\s\S]+)$/i);
+    if (sameBlockQuoteStyle) {
+      pendingQuoteStyle = sameBlockQuoteStyle[1].toLowerCase() as QuoteStyle;
+      block = sameBlockQuoteStyle[2].trim();
+    } else {
+      const quoteStyle = parseQuoteStyleBlock(block);
+      if (quoteStyle) {
+        pendingQuoteStyle = quoteStyle;
+        continue;
+      }
     }
 
     const images: Array<{ src: string; alt: string; fileName: string; size: BlogImageSize }> = [];
@@ -308,25 +347,21 @@ function MarkdownContent({ markdown, post }: { markdown: string; post: Post }) {
     if (images.length > 0) {
       const caption = cursor < blocks.length ? parseCaptionBlock(blocks[cursor]) : null;
       if (caption) cursor += 1;
-      rendered.push(<MarkdownImageGroup key={i} images={images} caption={caption || undefined} />);
-      i = cursor - 1;
-      continue;
-    }
-
-    const standaloneCaption = parseCaptionBlock(block);
-    if (standaloneCaption) {
       rendered.push(
-        <figcaption
+        <MarkdownImageGroup
           key={i}
-          className="blog-standalone-caption"
-          dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(standaloneCaption) }}
+          images={images}
+          caption={caption || undefined}
+          onOpen={onOpenImage}
         />
       );
+      i = cursor - 1;
       continue;
     }
 
     if (block.startsWith('## ')) {
       const title = block.replace(/^##\s+/, '');
+      isIndexSection = false;
       rendered.push(
         <AnchorHeading key={i} level={2} id={slugify(title.replace(/\\</g, '').replace(/\\>/g, ''))}>
           <span dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(title) }} />
@@ -337,6 +372,7 @@ function MarkdownContent({ markdown, post }: { markdown: string; post: Post }) {
 
     if (block.startsWith('### ')) {
       const title = normalizeBrunchHeading(block.replace(/^###\s+/, ''));
+      isIndexSection = title.trim().toLowerCase() === 'index';
       rendered.push(
         <AnchorHeading key={i} level={3} id={slugify(title)}>
           <span dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(title) }} />
@@ -347,6 +383,7 @@ function MarkdownContent({ markdown, post }: { markdown: string; post: Post }) {
 
     if (block.startsWith('#### ')) {
       const title = normalizeBrunchHeading(block.replace(/^####\s+/, ''));
+      isIndexSection = false;
       rendered.push(
         <AnchorHeading key={i} level={4} id={slugify(title)}>
           <span dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(title) }} />
@@ -358,9 +395,11 @@ function MarkdownContent({ markdown, post }: { markdown: string; post: Post }) {
     if (/^cite/.test(block) || /^keyword$/i.test(block)) continue;
 
     if (block.startsWith('>')) {
+      const quoteStyle = pendingQuoteStyle;
+      pendingQuoteStyle = 'normal';
       const lines = block.split('\n').map(line => line.replace(/^>\s?/, '')).filter(Boolean);
       rendered.push(
-        <blockquote key={i}>
+        <blockquote key={i} className={`blog-quote blog-quote-${quoteStyle}`}>
           {lines.map((line, lineIndex) => (
             <p key={lineIndex} dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(line) }} />
           ))}
@@ -370,6 +409,28 @@ function MarkdownContent({ markdown, post }: { markdown: string; post: Post }) {
     }
 
     if (/^- /.test(block)) {
+      if (isIndexSection) {
+        rendered.push(
+          <ul key={i} className="blog-index-list">
+            {block.split('\n').map((line, lineIndex) => {
+              const title = line.replace(/^- /, '').trim();
+              const { lead, rest } = formatIndexLinkLabel(title);
+              return (
+                <li key={lineIndex}>
+                  <a href={`#${slugify(title)}`} className="blog-index-link">
+                    <span className="blog-index-marker" aria-hidden="true">
+                      ·{' '}
+                    </span>
+                    <strong>{lead}</strong>
+                    {rest}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        );
+        continue;
+      }
       rendered.push(
         <ul key={i}>
           {block.split('\n').map((line, lineIndex) => (
@@ -397,9 +458,15 @@ function MarkdownContent({ markdown, post }: { markdown: string; post: Post }) {
 }
 
 // ─── Post body content ────────────────────────────────────────────────────────
-function PostContent({ post }: { post: Post }) {
+function PostContent({
+  post,
+  onOpenImage,
+}: {
+  post: Post;
+  onOpenImage: (src: string, alt: string) => void;
+}) {
   if (post.sourceMarkdown && SOURCE_MARKDOWN[post.sourceMarkdown]) {
-    return <MarkdownContent markdown={SOURCE_MARKDOWN[post.sourceMarkdown]} post={post} />;
+    return <MarkdownContent markdown={SOURCE_MARKDOWN[post.sourceMarkdown]} post={post} onOpenImage={onOpenImage} />;
   }
 
   // Dashboard-created posts: render plain body as paragraphs
@@ -671,99 +738,6 @@ function PostContent({ post }: { post: Post }) {
     );
   }
 
-  if (slug === 'dokdo-security-police') {
-    return (
-      <div className="prose-content">
-        <p>
-          "I served my Korean military service for twenty-one months as a{' '}
-          <strong>Dokdo Security Police</strong>."
-        </p>
-        <p>
-          If you are a Korean citizen, you know that the island 'Dokdo' is our precious territory which we need to
-          protect. It is the symbol of patriotism. Thus, it is not an exaggeration to say that{' '}
-          <strong>Dokdo is another persona of Korea.</strong>
-        </p>
-        <p>
-          As the author, and a Korean, my heart also beats deeply when Dokdo comes to my mind. Before becoming a
-          Dokdo Security Police, I had already visited the island twice — once when I was in middle school and once
-          in high school. So, after turning 19, the thought of applying for the position of Dokdo Security Police
-          for my military service naturally came to me.
-        </p>
-        <p>
-          However, <em>patriotism</em> is not the only reason why I applied for that position.
-        </p>
-
-        <AnchorH2 id="hunger-for-growth">A Hunger for Growth</AnchorH2>
-        <p>
-          I had a <em>hunger</em>, to say the least, to experience something new, or make myself grow, so that I
-          could reclaim my self-esteem.
-        </p>
-        <p>
-          <em>I wanted to <strong>know the world</strong> rather than just <strong>studying with no specific
-          goals in mind</strong>.</em>
-        </p>
-        <p>
-          After moving from my small hometown to Seoul, I was somewhat taken aback that people were living their
-          lives in such different ways from what I knew. In fact, as a person who had only been studying hard up
-          to that point in my life, I found it fascinating to see people who had achieved success and expressed
-          themselves through fashion, music, or in ways other than studying. They seemed as different to me as if
-          they were people from a different planet.
-        </p>
-        <p>
-          I wanted to have <strong>my own color</strong> and <strong>my own story</strong>.
-        </p>
-
-        <AnchorH2 id="self-honesty">Learning to Be Honest with Myself</AnchorH2>
-        <p>
-          Before I turned 19, I wasn't honest with myself. I was a leader to people, and I always tried to be
-          subjective and proactive. On the other hand, I was often insincere, and I buried myself in studying
-          instead of allowing myself to be curious about other things, and instead of chasing what I really wanted.
-        </p>
-        <p>
-          After getting into university, I tried to talk to people from different backgrounds as much as possible,
-          completed a cycling trip from one end of Korea to the other, and questioned myself every day.
-        </p>
-        <p>
-          <em><strong>I got to learn about the world in my own way.</strong></em>
-        </p>
-        <p>
-          The more I experienced, the smaller I felt myself become. I wondered why I wasn't more honest in the past.
-          The more I got to know the world, the more I came to know about myself.
-        </p>
-        <p>
-          So, in order to retake my self-esteem, find my own color, and figure out what I truly wanted, I applied
-          to become a <strong>Dokdo Security Police.</strong>
-        </p>
-
-        <AnchorH2 id="looking-back">Looking Back</AnchorH2>
-        <p>
-          It has been a while since I finished my military service. The reason why I am writing this retrospective
-          now about my life in Dokdo and Ulleung-do (the sister island to Dokdo) is to encourage myself in the
-          future to have more confidence and self-esteem in myself. At the same time, I am writing to encourage
-          people — not just those from Korea but people from all over the world — to have more interest in Dokdo.
-        </p>
-        <p>
-          I became proud of myself and got to learn more about myself after that period of being a Dokdo Security
-          Police. I experienced something that deeply moved my heart, and in the future, I will continue to fight
-          for something that makes my heart beat.
-        </p>
-        <p>
-          Today, I share my story of Dokdo — <strong>21 months that changed my life.</strong>
-        </p>
-
-        <AnchorH2 id="final-thought">A Final Thought</AnchorH2>
-        <p>
-          I am not just proud of protecting Dokdo as a piece of territory. I am proud of who I became during those
-          21 months — someone who learned to be more honest, more curious, and more willing to take action.
-        </p>
-        <p>
-          If you're at a crossroads, consider this: sometimes the most unconventional path is the one that leads
-          you back to yourself. For me, it was standing guard on a remote island in the East Sea.
-        </p>
-      </div>
-    );
-  }
-
   return null;
 }
 
@@ -807,6 +781,7 @@ function PostCard({ post }: { post: (typeof POSTS)[0] }) {
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
   const [allPosts, setAllPosts] = useState<Post[]>(POSTS);
+  const [lightboxImage, setLightboxImage] = useState<{ src: string; alt: string; index: number; total: number } | null>(null);
 
   useEffect(() => {
     const drafts = getDraftPosts();
@@ -815,9 +790,6 @@ export default function BlogPost() {
   }, []);
 
   const post = allPosts.find(p => p.slug === slug);
-  const magazine = slug ? getMagazineForPost(slug) : undefined;
-  const position = slug ? getPositionInMagazine(slug) : undefined;
-
   // Track view on mount
   useEffect(() => {
     if (slug) trackView(slug, 'post');
@@ -868,7 +840,7 @@ export default function BlogPost() {
         {/* Title */}
         <h1
           id={slugify(post.title)}
-          className="text-gray-900 mb-4"
+          className="article-title-heading text-gray-900 mb-4"
           style={{
             fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
             fontWeight: 400,
@@ -876,16 +848,26 @@ export default function BlogPost() {
             letterSpacing: '-0.02em',
           }}
         >
-          <a
-            className="article-title-anchor"
-            href={`#${slugify(post.title)}`}
-            onClick={e => {
-              e.preventDefault();
-              copyAnchorLink(slugify(post.title));
-            }}
-          >
-            {post.title}
-          </a>
+          <span className="anchor-heading-row">
+            <button
+              type="button"
+              className="anchor-link-chip anchor-link-chip-title"
+              aria-label="Copy link to post"
+              onClick={() => copyAnchorLink(slugify(post.title))}
+            >
+              <Link2 size={16} strokeWidth={2} />
+            </button>
+            <a
+              className="article-title-anchor anchor-heading-text"
+              href={`#${slugify(post.title)}`}
+              onClick={e => {
+                e.preventDefault();
+                copyAnchorLink(slugify(post.title));
+              }}
+            >
+              {post.title}
+            </a>
+          </span>
         </h1>
 
         {/* Subtitle */}
@@ -893,46 +875,38 @@ export default function BlogPost() {
           {post.subtitle}
         </p>
 
-        {/* Meta bar — magazine label left · date right */}
+        {/* Meta bar — tag left · date right */}
         <div className="flex items-center justify-between gap-4 mb-8">
-          {/* Left: magazine name */}
-          {magazine ? (
+          {post.tags[0] && (
             <Link
-              to={`/magazine/${magazine.slug}`}
-              className="text-xs text-gray-400 uppercase tracking-widest hover:text-black transition-colors"
+              to={`/blog?tag=${encodeURIComponent(post.tags[0])}`}
+              className="text-xs text-gray-400 hover:text-black transition-colors"
               style={{ letterSpacing: '0.12em' }}
             >
-              {magazine.name}
-              {position && (
-                <span className="ml-2 not-uppercase normal-case tracking-normal text-gray-300">
-                  {position}/{magazine.postSlugs.length}
-                </span>
-              )}
+              {post.tags[0]}
             </Link>
-          ) : (
-            post.tags[0] && (
-              <span
-                className="text-xs text-gray-400 uppercase"
-                style={{ letterSpacing: '0.12em' }}
-              >
-                {post.tags[0]}
-              </span>
-            )
           )}
           {/* Right: date only */}
           <span className="text-xs text-gray-400 flex-shrink-0">
             {formatDate(post.date)}
           </span>
         </div>
-
-        {/* Cover image */}
-        <CoverImage post={post} />
+        <div className="border-t border-gray-100 mb-8" />
 
         {/* Body */}
         <style>{`
           .prose-content {
-            --blog-body-size: 1.05rem;
+            --blog-body-size: 1.125rem;
             --blog-line-height: 1.8;
+            --blog-paragraph-gap: 1.1rem;
+            --blog-heading-top-gap-h2: 2rem;
+            --blog-heading-top-gap-h3: 1.65rem;
+            --blog-heading-top-gap-h4: 1.35rem;
+            --blog-heading-bottom-gap: 0.7rem;
+            --blog-image-gap-top: 1.25rem;
+            --blog-image-gap-bottom: 0.35rem;
+            --blog-caption-gap-top: 0.45rem;
+            --blog-caption-gap-bottom: 1.15rem;
           }
           .prose-content .blog-text-small {
             --blog-body-size: 0.96rem;
@@ -949,59 +923,168 @@ export default function BlogPost() {
           .prose-content p {
             color: #374151;
             line-height: var(--blog-line-height);
-            margin-bottom: 1.4rem;
+            margin-bottom: var(--blog-paragraph-gap);
             font-size: var(--blog-body-size);
           }
           .prose-content h2 {
-            font-size: 1.625rem;
+            font-size: 1.875rem;
             font-weight: 700;
             color: #111827;
-            margin-top: 2.5rem;
-            margin-bottom: 1rem;
-            letter-spacing: -0.01em;
+            margin-top: var(--blog-heading-top-gap-h2);
+            margin-bottom: var(--blog-heading-bottom-gap);
+            letter-spacing: -0.02em;
+            line-height: 1.25;
           }
           .prose-content h3 {
-            font-size: 1.35rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: #111827;
-            margin-top: 2rem;
-            margin-bottom: 0.75rem;
+            margin-top: var(--blog-heading-top-gap-h3);
+            margin-bottom: calc(var(--blog-heading-bottom-gap) - 0.1rem);
+            letter-spacing: -0.015em;
+            line-height: 1.3;
           }
           .prose-content h4 {
-            font-size: 1.125rem;
+            font-size: 1.3125rem;
             font-weight: 700;
             color: #111827;
-            margin-top: 1.5rem;
-            margin-bottom: 0.65rem;
+            margin-top: var(--blog-heading-top-gap-h4);
+            margin-bottom: calc(var(--blog-heading-bottom-gap) - 0.2rem);
+            letter-spacing: -0.01em;
+            line-height: 1.35;
+          }
+          .article-title-heading .anchor-heading-row,
+          .prose-content .anchor-heading-row {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+          }
+          .anchor-link-chip {
+            position: absolute;
+            left: -2.25rem;
+            top: 0.2em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.75rem;
+            height: 1.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.375rem;
+            background: #fff;
+            color: #6b7280;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+          }
+          .anchor-link-chip-title {
+            top: 0.35em;
+          }
+          .article-title-heading:hover .anchor-link-chip,
+          .article-title-heading:focus-within .anchor-link-chip,
+          .prose-content .anchor-heading:hover .anchor-link-chip,
+          .prose-content .anchor-heading:focus-within .anchor-link-chip {
+            opacity: 1;
+            pointer-events: auto;
+          }
+          .anchor-link-chip:hover {
+            color: #111827;
+            border-color: #d1d5db;
           }
           .article-title-anchor {
             color: inherit;
             text-decoration: none;
-            font-weight: 700;
+            font-weight: 400;
+          }
+          .anchor-heading-text {
+            min-width: 0;
           }
           .prose-content a {
             color: #111827;
             text-decoration: underline;
             text-underline-offset: 3px;
           }
-          .prose-content .anchor-heading a {
+          .prose-content .anchor-heading .anchor-heading-text {
             color: inherit;
             text-decoration: none;
             font-weight: 700;
           }
           .prose-content blockquote {
-            border-left: 2px solid #e5e7eb;
-            padding-left: 1rem;
-            margin: 1.75rem 0;
+            position: relative;
+            border-left: 2px solid #d1d5db;
+            padding: 0.15rem 0 0.15rem 1rem;
+            margin: 1.5rem 0;
+            background: transparent;
           }
           .prose-content blockquote p {
             color: #4b5563;
             margin-bottom: 0.75rem;
           }
+          .prose-content blockquote p:last-child {
+            margin-bottom: 0;
+          }
+          .prose-content .blog-quote-line {
+            border-left: 0;
+            border-top: 1px solid #d1d5db;
+            border-bottom: 1px solid #d1d5db;
+            padding: 1.15rem 0;
+            margin: 1.75rem 0;
+          }
+          .prose-content .blog-quote-box {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            background: #fafafa;
+            padding: 1.15rem 1.25rem;
+            margin: 1.75rem 0;
+          }
+          .prose-content .blog-quote-marks {
+            border-left: 0;
+            padding: 1.25rem 2.5rem;
+            margin: 1.75rem 0;
+          }
+          .prose-content .blog-quote-marks::before,
+          .prose-content .blog-quote-marks::after {
+            position: absolute;
+            color: #d1d5db;
+            font-family: Georgia, serif;
+            font-size: 3.25rem;
+            line-height: 1;
+          }
+          .prose-content .blog-quote-marks::before {
+            content: "“";
+            left: 0;
+            top: 0.35rem;
+          }
+          .prose-content .blog-quote-marks::after {
+            content: "”";
+            right: 0;
+            bottom: -0.35rem;
+          }
           .prose-content ul {
             list-style: disc;
             padding-left: 1.25rem;
             margin: 1rem 0 1.5rem;
+          }
+          .prose-content .blog-index-list {
+            list-style: none;
+            padding-left: 0;
+          }
+          .prose-content .blog-index-list li {
+            margin-bottom: 0.55rem;
+          }
+          .prose-content .blog-index-link {
+            color: #4b5563;
+            text-decoration: none;
+            display: inline;
+          }
+          .prose-content .blog-index-link:hover {
+            color: #111827;
+          }
+          .prose-content .blog-index-link strong {
+            font-weight: 600;
+            color: #111827;
+          }
+          .prose-content .blog-index-marker {
+            color: #4b5563;
           }
           .prose-content li {
             color: #374151;
@@ -1015,20 +1098,27 @@ export default function BlogPost() {
             font-size: calc(var(--blog-body-size) * 0.82);
             line-height: 1.55;
             text-align: center;
-            margin: 0.65rem auto 1.75rem;
+            margin: var(--blog-caption-gap-top) auto var(--blog-caption-gap-bottom);
             max-width: 42rem;
           }
           .prose-content .blog-image-group {
-            margin: 2rem 0;
+            margin: var(--blog-image-gap-top) 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          .prose-content .blog-image-group .blog-image {
+            width: 100%;
           }
           .prose-content .blog-image-row {
             display: grid;
             grid-template-columns: repeat(var(--image-count), minmax(0, 1fr));
             gap: 0.75rem;
             align-items: start;
+            width: 100%;
           }
           .prose-content .blog-image {
-            margin: 2rem 0;
+            margin: var(--blog-image-gap-top) 0 var(--blog-image-gap-bottom);
           }
           .prose-content .blog-image-row .blog-image {
             margin: 0;
@@ -1050,10 +1140,11 @@ export default function BlogPost() {
             margin-right: auto;
           }
           .prose-content .blog-image-wide {
-            width: min(92vw, 56rem);
-            max-width: none;
-            margin-left: 50%;
-            transform: translateX(-50%);
+            width: 100%;
+            max-width: 56rem;
+            margin-left: auto;
+            margin-right: auto;
+            transform: none;
           }
           .prose-content .missing-image {
             border: 1px dashed #d1d5db;
@@ -1103,46 +1194,45 @@ export default function BlogPost() {
             font-size: 0.75rem;
             margin-top: 0.35rem;
           }
-          .prose-content hr {
-            border: 0;
-            border-top: 1px solid #f3f4f6;
-            margin: 2rem 0;
-          }
           .prose-content code {
             background: #f3f4f6;
             border-radius: 0.25rem;
             padding: 0.1rem 0.25rem;
             font-size: 0.9em;
           }
-          .prose-content em { font-style: italic; }
+          .prose-content em {
+            font-family: Georgia, 'Times New Roman', serif;
+            font-style: italic;
+          }
           .prose-content strong { font-weight: 600; color: #111827; }
           @media (max-width: 640px) {
+            .anchor-link-chip {
+              left: -2rem;
+            }
             .prose-content .blog-image-row {
               grid-template-columns: 1fr;
             }
           }
         `}</style>
-        <PostContent post={post} />
+        <PostContent
+          post={post}
+          onOpenImage={(src, alt) => {
+            const images = Array.from(document.querySelectorAll<HTMLImageElement>('article .cursor-zoom-in'));
+            const index = Math.max(0, images.findIndex(img => img.src === src));
+            setLightboxImage({ src, alt, index, total: images.length });
+          }}
+        />
 
-        {/* ── End bar: magazine label left · share right ── */}
+        {/* ── End bar: tag left · share right ── */}
         <div className="flex items-center justify-between pt-10 mt-10 border-t border-gray-100">
-          {magazine ? (
+          {post.tags[0] && (
             <Link
-              to={`/magazine/${magazine.slug}`}
-              className="text-xs text-gray-400 uppercase tracking-widest hover:text-black transition-colors"
+              to={`/blog?tag=${encodeURIComponent(post.tags[0])}`}
+              className="text-xs text-gray-400 hover:text-black transition-colors"
               style={{ letterSpacing: '0.12em' }}
             >
-              {magazine.name}
+              {post.tags[0]}
             </Link>
-          ) : (
-            post.tags[0] && (
-              <span
-                className="text-xs text-gray-400 uppercase"
-                style={{ letterSpacing: '0.12em' }}
-              >
-                {post.tags[0]}
-              </span>
-            )
           )}
           <button
             onClick={() => {
@@ -1175,6 +1265,67 @@ export default function BlogPost() {
             </div>
           </div>
         </section>
+      )}
+
+      {lightboxImage && (
+        <div
+          className="fixed inset-0 z-[120] bg-black/85 flex items-center justify-center p-6 cursor-zoom-out"
+          onClick={() => setLightboxImage(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <button
+            className="absolute top-5 right-5 text-white/90 hover:text-white cursor-pointer"
+            onClick={() => setLightboxImage(null)}
+            aria-label="Close image"
+          >
+            <X size={24} />
+          </button>
+          <img
+            src={lightboxImage.src}
+            alt={lightboxImage.alt}
+            className="max-w-full max-h-full object-contain rounded-md cursor-zoom-out"
+            onClick={() => setLightboxImage(null)}
+          />
+          {lightboxImage.total > 1 && (
+            <>
+              <button
+                className="absolute left-5 top-1/2 -translate-y-1/2 text-white/90 hover:text-white"
+                aria-label="Previous image"
+                onClick={e => {
+                  e.stopPropagation();
+                  const images = Array.from(document.querySelectorAll<HTMLImageElement>('article .cursor-zoom-in'));
+                  const prev = (lightboxImage.index - 1 + images.length) % images.length;
+                  setLightboxImage({
+                    src: images[prev].src,
+                    alt: images[prev].alt || post.title,
+                    index: prev,
+                    total: images.length,
+                  });
+                }}
+              >
+                <ChevronLeft size={28} />
+              </button>
+              <button
+                className="absolute right-5 top-1/2 -translate-y-1/2 text-white/90 hover:text-white"
+                aria-label="Next image"
+                onClick={e => {
+                  e.stopPropagation();
+                  const images = Array.from(document.querySelectorAll<HTMLImageElement>('article .cursor-zoom-in'));
+                  const next = (lightboxImage.index + 1) % images.length;
+                  setLightboxImage({
+                    src: images[next].src,
+                    alt: images[next].alt || post.title,
+                    index: next,
+                    total: images.length,
+                  });
+                }}
+              >
+                <ChevronRight size={28} />
+              </button>
+            </>
+          )}
+        </div>
       )}
     </div>
   );
