@@ -31,7 +31,7 @@ export const router = createBrowserRouter([
   },
   // ── Admin ─────────────────────────────────────────────────────────────────────
   {
-    path: "/admin",
+    path: "/nahojgnues",
     Component: AdminLayout,
     children: [
       { index: true,           Component: AdminLogin },

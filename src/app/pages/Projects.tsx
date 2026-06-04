@@ -168,7 +168,7 @@ function ProjectCard({ project, selectedTags, onTagClick, index }: {
             to={`/projects/${project.slug}`}
             className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-black transition-colors flex-shrink-0 mt-1"
           >
-            View case study <ArrowRight size={13} />
+            View project <ArrowRight size={13} />
           </Link>
         </div>
         <p className="text-xs text-gray-400 mb-8">{project.client} · {project.year}</p>
