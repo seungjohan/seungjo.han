@@ -4,8 +4,11 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "vite build",
-    "dev": "vite"
+    "dev": "vite",
+    "generate:sitemap": "node scripts/generate-sitemap.mjs",
+    "verify:assets": "node scripts/verify-assets.mjs",
+    "prebuild": "npm run generate:sitemap && npm run verify:assets",
+    "build": "vite build"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",

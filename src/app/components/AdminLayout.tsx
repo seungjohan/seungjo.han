@@ -2,30 +2,32 @@ import { Outlet, Link, useNavigate, useLocation } from 'react-router';
 import { LayoutDashboard, FileText, Briefcase, BarChart2, LogOut, ExternalLink } from 'lucide-react';
 
 const NAV = [
-  { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/admin/posts',     label: 'Posts',     icon: FileText },
-  { to: '/admin/projects',  label: 'Projects',  icon: Briefcase },
-  { to: '/admin/analytics', label: 'Analytics', icon: BarChart2 },
+  { to: '/nahojgnues/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/nahojgnues/posts',     label: 'Posts',     icon: FileText },
+  { to: '/nahojgnues/projects',  label: 'Projects',  icon: Briefcase },
+  { to: '/nahojgnues/analytics', label: 'Analytics', icon: BarChart2 },
 ];
+
+const ADMIN_AUTH_KEY = 'nahojgnuesAuth';
 
 export default function AdminLayout() {
   const navigate  = useNavigate();
   const location  = useLocation();
 
   // Login page renders without sidebar
-  if (location.pathname === '/admin') {
+  if (location.pathname === '/nahojgnues') {
     return <Outlet />;
   }
 
   // Auth guard for panel routes
-  if (localStorage.getItem('adminAuth') !== 'true') {
-    navigate('/admin', { replace: true });
+  if (localStorage.getItem(ADMIN_AUTH_KEY) !== 'true') {
+    navigate('/nahojgnues', { replace: true });
     return null;
   }
 
   const logout = () => {
-    localStorage.removeItem('adminAuth');
-    navigate('/admin');
+    localStorage.removeItem(ADMIN_AUTH_KEY);
+    navigate('/nahojgnues');
   };
 
   return (

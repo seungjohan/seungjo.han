@@ -14,6 +14,7 @@ export interface Project {
   duration: string;
   platform: string;
   techStack: string;
+  url: string;
   // 3-part structured explanation
   impact: string;
   whatIDid: string;                // intro sentence for What I Did
@@ -31,9 +32,9 @@ export const PROJECTS: Project[] = [
     tags: ['Entrepreneurship', 'Product Management', 'Full-Stack', 'ESG'],
     coverImage: 'https://images.unsplash.com/photo-1628532429788-c35922b5e6c1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmb29kJTIwd2FzdGUlMjByZXN0YXVyYW50JTIwc3VzdGFpbmFiaWxpdHklMjBLb3JlYXxlbnwxfHx8fDE3Nzk2NzY5NTZ8MA&ixlib=rb-4.1.0&q=80&w=1080',
     images: [
-      'https://images.unsplash.com/photo-1628532429788-c35922b5e6c1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmb29kJTIwd2FzdGUlMjByZXN0YXVyYW50JTIwc3VzdGFpbmFiaWxpdHklMjBLb3JlYXxlbnwxfHx8fDE3Nzk2NzY5NTZ8MA&ixlib=rb-4.1.0&q=80&w=1080',
-      'https://images.unsplash.com/photo-1603031682537-ea6729c9d1bc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxmb29kJTIwd2FzdGUlMjByZXN0YXVyYW50JTIwc3VzdGFpbmFiaWxpdHklMjBLb3JlYXxlbnwxfHx8fDE3Nzk2NzY5NTZ8MA&ixlib=rb-4.1.0&q=80&w=1080',
-      'https://images.unsplash.com/photo-1560100927-c32f29063ade?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwzfHxmb29kJTIwd2FzdGUlMjByZXN0YXVyYW50JTIwc3VzdGFpbmFiaWxpdHklMjBLb3JlYXxlbnwxfHx8fDE3Nzk2NzY5NTZ8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      'public/project-images/webeing-hybrid-app.svg',
+      'public/project-images/webeing-flyer.PNG',
+      'public/project-images/webeing-hybrid-app.svg',
     ],
     color: '#f4f4f5',
     role: 'Co-founder · Product Owner · Software Engineer',
@@ -63,9 +64,8 @@ export const PROJECTS: Project[] = [
     tags: ['Entrepreneurship', 'Prototyping', 'Market Research', 'Community'],
     coverImage: 'https://images.unsplash.com/photo-1588671815815-b0cd3b2a9189?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNraW5nJTIwbGl2ZSUyMG11c2ljJTIwc3RyZWV0JTIwcGVyZm9ybWFuY2V8ZW58MXx8fHwxNzc5Njc2OTU3fDA&ixlib=rb-4.1.0&q=80&w=1080',
     images: [
-      'https://images.unsplash.com/photo-1588671815815-b0cd3b2a9189?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNraW5nJTIwbGl2ZSUyMG11c2ljJTIwc3RyZWV0JTIwcGVyZm9ybWFuY2V8ZW58MXx8fHwxNzc5Njc2OTU3fDA&ixlib=rb-4.1.0&q=80&w=1080',
-      'https://images.unsplash.com/photo-1774821171271-370380d0e520?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxidXNraW5nJTIwbGl2ZSUyMG11c2ljJTIwc3RyZWV0JTIwcGVyZm9ybWFuY2V8ZW58MXx8fHwxNzc5Njc2OTU3fDA&ixlib=rb-4.1.0&q=80&w=1080',
-      'https://images.unsplash.com/photo-1772864463608-ab7da2aee6a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwzfHxidXNraW5nJTIwbGl2ZSUyMG11c2ljJTIwc3RyZWV0JTIwcGVyZm9ybWFuY2V8ZW58MXx8fHwxNzc5Njc2OTU3fDA&ixlib=rb-4.1.0&q=80&w=1080',
+      '/public/project-images/busking-town.png',
+      '/public/project-images/busking-town_1.png',
     ],
     color: '#fafaf0',
     role: 'Project Leader · Prototype Developer',
@@ -125,8 +125,7 @@ export const PROJECTS: Project[] = [
     tags: ['Global', 'Entrepreneurship', 'Market Research', 'Leadership'],
     coverImage: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYWNrYXRob24lMjBnbG9iYWwlMjB0ZWFtJTIwY29sbGFib3JhdGlvbiUyMGlubm92YXRpb258ZW58MXx8fHwxNzc5Njc2OTU4fDA&ixlib=rb-4.1.0&q=80&w=1080',
     images: [
-      'https://images.unsplash.com/photo-1522071820081-009f0129c71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYWNrYXRob24lMjBnbG9iYWwlMjB0ZWFtJTIwY29sbGFib3JhdGlvbiUyMGlubm92YXRpb258ZW58MXx8fHwxNzc5Njc2OTU4fDA&ixlib=rb-4.1.0&q=80&w=1080',
-      'https://images.unsplash.com/photo-1556761175-b413da4baf72?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxoYWNrYXRob24lMjBnbG9iYWwlMjB0ZWFtJTIwY29sbGFib3JhdGlvbiUyMGlubm92YXRpb258ZW58MXx8fHwxNzc5Njc2OTU4fDA&ixlib=rb-4.1.0&q=80&w=1080',
+      'public/project-images/gif.jpeg',
     ],
     color: '#f0f4fa',
     role: 'Project Leader',
@@ -155,8 +154,14 @@ export const PROJECTS: Project[] = [
     tags: ['Global', 'Market Research', 'Entrepreneurship', 'Community'],
     coverImage: 'https://images.unsplash.com/photo-1602479185195-32f5cd203559?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0cmF2ZWwlMjBLb3JlYSUyMGN1bHR1cmFsJTIwZXhwZXJpZW5jZSUyMHRvdXJpc218ZW58MXx8fHwxNzc5Njc2OTU5fDA&ixlib=rb-4.1.0&q=80&w=1080',
     images: [
-      'https://images.unsplash.com/photo-1602479185195-32f5cd203559?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0cmF2ZWwlMjBLb3JlYSUyMGN1bHR1cmFsJTIwZXhwZXJpZW5jZSUyMHRvdXJpc218ZW58MXx8fHwxNzc5Njc2OTU5fDA&ixlib=rb-4.1.0&q=80&w=1080',
-      'https://images.unsplash.com/photo-1583833008338-31a6657917ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHx0cmF2ZWwlMjBLb3JlYSUyMGN1bHR1cmFsJTIwZXhwZXJpZW5jZSUyMHRvdXJpc218ZW58MXx8fHwxNzc5Njc2OTU5fDA&ixlib=rb-4.1.0&q=80&w=1080',
+      'public/project-images/travel-cp.jpeg',
+      'public/project-images/travel-cp_1.jpeg',
+      'public/project-images/travel-cp_2.png',
+      'public/project-images/travel-cp_3.jpeg',
+      'public/project-images/travel-cp_4.jpeg',
+      'public/project-images/travel-cp_5.jpg',
+      'public/project-images/travel-cp_6.png',
+      'public/project-images/travel-cp_7.gif',
     ],
     color: '#f4f4f5',
     role: 'Project Leader',
@@ -185,8 +190,10 @@ export const PROJECTS: Project[] = [
     tags: ['Global', 'Market Research', 'Strategy', 'Leadership'],
     coverImage: 'https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHN0cmF0ZWd5JTIwaW50ZXJuYXRpb25hbCUyMG1hcmtldCUyMGV4cGFuc2lvbnxlbnwxfHx8fDE3Nzk2NzY5NjB8MA&ixlib=rb-4.1.0&q=80&w=1080',
     images: [
-      'https://images.unsplash.com/photo-1444653614773-995cb1ef9efa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHN0cmF0ZWd5JTIwaW50ZXJuYXRpb25hbCUyMG1hcmtldCUyMGV4cGFuc2lvbnxlbnwxfHx8fDE3Nzk2NzY5NjB8MA&ixlib=rb-4.1.0&q=80&w=1080',
-      'https://images.unsplash.com/photo-1600633349333-eebb43d01e23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMHN0cmF0ZWd5JTIwaW50ZXJuYXRpb25hbCUyMG1hcmtldCUyMGV4cGFuc2lvbnxlbnwxfHx8fDE3Nzk2NzY5NjB8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      'public/project-images/northeastern.jpeg',
+      'public/project-images/northeastern_1.jpg',
+      'public/project-images/northeastern_2.jpeg',
+      'public/project-images/northeastern_3.jpeg',
     ],
     color: '#faf0f4',
     role: 'Project Leader · Tour Guide',

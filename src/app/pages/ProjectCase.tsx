@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router';
 import { useEffect, useState } from 'react';
-import { ArrowLeft, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, ExternalLink, X } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PROJECTS } from '../data/projects';
 import { trackView } from '../utils/viewTracker';
@@ -323,6 +323,20 @@ export default function ProjectCase() {
               <p className="text-xs text-gray-400 uppercase tracking-wider mb-0.5">Tools</p>
               <p className="text-sm text-gray-900">{project.techStack}</p>
             </div>
+            {project.url && (
+              <div className="grid gap-2 sm:grid-cols-[7rem_1fr]">
+                <p className="text-xs text-gray-400 uppercase tracking-wider mb-0.5">URL</p>
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm text-gray-900 underline underline-offset-4 hover:text-gray-500 transition-colors"
+                >
+                  {project.url}
+                  <ExternalLink size={13} />
+                </a>
+              </div>
+            )}
           </div>
         </motion.div>
       </div>

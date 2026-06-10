@@ -189,11 +189,12 @@ Use this release flow for each post:
 1. Create or edit the post locally.
 2. Preview the post locally.
 3. Confirm links, images, mobile layout, and typos.
-4. Commit with a clear message, for example `Add blog post about design systems`.
-5. Push to the deployment branch.
-6. Wait for the hosting provider build to finish.
-7. Open the live post URL.
-8. Share only after the live page, social preview, and canonical URL are correct.
+4. Run the [pre-deploy checklist](./pre_deploy_checklist.md) (`npm run verify:assets`, `npm run generate:sitemap`, `npm run build`).
+5. Commit with a clear message, for example `Add blog post about design systems`.
+6. Push to the deployment branch.
+7. Wait for the hosting provider build to finish.
+8. Open the live post URL.
+9. Share only after the live page, social preview, and canonical URL are correct.
 
 ## 7. SEO Checklist Per Post
 
