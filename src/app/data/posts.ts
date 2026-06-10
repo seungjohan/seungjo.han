@@ -18,7 +18,7 @@ export const POSTS: Post[] = [
     date: 'February 6, 2026',
     tags: ['Life', 'Myself', 'Travel', 'Self-esteem', 'Challenge'],
     excerpt: 'A personal reflection on travel, Dokdo, cold emails, startups, languages, kindness, music, and choosing a colorful life.',
-    coverImage: '/blog-images/i-want-my-life-to-be-colorful_1.jpg',
+    coverImage: '/blog-images/i-want-my-life-to-be-colorful_6.jpg',
     sourceMarkdown: 'i-want-my-life-to-be-colorful',
   },
   {
@@ -28,7 +28,7 @@ export const POSTS: Post[] = [
     date: 'September 26, 2024',
     tags: ['Startup', 'Technology', 'Product'],
     excerpt: 'How I went from zero programming knowledge to shipping a full-stack web product — and what that process taught me about building startups.',
-    coverImage: '/blog-images/developing-a-web-product-for-an-early-stage-startup-from-scratch_1.jpg',
+    coverImage: '/blog-images/developing-a-web-product-for-an-early-stage-startup-from-scratch_1.JPEG',
     sourceMarkdown: 'webeing-product-development',
   },
   {
@@ -38,7 +38,7 @@ export const POSTS: Post[] = [
     date: 'September 26, 2024',
     tags: ['Startup', 'Design', 'Product', 'Prototype'],
     excerpt: 'What I learned from iterating through 5 prototype versions of a real startup — and why prototyping is the blueprint for everything you build.',
-    coverImage: '/blog-images/designing-a-prototype-for-a-startup-to-turn-your-ideas-into-reality_1.jpg',
+    coverImage: 'https://substackcdn.com/image/fetch/$s_!6p6g!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F4b64ad48-2e39-4e52-8672-c1749fbaacae_1202x2014.png',
     sourceMarkdown: 'prototyping-startup-ideas',
   },
   {

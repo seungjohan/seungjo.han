@@ -24,7 +24,8 @@ Use this file when replacing the current Figma Make design files. Preserve or re
 - `public/robots.txt`
   - Keep the sitemap reference: `https://seungjohan.vercel.app/sitemap.xml`.
 - `public/sitemap.xml`
-  - Update route URLs if the new design changes routes.
+  - Regenerate with `npm run generate:sitemap` (also runs automatically before `npm run build`).
+  - Must include all public routes from `posts.ts` and `projects.ts`; exclude disabled magazine routes unless re-enabled.
 - `public/favicon.svg` and `public/og-image.svg`
   - Keep unless replacing the brand assets intentionally.
 - `package.json`

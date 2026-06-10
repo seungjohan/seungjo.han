@@ -1,7 +1,7 @@
 # PRD — Personal Blog & Portfolio Website
 **Owner:** Seungjo Han (한승조)
-**Version:** 4.1
-**Updated:** May 25, 2026
+**Version:** 4.2
+**Updated:** June 8, 2026
 **Status:** Actively Iterating
 
 ---
@@ -871,22 +871,29 @@ scrolled ? 'bg-white shadow-sm' : 'bg-white/80 backdrop-blur-md'
 
 ## 10. Content Guidelines
 
+**Pre-deploy:** Run [guidelines/pre_deploy_checklist.md](./guidelines/pre_deploy_checklist.md) before every production deploy. Automated steps: `npm run verify:assets`, `npm run generate:sitemap`, `npm run build`.
+
 ### Adding a blog post
 
-1. Add entry to `POSTS` in `posts.ts`
-2. Add `if (slug === 'your-slug')` branch in `PostContent` in `BlogPost.tsx`
-3. (Optional) Add slug to a `magazine.postSlugs` array in `magazines.ts`
+1. Add entry to `POSTS` in `src/app/data/posts.ts`
+2. Add markdown body to `src/imports/pasted_text/{key}.md`
+3. Register import in `SOURCE_MARKDOWN` in `BlogPost.tsx`
+4. Add images to `public/blog-images/`
+5. Run `npm run generate:sitemap`
+
+See [guidelines/blog_management_workflow.md](./guidelines/blog_management_workflow.md) for markdown syntax, images, and index links.
 
 ### Adding a project
 
 1. Add entry to `PROJECTS` in `projects.ts` — all fields required including `impact`, `whatIDid`, `whatIDidBullets`, `outcome`
-2. (Optional) Add `if (slug === 'your-slug')` branch in `CaseContent` in `ProjectCase.tsx`
+2. Add images to `public/project-images/` (optional) and reference in `coverImage` / `images[]`
+3. (Optional) Add `if (slug === 'your-slug')` branch in `CaseContent` in `ProjectCase.tsx`
+
+See [guidelines/project_delivery_workflow.md](./guidelines/project_delivery_workflow.md) §5 for editing project pictures and copy.
 
 ### Adding a magazine
 
-1. Add entry to `MAGAZINES` in `magazines.ts`
-2. `postSlugs` must reference existing `POSTS[].slug` values in the desired reading order
-3. No other code changes needed
+Magazine UI is **disabled** in routes/nav (data preserved in `magazines.ts` for future use). Do not add magazine URLs to sitemap until re-enabled.
 
 ---
 
@@ -894,12 +901,12 @@ scrolled ? 'bg-white shadow-sm' : 'bg-white/80 backdrop-blur-md'
 
 | Limitation | Impact | Planned fix |
 |---|---|---|
-| Post body is hardcoded JSX | Adding a post requires code deploy | MDX files or CMS |
-| No catch-all `path: '*'` route | Unmatched URLs throw React Router error | Add `{ path: '*', Component: NotFound }` |
+| Sitemap is generated at build time, not runtime | Must run `npm run generate:sitemap` when posts/projects change | Already automated via `prebuild` script |
+| SPA: crawlers depend on sitemap + Helmet meta | Fine for Google; some bots may not execute JS | SSR or prerender if needed |
 | `formatDate()` duplicated in `Blog.tsx` and `BlogPost.tsx` | DRY violation | Extract to `src/app/utils/formatDate.ts` |
 | Related post scoring is tag-overlap only | May surface loosely related posts | Add title keyword similarity |
-| No OG/meta tags | Poor social preview | `react-helmet-async` or Vite meta plugin |
 | Magazine postSlugs not validated at runtime | Typo silently renders nothing | Dev-time assertion in `magazines.ts` |
+| Project case studies mostly use placeholder copy | Detail pages lack real narrative for most slugs | Custom `CaseContent` branches per project |
 
 ---
 
@@ -939,3 +946,4 @@ scrolled ? 'bg-white shadow-sm' : 'bg-white/80 backdrop-blur-md'
 | 3.9 | May 7, 2026 | **Footer margin**: changed footer container from `max-w-6xl` to `max-w-4xl` to align with page body content. **Scroll-to-top**: added `useEffect` on `location.pathname` in Layout.tsx so every route transition automatically scrolls to top (covers programmatic navigation, Link clicks, and browser history). **Anchor `#` buttons removed**: `AnchorH2` in BlogPost.tsx simplified to a plain `<h2 id>` — hover-copy `#` button eliminated. Personal info pending (user to provide). |
 | 4.0 | May 7, 2026 | **Magazine fully restored**: recreated `magazines.ts` (3 series — Product Thinking, Tech Futures, Creative Life — each with slug, name, description, cover image, and ordered postSlugs); recreated `Magazine.tsx` (grid of magazine cards with cover, name, essay count); recreated `MagazineDetail.tsx` (hero cover image, ordered post list with issue numbers + thumbnails, "Other series" pills); routes `/magazine` and `/magazine/:slug` restored; Magazine added back to nav and footer Pages column. **BlogPost meta bar updated**: left side now shows the magazine name (linked to magazine page) with position indicator (e.g. "2/3"); falls back to first tag label if post has no magazine. |
 | 4.1 | May 25, 2026 | **Projects data replaced** with 6 real portfolio projects from Seungjo's actual background (Webeing, Busking Town, LITER, GIF Hackathon, Travel CP, North America Strategy) — all fields filled with authentic content, real Unsplash imagery. **3 blog posts added** from Substack: "Developing a Web Product for an Early-stage Startup", "Designing a Prototype for a Startup", "I'm a Proud Dokdo Security Police of Korea" — all with full body content in BlogPost.tsx. **Blog tag filter expanded** to include Startup, Life, Korea. **"What I Bring" 4th pillar added** (Hands-on Mindset) and grid changed from `lg:grid-cols-4` to `grid-cols-2` (2×2 layout). **Home "Selected Work" label renamed** to "Projects". |
+| 4.2 | Jun 8, 2026 | **Pre-deploy checklist** added (`guidelines/pre_deploy_checklist.md`). **Sitemap generator** (`scripts/generate-sitemap.mjs`) + **asset verifier** (`scripts/verify-assets.mjs`) run automatically before `npm run build`. Sitemap synced to 4 live posts + 6 projects (removed stale placeholder posts and disabled magazine URLs). Blog posts use markdown sources in `src/imports/pasted_text/`. Magazine routes removed from public nav. SEO via `react-helmet-async` on all public pages. |

@@ -1,0 +1,215 @@
+{
+  "project": "Personal Website (Blog & Portfolio)",
+  "schema_version": "1.0",
+  "generated_at": "2026-06-07",
+  "description": "User prompts only (assistant responses excluded), ordered chronologically by chat session and timestamp.",
+  "total_prompts": 23,
+  "chat_sessions": [
+    {
+      "chat_id": "4f4a88b7-2273-462a-857d-60adaf8162d6",
+      "label": "seungjohan-github-io — PRD & Scaffold",
+      "reference": "[PRD & Initial Build](4f4a88b7-2273-462a-857d-60adaf8162d6)"
+    },
+    {
+      "chat_id": "91851918-ae69-4e99-8e46-e65fa6ef7ee7",
+      "label": "CursorProject — Next.js Exploration",
+      "reference": "[Next.js Exploration](91851918-ae69-4e99-8e46-e65fa6ef7ee7)"
+    },
+    {
+      "chat_id": "09ae22bc-44c5-4d1f-b57b-24a47a768fc4",
+      "label": "seungjo.han — Implementation & Refinement",
+      "reference": "[Implementation Session](09ae22bc-44c5-4d1f-b57b-24a47a768fc4)"
+    },
+    {
+      "chat_id": "ca6ae47b-e3ee-4658-9043-3ffe4eb4ae63",
+      "label": "seungjo.han — Prompt Archive",
+      "reference": "[Prompt Archive](ca6ae47b-e3ee-4658-9043-3ffe4eb4ae63)"
+    }
+  ],
+  "prompts": [
+    {
+      "order": 1,
+      "version": 1,
+      "chat_id": "4f4a88b7-2273-462a-857d-60adaf8162d6",
+      "chat_label": "seungjohan-github-io — PRD & Scaffold",
+      "timestamp": null,
+      "prompt": "initialize taskmaster in this project"
+    },
+    {
+      "order": 2,
+      "version": 2,
+      "chat_id": "4f4a88b7-2273-462a-857d-60adaf8162d6",
+      "chat_label": "seungjohan-github-io — PRD & Scaffold",
+      "timestamp": null,
+      "prompt": "I want to make a prd for this project.\n\nI am going to make a personal Portfolio and my personal blog in this project. So bascially building a personal website.\nI will give you more detail feature and others I want to put. So guide me how to"
+    },
+    {
+      "order": 3,
+      "version": 3,
+      "chat_id": "4f4a88b7-2273-462a-857d-60adaf8162d6",
+      "chat_label": "seungjohan-github-io — PRD & Scaffold",
+      "timestamp": null,
+      "prompt": "1. portfolio is for the recruiter, and general other readers who wants to network with me but it's mostly for the HR in order to get my job.\nmy blog is for everyone. I'm going to write about my personal growth, challenge, career, and others.\n\n2. all the thing as you said. mostly see projects and read blog, getting to know about me.\n\n3. Home, About, Projects, Engineering, Blog, Contact\nBut not all in a single page. I want to make them each pages and responsible react.\n\n4. can you recommend me more?\n\n5. Language mostly English, pretty enough of Korean.\n\n6. minimal, refer substack style.\n\n7. search, tags, dark mode, comments, innerlink to move to other h tag, \n\n8. I am thinking of vercel or just github."
+    },
+    {
+      "order": 4,
+      "version": 4,
+      "chat_id": "4f4a88b7-2273-462a-857d-60adaf8162d6",
+      "chat_label": "seungjohan-github-io — PRD & Scaffold",
+      "timestamp": null,
+      "prompt": "which stack do substack use?"
+    },
+    {
+      "order": 5,
+      "version": 5,
+      "chat_id": "4f4a88b7-2273-462a-857d-60adaf8162d6",
+      "chat_label": "seungjohan-github-io — PRD & Scaffold",
+      "timestamp": null,
+      "prompt": "I want prd file not to upload on git. so put in a gitignore"
+    },
+    {
+      "order": 6,
+      "version": 6,
+      "chat_id": "4f4a88b7-2273-462a-857d-60adaf8162d6",
+      "chat_label": "seungjohan-github-io — PRD & Scaffold",
+      "timestamp": null,
+      "prompt": "should I use bootstrap?"
+    },
+    {
+      "order": 7,
+      "version": 7,
+      "chat_id": "4f4a88b7-2273-462a-857d-60adaf8162d6",
+      "chat_label": "seungjohan-github-io — PRD & Scaffold",
+      "timestamp": null,
+      "prompt": "I don't want to use bootstrap as well"
+    },
+    {
+      "order": 8,
+      "version": 8,
+      "chat_id": "4f4a88b7-2273-462a-857d-60adaf8162d6",
+      "chat_label": "seungjohan-github-io — PRD & Scaffold",
+      "timestamp": null,
+      "prompt": "let's skip the dark mode for now"
+    },
+    {
+      "order": 9,
+      "version": 9,
+      "chat_id": "4f4a88b7-2273-462a-857d-60adaf8162d6",
+      "chat_label": "seungjohan-github-io — PRD & Scaffold",
+      "timestamp": null,
+      "prompt": "I will give you a initial version of contents for each page. Can you add them in the initial version then??\n\nhttps://seungjohan.notion.site/Seungjo-Han-8b3f842fd9da473d924af83163eba758"
+    },
+    {
+      "order": 10,
+      "version": 10,
+      "chat_id": "4f4a88b7-2273-462a-857d-60adaf8162d6",
+      "chat_label": "seungjohan-github-io — PRD & Scaffold",
+      "timestamp": null,
+      "prompt": "for home\n\n# Seungjo Han (한승조)\n\n## **Proactive and Customer-Focused Product Manager**\n\n![](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c78d1dc9-8987-421a-95ce-68df14375971/.jpg)\n\n📧 [seungjohan.kr@gmail.com](mailto:seungjohan.kr@gmail.com)\n\n📞 +82 1099086439\n\n📍 Seoul, Korea\n\n🌐 [LinkedIn](https://www.linkedin.com/in/seungjohan/) | [Substack](http://seungjohan.substack.com) | [Brunch](https://brunch.co.kr/@seungjohan) | [Github](https://github.com/seungjohan) \n\n#zero-to-one #hands-on #data-driven #customer-focused #technical innovation #trial & error\n\n### 💬 About Myself\n\n- Passionate about solving problems and driving positive innovation to the world through developing ideas, building technical products, and taking action.\n- Love to work in fast-paced environments and interact with people of all backgrounds and different mindsets.\n- Keen to listen to people’s voices, learn new things, and challenge myself.\n\n### 💼 Experiences\n\n- Lively and Others | Product Manager on Contract | Nov 2022 - Dec 2023\n- Webeing (위빙) | Co-founder, Product Owner, Software Engineer | January 2020 - July 2021\n- NextChallenge, StartupBay | Management Intern, SEO Developing | July 2019\n\n### 🎓 Education\n\n🇰🇷 Chung-Ang University\n\nMathematics and Software Venture (Computer Science and Business Entrepreneurship), 멋쟁이사자처럼\n\n| March 2016 - June 2022\n\n🇺🇸🇰🇷 Northeastern University and Seoul National University of Science and Technology\n\n| April 2019 - Jun 2019\n\n## 📁 Files and Reference\n\n### Resume\n\n[seungjohan_resume.pdf](attachment:d0d7eb17-76e5-40ec-949f-e267d6db18a2:seungjohan_resume.pdf)\n\n### Cover letter\n\n[seungjohan_coverletter.pdf](attachment:8fc1473f-1661-4c83-8a0b-763d03cb9173:seungjohan_coverletter.pdf)\n\n[Seungjo Han | Substack](https://seungjohan.substack.com/)\n\n## 🧳 My Journey So Far\n\n# 2+\n\nYears of Experience\n\n# 10+\n\nTechnical Projects Completed\n\n# 500+\n\nCustomers Interviewed in Person \n\n### **Entrepreneurship**\n\nI founded a B2B2C e-Commerce Startup in order to deliver my vision and solve a real-world problem.\n\n### **Technology**\n\nI studied Software Venture (Computer Science and Entrepreneurship), learned programming at ‘멋쟁이사자처럼’, and built software projects for implementing my ideas.\n\n### Hands-on Mindset\n\nI am curious about business opportunities, and solve problems through projects, meeting customers, and taking action. \n\n### **Global Communication**\n\nI collaborated with global teammates from the US, Kazakhstan, and Europe.\n\n## 💻 Projects\n\n[Project](https://www.notion.so/f2512703948f472094de0e7b0b4ce19e?pvs=21)\n\n## ✏️ Relevant Skills\n\n[TODOLIST (1)](https://www.notion.so/b341ae2d2b0a433db392bc8f35e37c67?pvs=21)\n\n## 🏆 Awards and Certifications\n\n| **Award / Certification** | **Organization** | **Date** |\n| --- | --- | --- |\n| LINC+ CAPSTONE Design Award (2nd Prize) | Ministry of Education Research Foundation of Korea, Seoul Business Agency, Chung-Ang University | Dec 2021 |\n| Lotte Corporation & Likelion Online Hackathon (2nd Prize) | Lotte, LikeLion | Nov 2020 |\n| Selected for ‘The Package for Prospective Founders (예비창업 특화패키지)’ | Ministry of SMEs and Startups, SmartCity Institution | Jun 2020 |\n| Chung Ang University Davinci SW.AI Startup Idea Contest (3rd Prize) | Chung-Ang University | Sep 2020 |\n| Global Innovator Festa IDEATHON (Global Challenger Award) | Daegu, Daegu Digital Industry Promotion Agency | Nov 2019 |\n| Digital Nomad 1st Batch ‘100hours Work Marathon’ (Finished) | Next Challenge, StartUp Bay, Jeju | Jul 2019 |\n| Northeastern University USA Entrepreneurship Global Exchange Program | Korea Entrepreneurship Foundation, Northeastern University, Seoul National University of Science and Technology | Jun 2019 |\n\n> [LinkedIn](https://www.linkedin.com/in/seungjohan/) | [Substack](http://seungjohan.substack.com) | [Brunch](https://brunch.co.kr/@seungjohan) | [Github](https://github.com/seungjohan)\n> \n\n> Email : [seungjohan.kr@gmail.com](mailto:seungjohan.kr@gmail.com)\n> \n\nCopyright © 2025 Seungjo Han. All rights reserved.\n\nhttps://embed.notionlytics.com/wt/ZXlKd1lXZGxTV1FpT2lJNFlqTm1PRFF5Wm1RNVpHRTBOek5rT1RJMFlXWTRNekUyTTJWaVlUYzFPQ0lzSW5kdmNtdHpjR0ZqWlZSeVlXTnJaWEpKWkNJNkltTkRkVkZpUW5aeVN6QmpZbTlRTUVaRU9GUlRJbjA9\n\n## 🧳 My Journey So Far\n\n# 2+\n\nYears of Experience\n\n# 10+\n\nTechnical Projects Completed\n\n# 500+\n\nCustomers Interviewed in Person \n\n### **Entrepreneurship**\n\nI founded a B2B2C e-Commerce Startup in order to deliver my vision and solve a real-world problem.\n\n### **Technology**\n\nI studied Software Venture (Computer Science and Entrepreneurship), learned programming at ‘멋쟁이사자처럼’, and built software projects for implementing my ideas.\n\n### Hands-on Mindset\n\nI am curious about business opportunities, and solve problems through projects, meeting customers, and taking action. \n\n### **Global Communication**\n\nI collaborated with global teammates from the US, Kazakhstan, and Europe.\n\nfor about\n\n어떻게 살지 몰라 어떻게든 다채롭게 살아보려는 청년.\n스타트업문화여행예술가개발자아티스트\n기타 이력 및 포트폴리오\n배낭여행, 자전거 국토종주, 히치하이킹, 막무가내 말걸기 등을 하며 세계를 누비고 있습니다. 저만의 색깔을 갖추기 위해 독도경비대, 스타트업 창업, 영어•스페인어 공부, 그리고 다양한 사람들과의 여정을 하고 있습니다.\n나이, 인종을 불문하고 여러 사람들과 이야기를 나누면서 언어와 문화를 경험하고 세계를 이해해가고 있습니다.\n\n다양한 페르소나를 가지고 있습니다.\n작가. ex CEO. 독도경비대. 개발자. 기획자. 아들. 형. 4개국어. 싸이클. 수영. 피아노. 작곡가.\n\n2017.03 - 독도경비대\n2020.01 - 스타트업 창업\n2021.10 - 브런치 작가 선정 및 작가프로젝트 시작\n\nA guy from Korea who doesn't know how to live wisely, but is trying to live colorfully in his own way.\n\nSubscribe\nPersonas\n\nKorean. ex-Entrepreneur, Dokdo Security Police, Writer, Programmer, Polyglot (Korean, English, Spanish, French), Sportsman (Cycling, Swimming, Running), Pianist, Music Composer, Brother, and Son.\n\nI've been backpacking trip, cycling across the country, hitchhiking, and talking to people on my way around the world. To make myself colorful, I've been challenging diverse things to learn about the world, and trying to find what truly excites me.\n\nBy talking to people regardless of their background, I am experiencing languages, cultures, and understanding the world and myself.\n\nBut translate in English plz\nMix together well plz\n\nfor projects\n\nhttps://seungjohan.notion.site/Seungjo-Han-8b3f842fd9da473d924af83163eba758?p=e5424ca323644024840746e625a8d1e9&pm=c"
+    },
+    {
+      "order": 11,
+      "version": 11,
+      "chat_id": "4f4a88b7-2273-462a-857d-60adaf8162d6",
+      "chat_label": "seungjohan-github-io — PRD & Scaffold",
+      "timestamp": null,
+      "prompt": "for the blog\ncan you make with this content\n\nhttps://seungjohan.substack.com/p/im-a-proud-dokdo-security-police"
+    },
+    {
+      "order": 12,
+      "version": 12,
+      "chat_id": "4f4a88b7-2273-462a-857d-60adaf8162d6",
+      "chat_label": "seungjohan-github-io — PRD & Scaffold",
+      "timestamp": null,
+      "prompt": "let me see the preview first"
+    },
+    {
+      "order": 13,
+      "version": 1,
+      "chat_id": "91851918-ae69-4e99-8e46-e65fa6ef7ee7",
+      "chat_label": "CursorProject — Next.js Exploration",
+      "timestamp": null,
+      "prompt": "how can I make a personal website like https://www.alessandrakrick.com/about  then?\n\nI'd like to try Next.js with Vercel then\ncan you help me out making my personal portfolio website\n\nand lastly for about category I want to build my personal information section like this\n\nhttps://www.sehyunjeon.com/expertise\n\ncan you make exactly the same design with next.js or typescript?"
+    },
+    {
+      "order": 14,
+      "version": 2,
+      "chat_id": "91851918-ae69-4e99-8e46-e65fa6ef7ee7",
+      "chat_label": "CursorProject — Next.js Exploration",
+      "timestamp": null,
+      "prompt": "how can I see the preview?"
+    },
+    {
+      "order": 15,
+      "version": 1,
+      "chat_id": "09ae22bc-44c5-4d1f-b57b-24a47a768fc4",
+      "chat_label": "seungjo.han — Implementation & Refinement",
+      "timestamp": "Tuesday, Jun 2, 2026, 9:17 PM (UTC+9)",
+      "prompt": "- when I click multiples keywords, then It should be filtered by all the keywords I select.\n- even though I enter the project detailed page, show all the pictures as like the pictures on the project pages which change automatically.\n\non the page 'blog' post\n- There are 4 different sizes, I want to follow the context of the h tags size as same as substack which I gave you with the url.\n- and also, If I click h tag make user copy that anchor link of that current page as like substack feature, and show by popup screen on the left bottom ' Copied link to clipboard'.\n- don't show underline when I move the mouse to the h tag.\n- bold all the h tag context.\n\non the page 'home'\n- on the project section\nadd simple explanation of each project as like blog section in the below. and move date, and side project context on the right side.\n- Remove pictures"
+    },
+    {
+      "order": 16,
+      "version": 2,
+      "chat_id": "09ae22bc-44c5-4d1f-b57b-24a47a768fc4",
+      "chat_label": "seungjo.han — Implementation & Refinement",
+      "timestamp": "Tuesday, Jun 2, 2026, 9:27 PM (UTC+9)",
+      "prompt": "I think you changed the post of 'dokdo secutiry guard' post in blog page a bit.\nThis is the original post of mine.\nCopy the structure, picture, place, context of this post and replace mine.\n\nhttps://substack.com/home/post/p-166460853 \n\nand also in the all the blog post, I think you add thumbnail picture in the front. remove that pictures in the context since it's repeated instead, set them for the thumbnail picture. I don't know how to set the thumbnail picture. guide me that as well"
+    },
+    {
+      "order": 17,
+      "version": 3,
+      "chat_id": "09ae22bc-44c5-4d1f-b57b-24a47a768fc4",
+      "chat_label": "seungjo.han — Implementation & Refinement",
+      "timestamp": "Tuesday, Jun 2, 2026, 9:48 PM (UTC+9)",
+      "prompt": "on the blog page\n- post 'I want my life to be colorful' all the pictures are placed on the left side, place them on the center. in the section index in the context. I want them to link to each h tag. If I click 'Music. To reclaim the childhood dream I had lost' then move down to the Music h tag. like a inner link\n- post 'developing a web' this one, and 'design a prototype' this one start the context with the repeated two pictures. Remove the first one so that the picture doesnt' repeat. and these two post have line between h tag parts. I don't want those line. Get rid of line when h tag or anchor link start. It's also for all the posts. \nDon't put thumbnail picture on the top of the blog post. Thumbnail is just for thumbnail picture.\n- 'dokco security' blog post missed one picture at the end with the caption 'The time when I served my military service in Dokdo.' adjust that by referring the original url post I gave you.\n- don't make the word upper case for hashtag in the blog post page, just only firsts character like Life, not LIFE. Make that also possible to click and link to the hashtag filtered one.\n\n- including page 'projects detail' and blog post detail, not page 'projects' . If I click the pictures, I want to be possible to look at the picture bigger like substack. Can you do that?"
+    },
+    {
+      "order": 18,
+      "version": 4,
+      "chat_id": "09ae22bc-44c5-4d1f-b57b-24a47a768fc4",
+      "chat_label": "seungjo.han — Implementation & Refinement",
+      "timestamp": "Tuesday, Jun 2, 2026, 10:35 PM (UTC+9)",
+      "prompt": "- I want to gap between picture and caption are same as substack one. current one is too far.\n- Don't get rid of the first pictures on all the post in the blog. what I meant was I won't set first picture as thumbnail. I will set seperately later. Recover the first picture in all the blog posts. and place all the pictures in the middle, center. Some pictures are placed not correctly.\n- how can I fix the gap between line to line, paragraphy to the next one, before the new h tag, before picture, after picture something like that? I want to change those details.\n- when I click the picture, It's working that picture gets bigger but If I click once more it should go back to the post, normal. Make that happen, and also make it possible to move to the next pictures in the same post.\n- after th blog starts, put one line before it actualy starts. Place the line right after the hashtag keyword and date section.\n- let's get rid of 'magazine' feature for now. But save them to somewhere, so if I ask you to rework again, make them work.\n- include 'I want my life to be colorful' to the new magazine called 'What's your life like?' and include 'dokdo security guard' as well instead of 'life and identity', rename the 'startup stories' to 'A Shout to the World: Startup'"
+    },
+    {
+      "order": 19,
+      "version": 5,
+      "chat_id": "09ae22bc-44c5-4d1f-b57b-24a47a768fc4",
+      "chat_label": "seungjo.han — Implementation & Refinement",
+      "timestamp": null,
+      "prompt": "can you listup all the prompts I had with you related to the personal website for blog and portfolio? so that I can check all the context I gave you. make a json or csv format I don't know which one is better format, but make a better format and with the data order number, version number, time and prompt, but only prompts I gave you. All the prompts including other chatroom as well"
+    },
+    {
+      "order": 20,
+      "version": 6,
+      "chat_id": "09ae22bc-44c5-4d1f-b57b-24a47a768fc4",
+      "chat_label": "seungjo.han — Implementation & Refinement",
+      "timestamp": null,
+      "prompt": "- copy and paste context in this project with md format and follow the structure of this post. Two pictures are missing at the moment.\nhttps://seungjohan.substack.com/p/im-a-proud-dokdo-security-police \nfrom now on, if I take any post from outsourcing then keep the context with md format.\n\n- before clicking pictures in the pages projects or blog posts,the mouse turns into + character, but after clicking and picture gets bigger, mouse is normal. I want mouse to be - character so that visitor can easily notice that by just clicking they can go back to normal."
+    },
+    {
+      "order": 21,
+      "version": 7,
+      "chat_id": "09ae22bc-44c5-4d1f-b57b-24a47a768fc4",
+      "chat_label": "seungjo.han — Implementation & Refinement",
+      "timestamp": null,
+      "prompt": "- italic context with _{context}_ works in md file, but it doesn't work in blog since blog is just context format. How can I make them work?\n- in the blog post 'I want my life to be colorful', change the place of pictures in the right places by referring this url and move the first current picture to the beginning of the body context like a thumbnail.\nhttps://brunch.co.kr/@seungjohan/38\nJust follow the structure, not the context.\n- in the same page, and section 'index', I want to link 'Travel. The way to discover my most authentic self' context to the h tag 'Travel. The way to discover my most authentic self' and context in the index 'Music. To reclaim the childhood dream I had lost' to the h tag in the below 'Music. To reclaim the childhood dream I had lost'. same for other sentences. like a inner link.\n\nin the project page, guide me how to change or add the pictures, and also change the context."
+    },
+    {
+      "order": 22,
+      "version": 8,
+      "chat_id": "09ae22bc-44c5-4d1f-b57b-24a47a768fc4",
+      "chat_label": "seungjo.han — Implementation & Refinement",
+      "timestamp": null,
+      "prompt": "perfect one more thing.\nRegarding the 3. index inner linkes, I want to keep the - in front of the context and I want to bold the first words which is from the beginning until the . such as Travel, Dokdo Security Guard, Paying it forward, Music.\nin this post, get rid of all the '-' in the middle of the context such as 'I decided to start with the things I love most — the things that make my heart race. I wanted to take on a challenge that would push me past my limits. So I cycled the 660-kilometer national cycling route from Incheon to Busan. Then, two years later, wanting to share this experience, I took my father and younger brother along for another trip — completing a total of two cross-country bike rides.'\n\n- when I put the mouse to the h tag make the copy link box appear on the left side of the h tag like a substack.\n- can you make basic context size bigger like 1pt little more?\n- and make other h tags size bigger same as Substack. Mine is little bit small which is little bit uncomfortable to differentiate with body normal context. Check the following post.\nhttps://seungjohan.substack.com/p/designing-a-prototype-for-a-startup \n\n- get rid of all the reading time data in this project."
+    },
+    {
+      "order": 23,
+      "version": 1,
+      "chat_id": "ca6ae47b-e3ee-4658-9043-3ffe4eb4ae63",
+      "chat_label": "seungjo.han — Prompt Archive",
+      "timestamp": null,
+      "prompt": "can you make a json format basd on all prompts we had related to building my personal websit for blog and portfolio from all the chatrooms? you can exclude your answer, only my questions prmpts with date, order of prompt, and prompt contexts by order. I'm going to orgnise all the prompt I had for building my personal website project."
+    }
+  ]
+}
