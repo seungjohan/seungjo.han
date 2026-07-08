@@ -55,7 +55,7 @@ export default function Blog() {
           A man who hasn't figured out how to live his life yet, but is trying to make it as colorful and diverse as possible.
         </p>
         <p>
-          My Personas: Writer, Ex-founder, Dokdo security guard, Product manager, Software engineer, Multilingual learner (Korean, English, Español, and Français), Triathlete, Pianist, Composer, Gardener, Cook, Son, and Brother
+          My Personas: <br />Writer, Ex-founder, Dokdo security guard, Product manager, Software engineer, Multilingual learner (Korean, English, Español, and Français), Triathlete, Pianist, Composer, Gardener, Cook, Son, and Brother
         </p>
       </div>
 

@@ -15,13 +15,40 @@ function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
 }
 
+function readSourceFiles(dir) {
+  const files = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...readSourceFiles(fullPath));
+    } else if (/\.(ts|tsx|js|jsx|md|html)$/i.test(entry.name)) {
+      files.push(fs.readFileSync(fullPath, 'utf8'));
+    }
+  }
+  return files;
+}
+
 function localPathsFromText(text) {
   const paths = new Set();
-  for (const match of text.matchAll(/['"](\/(?:blog-images|project-images)\/[^'"]+)['"]/g)) {
+  for (const match of text.matchAll(/['"](\/(?:blog-images|project-images|images)\/[^'"]+)['"]/g)) {
     paths.add(match[1]);
   }
-  for (const match of text.matchAll(/\]\((\/(?:blog-images|project-images)\/[^)]+)\)/g)) {
+  for (const match of text.matchAll(/\]\((\/(?:blog-images|project-images|images)\/[^)]+)\)/g)) {
     paths.add(match[1].split('|')[0].trim());
+  }
+  for (const match of text.matchAll(/['"](\/(?:favicon|og-image)\.svg)['"]/g)) {
+    paths.add(match[1]);
+  }
+  return paths;
+}
+
+function invalidPublicPathsFromText(text) {
+  const paths = new Set();
+  for (const match of text.matchAll(/['"]((?:\/?public\/)(?:blog-images|project-images|images)\/[^'"]+)['"]/g)) {
+    paths.add(match[1]);
+  }
+  for (const match of text.matchAll(/['"](\/public\/(?:favicon|og-image)\.svg)['"]/g)) {
+    paths.add(match[1]);
   }
   return paths;
 }
@@ -29,10 +56,18 @@ function localPathsFromText(text) {
 const postsSource = read('src/app/data/posts.ts');
 const projectsSource = read('src/app/data/projects.ts');
 const markdownDir = path.join(root, 'src/imports/pasted_text');
+const appSources = readSourceFiles(path.join(root, 'src/app'));
 
 const referenced = new Set([
+  ...appSources.flatMap(source => [...localPathsFromText(source)]),
   ...localPathsFromText(postsSource),
   ...localPathsFromText(projectsSource),
+]);
+
+const invalidPublicPaths = new Set([
+  ...appSources.flatMap(source => [...invalidPublicPathsFromText(source)]),
+  ...invalidPublicPathsFromText(postsSource),
+  ...invalidPublicPathsFromText(projectsSource),
 ]);
 
 const postMarkdownKeys = [
@@ -46,6 +81,15 @@ for (const key of postMarkdownKeys) {
   if (!mdFile) continue;
   const markdown = fs.readFileSync(path.join(markdownDir, mdFile), 'utf8');
   for (const p of localPathsFromText(markdown)) referenced.add(p);
+  for (const p of invalidPublicPathsFromText(markdown)) invalidPublicPaths.add(p);
+}
+
+if (invalidPublicPaths.size) {
+  console.error('\nInvalid public asset paths:');
+  for (const item of invalidPublicPaths) {
+    console.error(`  ${item} -> remove the public prefix`);
+  }
+  process.exit(1);
 }
 
 const missing = [];
@@ -63,7 +107,7 @@ for (const webPath of referenced) {
     .find(name => name.toLowerCase() === base.toLowerCase());
 
   if (alt) {
-    caseMismatch.push({ webPath, found: `/public/${path.relative(publicDir, path.join(dir, alt)).replace(/\\/g, '/')}` });
+    caseMismatch.push({ webPath, found: `/${path.relative(publicDir, path.join(dir, alt)).replace(/\\/g, '/')}` });
   } else {
     missing.push(webPath);
   }

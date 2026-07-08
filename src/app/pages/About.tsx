@@ -43,7 +43,7 @@ export default function About() {
       {/* ── Portrait ── */}
       <div className="mb-12">
         <img
-          src="/public/favicon.svg"
+          src="/favicon.svg"
           alt="Seungjo Han"
           loading="eager"
           decoding="async"
