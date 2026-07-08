@@ -249,7 +249,7 @@ export default function Layout() {
                 Product Manager
               </p>
               <div className="flex flex-col mt-1" style={{ gap: '0.2rem' }}>
-                {['Author', 'Composer', 'Triathlete', 'Polyglot'].map(t => (
+                {['Writer', 'Composer', 'Triathlete', 'Multilingual learner'].map(t => (
                   <p key={t} className="text-gray-400" style={{ fontSize: '0.82rem' }}>{t}</p>
                 ))}
               </div>

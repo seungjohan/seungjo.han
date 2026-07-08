@@ -43,16 +43,21 @@ export default function Blog() {
   return (
     <section className="max-w-3xl mx-auto px-6 py-16 md:py-24">
       <SEO
-        title="Writing"
-        description="Essays by Seungjo Han on product, design, technology, startups, and creative work."
+        title="Blog"
+        description="A man who hasn't figured out how to live his life yet, but is trying to make it as colorful and diverse as possible."
         path="/blog"
       />
       <h1 className="mb-2" style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 400 }}>
-        Writing
+        Blog
       </h1>
-      <p className="text-gray-500 mb-10" style={{ fontSize: '0.95rem' }}>
-        Thoughts on design, technology, and creative life.
-      </p>
+      <div className="text-gray-500 mb-10 space-y-4" style={{ fontSize: '0.95rem' }}>
+        <p>
+          A man who hasn't figured out how to live his life yet, but is trying to make it as colorful and diverse as possible.
+        </p>
+        <p>
+          My Personas: Writer, Ex-founder, Dokdo security guard, Product manager, Software engineer, Multilingual learner (Korean, English, Español, and Français), Triathlete, Pianist, Composer, Gardener, Cook, Son, and Brother
+        </p>
+      </div>
 
       {/* Tag filter */}
       <div className="mb-12 flex flex-wrap gap-2">
