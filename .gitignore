@@ -47,3 +47,4 @@ GEMINI.md
 **/.DS_Store
 scripts/prd.txt
 dist/
+src/app/pages/admin/
