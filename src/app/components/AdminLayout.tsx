@@ -8,7 +8,8 @@ const NAV = [
   { to: '/nahojgnues/analytics', label: 'Analytics', icon: BarChart2 },
 ];
 
-const ADMIN_AUTH_KEY = 'nahojgnuesAuth';
+const ADMIN_AUTH_KEY = import.meta.env.VITE_ADMIN_AUTH_KEY || 'nahojgnuesAuth';
+const ADMIN_AUTH_VALUE = import.meta.env.VITE_ADMIN_AUTH_VALUE || 'true';
 
 export default function AdminLayout() {
   const navigate  = useNavigate();
@@ -20,7 +21,7 @@ export default function AdminLayout() {
   }
 
   // Auth guard for panel routes
-  if (localStorage.getItem(ADMIN_AUTH_KEY) !== 'true') {
+  if (localStorage.getItem(ADMIN_AUTH_KEY) !== ADMIN_AUTH_VALUE) {
     navigate('/nahojgnues', { replace: true });
     return null;
   }
