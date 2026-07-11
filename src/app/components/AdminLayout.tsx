@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router';
 import { LayoutDashboard, FileText, Briefcase, BarChart2, LogOut, ExternalLink } from 'lucide-react';
 
@@ -8,27 +9,40 @@ const NAV = [
   { to: '/nahojgnues/analytics', label: 'Analytics', icon: BarChart2 },
 ];
 
-const ADMIN_AUTH_KEY = import.meta.env.VITE_ADMIN_AUTH_KEY || 'nahojgnuesAuth';
-const ADMIN_AUTH_VALUE = import.meta.env.VITE_ADMIN_AUTH_VALUE || 'true';
-
 export default function AdminLayout() {
   const navigate  = useNavigate();
   const location  = useLocation();
+  const [status, setStatus] = useState<'checking' | 'authorized' | 'denied'>('checking');
+
+  // Auth guard for panel routes — verified server-side; the session lives in
+  // an httpOnly cookie the browser can't read or forge.
+  useEffect(() => {
+    if (location.pathname === '/nahojgnues') return;
+
+    let cancelled = false;
+    setStatus('checking');
+    fetch('/api/admin-check')
+      .then(res => res.json())
+      .then(data => { if (!cancelled) setStatus(data.authorized ? 'authorized' : 'denied'); })
+      .catch(() => { if (!cancelled) setStatus('denied'); });
+
+    return () => { cancelled = true; };
+  }, [location.pathname]);
 
   // Login page renders without sidebar
   if (location.pathname === '/nahojgnues') {
     return <Outlet />;
   }
 
-  // Auth guard for panel routes
-  if (localStorage.getItem(ADMIN_AUTH_KEY) !== ADMIN_AUTH_VALUE) {
+  if (status === 'checking') return null;
+
+  if (status === 'denied') {
     navigate('/nahojgnues', { replace: true });
     return null;
   }
 
   const logout = () => {
-    localStorage.removeItem(ADMIN_AUTH_KEY);
-    navigate('/nahojgnues');
+    fetch('/api/admin-logout', { method: 'POST' }).finally(() => navigate('/nahojgnues'));
   };
 
   return (
