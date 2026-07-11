@@ -50,9 +50,24 @@ This file maintains a chronological log of all prompts written by the user for b
 - Sitemap generator
 - Asset verifier
 
+## prompt v4.9
+**Date:** 2026-07-08 (Codex session — reconstructed from git history, not an original prompt log entry)
+
+- Scrub a hardcoded admin password, accidentally committed and pushed in `AdminLogin.tsx`, out of git history
+- (Rewrite removed the file from tracked history but left it gitignored and missing locally, and did not fully purge the leaked blob — see v5.1)
+
 ## prompt v5.0
 **Date:** 2026-07-11
 
 - Convert key to environment variable
 - Update log.md and prompt.md with historical context
 - Replace Agent with specific agent names in log.md
+
+## prompt v5.1
+**Date:** 2026-07-11 (Claude Code session)
+
+- Build was broken: "Could not resolve ./pages/admin/AdminLogin" — investigate and recover
+- Check for exposed keys/secrets visible in the deployed HTML/bundle; review overall implementation quality
+- Confirmed the admin password from the v4.9 incident was still publicly fetchable from GitHub by blob SHA; rotate the password and fully remove it (local Codex checkpoint refs + advise on GitHub-side purge)
+- Rebuild the admin panel with real server-side authentication instead of client-side `localStorage` checks
+- Keep `log.md`/`prompt.md` tracked and pushed as before (no change to their tracking)
