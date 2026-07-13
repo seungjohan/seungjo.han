@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createSessionCookieValue, sessionCookieHeader, verifyPassword } from './_lib/adminAuth';
+import { createSessionCookieValue, sessionCookieHeader, verifyPassword } from './_lib/adminAuth.js';
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {

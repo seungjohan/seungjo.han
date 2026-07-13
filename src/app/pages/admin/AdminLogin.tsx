@@ -33,8 +33,10 @@ export default function AdminLogin() {
 
       if (res.ok) {
         navigate('/nahojgnues/dashboard');
-      } else {
+      } else if (res.status === 401) {
         setError('Incorrect password.');
+      } else {
+        setError('Server error. Please try again later.');
       }
     } catch {
       setError('Something went wrong. Please try again.');
