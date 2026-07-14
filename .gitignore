@@ -47,5 +47,9 @@ GEMINI.md
 **/.DS_Store
 scripts/prd.txt
 dist/
+<<<<<<< HEAD
 .vercel
 .env*
+=======
+.gstack/
+>>>>>>> develop
