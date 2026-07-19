@@ -14,7 +14,7 @@ export interface Project {
   duration: string;
   platform: string;
   techStack: string;
-  url: string;
+  url?: string;
   // 3-part structured explanation
   impact: string;
   whatIDid: string;                // intro sentence for What I Did

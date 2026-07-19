@@ -11,6 +11,10 @@ node_modules/
 .next/
 out/
 dist/
+build/
+
+# React Router generated types
+.react-router/
 
 # Build/test caches
 coverage/

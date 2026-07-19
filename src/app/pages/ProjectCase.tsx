@@ -3,8 +3,20 @@ import { useEffect, useState } from 'react';
 import { ArrowLeft, ChevronLeft, ChevronRight, ExternalLink, X } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PROJECTS } from '../data/projects';
-import { trackView } from '../utils/viewTracker';
-import SEO from '../components/SEO';
+import { buildMeta } from '../components/SEO';
+
+export function meta({ params }: { params: { slug?: string } }) {
+  const project = PROJECTS.find(p => p.slug === params.slug);
+  if (!project) {
+    return buildMeta({ title: 'Project Not Found', path: '/projects' });
+  }
+  return buildMeta({
+    title: project.title,
+    description: project.description,
+    path: `/projects/${project.slug}`,
+    image: project.coverImage,
+  });
+}
 
 // ─── Numbered section ─────────────────────────────────────────────────────────
 function Section({
@@ -174,10 +186,6 @@ export default function ProjectCase() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    if (slug) trackView(slug, 'project');
-  }, [slug]);
-
-  useEffect(() => {
     setImgIndex(0);
   }, [slug]);
 
@@ -203,13 +211,6 @@ export default function ProjectCase() {
 
   return (
     <div className="bg-white">
-      <SEO
-        title={project.title}
-        description={project.description}
-        path={`/projects/${project.slug}`}
-        image={project.coverImage}
-      />
-
       {/* ── Back ── */}
       <div className="max-w-4xl mx-auto px-6 pt-10">
         <Link

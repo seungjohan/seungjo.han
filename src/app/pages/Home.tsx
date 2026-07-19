@@ -3,7 +3,16 @@ import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 import { POSTS } from '../data/posts';
 import { PROJECTS } from '../data/projects';
-import SEO from '../components/SEO';
+import { buildMeta, PERSON_JSON_LD } from '../components/SEO';
+
+export const meta = () =>
+  buildMeta({
+    title: 'Seungjo Han - Product Manager, Republic of Korea',
+    description:
+      'Product manager and builder in Korea with selected work across startups, product strategy, software, and global market research.',
+    path: '/',
+    jsonLd: [PERSON_JSON_LD],
+  });
 
 // ─── Pillars — three powerful "why" blocks ────────────────────────────────────
 const PILLARS = [
@@ -49,11 +58,6 @@ export default function Home() {
 
   return (
     <div>
-      <SEO
-        title="Seungjo Han - Product Manager, Republic of Korea"
-        description="Product manager and builder in Korea with selected work across startups, product strategy, software, and global market research."
-      />
-
       {/* ══════════════════════════════════════════════════════════════════
           HERO — bold, declarative, YC-style
       ══════════════════════════════════════════════════════════════════ */}

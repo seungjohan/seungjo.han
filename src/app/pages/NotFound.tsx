@@ -1,15 +1,17 @@
 import { Link } from 'react-router';
 import { ArrowLeft, SearchX } from 'lucide-react';
-import SEO from '../components/SEO';
+import { buildMeta } from '../components/SEO';
+
+export const meta = () =>
+  buildMeta({
+    title: 'Page Not Found - Seungjo Han',
+    description: 'The page you are looking for does not exist.',
+    path: '/404',
+  });
 
 export default function NotFound() {
   return (
     <section className="max-w-2xl mx-auto px-6 py-24 md:py-32 text-center">
-      <SEO
-        title="Page Not Found - Seungjo Han"
-        description="The page you are looking for does not exist."
-        path="/404"
-      />
       <div className="mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-500">
         <SearchX size={22} strokeWidth={1.5} />
       </div>
