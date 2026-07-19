@@ -59,47 +59,6 @@ export default function Layout() {
     return () => window.removeEventListener('keydown', handler);
   }, []);
 
-  // Inject GA4 / GTM / GSC scripts from localStorage config
-  useEffect(() => {
-    const gaId  = localStorage.getItem('sj_ga_id');
-    const gtmId = localStorage.getItem('sj_gtm_id');
-    const gscMeta = localStorage.getItem('sj_gsc_meta');
-
-    if (gaId && !document.getElementById('sj-ga-script')) {
-      const s = document.createElement('script');
-      s.id  = 'sj-ga-script';
-      s.async = true;
-      s.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
-      document.head.appendChild(s);
-      const init = document.createElement('script');
-      init.id = 'sj-ga-init';
-      init.text = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`;
-      document.head.appendChild(init);
-    }
-
-    if (gtmId && !document.getElementById('sj-gtm-script')) {
-      const s = document.createElement('script');
-      s.id   = 'sj-gtm-script';
-      s.text = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtmId}');`;
-      document.head.appendChild(s);
-      const ns = document.createElement('noscript');
-      ns.id = 'sj-gtm-noscript';
-      const iframe = document.createElement('iframe');
-      iframe.src = `https://www.googletagmanager.com/ns.html?id=${gtmId}`;
-      iframe.height = '0'; iframe.width = '0';
-      iframe.style.cssText = 'display:none;visibility:hidden';
-      ns.appendChild(iframe);
-      document.body.prepend(ns);
-    }
-
-    if (gscMeta && !document.querySelector('meta[name="google-site-verification"]')) {
-      const m = document.createElement('meta');
-      m.name    = 'google-site-verification';
-      m.content = gscMeta;
-      document.head.appendChild(m);
-    }
-  }, []);
-
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);

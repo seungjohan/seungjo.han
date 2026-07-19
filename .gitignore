@@ -11,6 +11,10 @@ node_modules/
 .next/
 out/
 dist/
+build/
+
+# React Router generated types
+.react-router/
 
 # Build/test caches
 coverage/
@@ -47,9 +51,6 @@ GEMINI.md
 **/.DS_Store
 scripts/prd.txt
 dist/
-<<<<<<< HEAD
 .vercel
 .env*
-=======
 .gstack/
->>>>>>> develop

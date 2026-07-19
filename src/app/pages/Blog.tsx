@@ -1,9 +1,15 @@
-import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router';
 import { POSTS, type Post } from '../data/posts';
 import { motion } from 'motion/react';
-import { getDraftPosts } from '../utils/draftStore';
-import SEO from '../components/SEO';
+import { buildMeta } from '../components/SEO';
+
+export const meta = () =>
+  buildMeta({
+    title: 'Blog',
+    description:
+      "A man who hasn't figured out how to live his life yet, but is trying to make it as colorful and diverse as possible.",
+    path: '/blog',
+  });
 
 const ALL_TAGS = ['Startup', 'Technology', 'Product', 'Design', 'Life', 'Korea', 'Identity', 'Travel'];
 
@@ -18,13 +24,7 @@ export default function Blog() {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedTags = searchParams.getAll('tag');
   const navigate = useNavigate();
-  const [allPosts, setAllPosts] = useState<Post[]>(POSTS);
-
-  useEffect(() => {
-    const drafts = getDraftPosts();
-    const draftSlugs = new Set(drafts.map(d => d.slug));
-    setAllPosts([...POSTS.filter(p => !draftSlugs.has(p.slug)), ...drafts]);
-  }, []);
+  const allPosts = POSTS;
 
   const toggleTag = (tag: string) => {
     const nextTags = selectedTags.includes(tag)
@@ -42,11 +42,6 @@ export default function Blog() {
 
   return (
     <section className="max-w-3xl mx-auto px-6 py-16 md:py-24">
-      <SEO
-        title="Blog"
-        description="A man who hasn't figured out how to live his life yet, but is trying to make it as colorful and diverse as possible."
-        path="/blog"
-      />
       <h1 className="mb-2" style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 400 }}>
         Blog
       </h1>

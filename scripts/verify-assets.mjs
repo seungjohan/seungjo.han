@@ -36,7 +36,7 @@ function localPathsFromText(text) {
   for (const match of text.matchAll(/\]\((\/(?:blog-images|project-images|images)\/[^)]+)\)/g)) {
     paths.add(match[1].split('|')[0].trim());
   }
-  for (const match of text.matchAll(/['"](\/(?:favicon|og-image)\.svg)['"]/g)) {
+  for (const match of text.matchAll(/['"`](?:https?:\/\/[^'"`]*?)?(\/(?:favicon|og-image)\.(?:svg|png))['"`]/g)) {
     paths.add(match[1]);
   }
   return paths;

@@ -1,4 +1,12 @@
-import SEO from '../components/SEO';
+import { buildMeta } from '../components/SEO';
+
+export const meta = () =>
+  buildMeta({
+    title: 'About',
+    description:
+      'About Seungjo Han, a product manager, multilingual learner, triathlete, composer, cook, thinker, and listener.',
+    path: '/about',
+  });
 
 const aboutSections = [
   {
@@ -34,12 +42,6 @@ const aboutSections = [
 export default function About() {
   return (
     <div className="max-w-2xl mx-auto px-8 md:px-12 py-20 md:py-28">
-      <SEO
-        title="About"
-        description="About Seungjo Han, a product manager, multilingual learner, triathlete, composer, cook, thinker, and listener."
-        path="/about"
-      />
-
       {/* ── Portrait ── */}
       <div className="mb-12">
         <img

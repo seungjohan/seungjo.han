@@ -4,8 +4,14 @@ import { ArrowRight, Mail, Linkedin } from 'lucide-react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { PROJECTS, type Project } from '../data/projects';
-import { getDraftProjects } from '../utils/draftStore';
-import SEO from '../components/SEO';
+import { buildMeta } from '../components/SEO';
+
+export const meta = () =>
+  buildMeta({
+    title: 'Projects',
+    description: 'Selected product, startup, software, and market research work by Seungjo Han.',
+    path: '/projects',
+  });
 
 // ─── Top stats (hero) ─────────────────────────────────────────────────────────
 const HERO_STATS = [
@@ -211,13 +217,7 @@ function ProjectCard({ project, selectedTags, onTagClick, index }: {
 export default function Projects() {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedTags = searchParams.getAll('tag');
-  const [allProjects, setAllProjects] = useState<Project[]>(PROJECTS);
-
-  useEffect(() => {
-    const drafts = getDraftProjects();
-    const draftSlugs = new Set(drafts.map(d => d.slug));
-    setAllProjects([...PROJECTS.filter(p => !draftSlugs.has(p.slug)), ...drafts]);
-  }, []);
+  const allProjects = PROJECTS;
 
   const setTag = (tag: string) => {
     const nextTags = selectedTags.includes(tag)
@@ -239,12 +239,6 @@ export default function Projects() {
 
   return (
     <section className="max-w-4xl mx-auto px-6">
-      <SEO
-        title="Projects"
-        description="Selected product, startup, software, and market research work by Seungjo Han."
-        path="/projects"
-      />
-
       {/* ══════════════════════════════════════════════════════════════════
           HERO — inspired by alessandrakrick.com/product-management
       ══════════════════════════════════════════════════════════════════ */}
