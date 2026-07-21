@@ -20,6 +20,8 @@ export interface Project {
   whatIDid: string;                // intro sentence for What I Did
   whatIDidBullets: string[];       // arrow-bullet list items
   outcome: string;                 // shown in highlighted box
+  focusKeyword?: string;           // primary SEO target — set this when you finish the case study
+  secondaryKeywords?: string[];    // optional supporting keywords
 }
 
 export const PROJECTS: Project[] = [
@@ -54,6 +56,8 @@ export const PROJECTS: Project[] = [
       'Ran the beta with partner restaurants and gathered structured feedback from users, founders, and UI/UX experts to inform pivots',
     ],
     outcome: 'Partnered with 5 restaurants and helped increase their sales by 30%. Won 2nd Prize at the Lotte & Likelion Hackathon (out of ~70 teams). Received government investment from the Prospective Founders Package program. Won 3rd Prize at Chung-Ang University Davinci Startup Contest. Shipped a live product used by real customers.',
+    focusKeyword: 'restaurant food waste',
+    secondaryKeywords: ['food e-commerce', 'startup'],
   },
   {
     slug: 'busking-town',
@@ -84,6 +88,8 @@ export const PROJECTS: Project[] = [
       'Organized and successfully ran one online concert event inside the metaverse space',
     ],
     outcome: 'Successfully launched the metaverse busking venue and ran a live concert event. Validated the product hypothesis with 100+ research participants. Created a replicable model for digital live performance with low barriers for indie artists and genuine audience interaction.',
+    focusKeyword: 'online busking',
+    secondaryKeywords: ['metaverse', 'Hongdae'],
   },
   {
     slug: 'liter',
@@ -115,6 +121,8 @@ export const PROJECTS: Project[] = [
       'Built interactive prototypes in Adobe XD and Protopie to test core flows before development',
     ],
     outcome: 'Reached the final stage of the \'Try Everything 2020 Idea Contest\'. Validated the concept through structured user testing. Delivered a prototype that demonstrated how small cafes could compete with franchise loyalty ecosystems without heavy infrastructure investment.',
+    focusKeyword: 'cafe loyalty platform',
+    secondaryKeywords: ['rewards', 'stamp card'],
   },
   {
     slug: 'gif-hackathon',
@@ -144,6 +152,8 @@ export const PROJECTS: Project[] = [
       'Turned a conflict about framing — how we described Kazakhstan\'s infrastructure — into a lesson about respectful cross-cultural collaboration',
     ],
     outcome: 'Won the Top Global Prize as an international team. The experience taught me that how you frame a problem matters as much as the solution — especially in cross-cultural settings.',
+    focusKeyword: 'global hackathon',
+    secondaryKeywords: ['Kazakhstan', 'cross-cultural leadership'],
   },
   {
     slug: 'travel-cp',
@@ -180,6 +190,8 @@ export const PROJECTS: Project[] = [
       'Ran 20+ MVP tests with real customers across multiple nationalities',
     ],
     outcome: 'Validated the hypothesis through 20+ real-world MVP tests across multiple customer segments. Customer satisfaction spiked when experiences were built around personal interests and genuine connection — not transactional exchanges. Learned how to communicate meaningfully across multiple cultures.',
+    focusKeyword: 'travel in Korea',
+    secondaryKeywords: ['foreigners', 'locals'],
   },
   {
     slug: 'north-america-strategy',
@@ -212,5 +224,7 @@ export const PROJECTS: Project[] = [
       'Presented the strategy directly to Emong Games executives in English',
     ],
     outcome: 'Emong Games responded positively and indicated they would seriously consider the U.S. market expansion based on our findings. Gained deep exposure to international business strategy and the IT and gaming industry from a global perspective.',
+    focusKeyword: 'North American market strategy',
+    secondaryKeywords: ['go-to-market', 'HTML5 game'],
   },
 ];
