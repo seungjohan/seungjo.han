@@ -1,4 +1,15 @@
 # PRD — Personal Blog & Portfolio Website
+
+> **STATUS: HISTORICAL — DO NOT FOLLOW.**
+>
+> This describes the pre-`8aafb93` Vite SPA. The site is now React Router v7
+> framework mode with `ssr: false` + build-time prerender. Sections 2-5, 7.7,
+> 7.8 and the §1 non-goals table are all wrong: there is no `main.tsx`, no
+> `createBrowserRouter`, no `react-helmet-async`, no Magazine, and SSR and
+> analytics both shipped. Post counts are stale.
+>
+> For how the site actually works, read `CLAUDE.md` and `README.md`.
+> Kept for history until it is rewritten or replaced.
 **Owner:** Seungjo Han (한승조)
 **Version:** 4.2
 **Updated:** June 8, 2026

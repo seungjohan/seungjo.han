@@ -6,7 +6,7 @@ This is the operating plan for moving the personal blog and portfolio from finis
 
 - Design: settled.
 - Frontend: Vite, React, TypeScript, React Router, Tailwind CSS.
-- Content today: `src/app/data/posts.ts` and `src/app/data/projects.ts`.
+- Content today: blog posts in `src/content/blog/<slug>/index.md`, projects in `src/app/data/projects.ts`.
 - Backend today: none.
 - Database today: none.
 - Real user-generated data today: none.
@@ -169,14 +169,14 @@ Use these checkpoints together before moving to the next phase:
 
 ## 5. Editing Project Pages (images and copy)
 
-Each project lives in `src/app/data/projects.ts`. The detail page at `/projects/{slug}` reads from that file plus optional case-study sections in `src/app/pages/ProjectCase.tsx`.
+Each project lives in `src/app/data/projects.ts`. The detail page at `/projects/{slug}` renders entirely from that file through the shared `ProjectNarrative` component. There are no per-project sections to add in `ProjectCase.tsx`.
 
 ### Hero images (carousel + lightbox)
 
 In `projects.ts`, for each project object:
 
 - `coverImage` — used on the projects list card and social preview.
-- `images` — array of image URLs shown in the hero carousel on the detail page. Order matters: first image shows first; the carousel auto-advances every 2 seconds when there is more than one image.
+- `images` — array of image URLs shown in the hero carousel on the detail page. Order matters: first image shows first; the carousel auto-advances every 5 seconds when there is more than one image, and pauses on hover, on focus, and under reduced-motion.
 
 To use your own files instead of external URLs:
 

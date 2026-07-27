@@ -1,6 +1,6 @@
 # Blog Management Workflow
 
-This is the operating workflow for writing, publishing, maintaining, and analyzing blog posts. The current site does not have MDX, CMS, backend storage, or a database yet. Posts currently live in `src/app/data/posts.ts`.
+This is the operating workflow for writing, publishing, maintaining, and analyzing blog posts. There is no MDX, CMS, backend storage, or database. Each post is one folder: `src/content/blog/<slug>/index.md`.
 
 ## 1. Write the Post
 
@@ -20,37 +20,41 @@ Recommended draft checklist:
 
 ## 2. Prepare Metadata
 
-Every post needs these fields in `src/app/data/posts.ts`:
+Every post starts with a frontmatter block at the top of its `index.md`:
 
-```ts
-{
-  slug: 'your-url-safe-slug',
-  title: 'Your Post Title',
-  subtitle: 'A short summary for the post page.',
-  date: 'May 2, 2026',
-  tags: ['Design', 'Technology'],
-  excerpt: 'One or two sentences for the blog listing and search.',
-  coverImage: 'https://...',
-  sections: [
-    { id: 'first-section', title: 'First section', body: '...' },
-  ],
-}
+```markdown
+---
+title: Your Post Title
+subtitle: A short summary for the post page.
+date: May 2, 2026
+tags: [Design, Technology]
+excerpt: One or two sentences for the blog listing and search.
+coverImage: /blog-images/your-image.jpg
+focusKeyword: your keyword
+secondaryKeywords: [supporting, terms]
+---
+
+Body markdown starts here.
 ```
 
 Rules:
 
-- `slug` should be lowercase kebab-case and should not change after publishing.
+- The **folder name is the slug and the URL**. Lowercase kebab-case, and never
+  change it after publishing.
+- `title`, `subtitle`, `date`, `tags`, `excerpt` are required. The build fails
+  loudly if one is missing or empty, rather than publishing a blank page.
 - `date` should be human-readable and accurate.
 - `tags` should be reused consistently because they power filtering, related posts, and search.
 - `excerpt` should describe the actual article, not act like marketing copy.
-- `sections[].id` should be stable because it can become a copied anchor link.
+- Headings in the body get anchor links automatically; keep heading text stable
+  because it becomes a copyable anchor.
 
 ## 3. Add the Post Today
 
-Current static workflow:
+Current workflow:
 
-1. Add the new post object to `POSTS` in `src/app/data/posts.ts`.
-2. Put the newest post first unless a different editorial order is intentional.
+1. Create `src/content/blog/<your-slug>/index.md` with the frontmatter above.
+2. Ordering is automatic — posts sort by `date`, newest first.
 3. Put local blog images in `public/blog-images`.
 4. Run `npm run dev`.
 5. Check `/blog`.
@@ -65,15 +69,19 @@ For now, do not create `src/content/blog` or MDX files unless the project has be
 
 ### Imported posts (Substack, Brunch, etc.)
 
-When a post is copied from an external source, keep the full article text as markdown in `src/imports/pasted_text/`:
+When a post is copied from an external source, paste the full article text as the
+body of its `index.md`, below the frontmatter:
 
 ```text
-src/imports/pasted_text/im-a-proud-dokdo-security-police-of-korea.md
+src/content/blog/dokdo-security-police/index.md
 ```
 
-Wire it in `posts.ts` with `sourceMarkdown` pointing to the file key, and register the import in `BlogPost.tsx` under `SOURCE_MARKDOWN`. Match the original structure: title, subtitle, date line, body paragraphs, image placeholders, and captions.
+There is nothing to register — `import.meta.glob` discovers the folder. Match the
+original structure: body paragraphs, image placeholders, and captions.
 
-Do not hardcode post bodies in `BlogPost.tsx` for imported posts — use the markdown file as the source of truth.
+Never hardcode post bodies in `BlogPost.tsx`. That file previously carried ~255
+lines of unreachable prose behind slug branches, which is exactly the failure this
+structure removes.
 
 ## 4. How to Change Project Pictures and Content
 
@@ -257,7 +265,7 @@ Add a database if:
 
 This version does not use a CMS or database. Blog posts and portfolio projects are static TypeScript data, which matches the v1 PRD scope.
 
-Add or edit blog posts in `src/app/data/posts.ts`.
+Add or edit blog posts in `src/content/blog/<slug>/index.md`.
 
 - `slug` becomes the URL: `/blog/my-post-slug`
 - `tags` power blog filtering, related posts, and search

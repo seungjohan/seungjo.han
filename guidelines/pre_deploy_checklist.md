@@ -3,7 +3,7 @@
 Run this checklist **every time** before deploying to production. Repeat the same steps after any content change (new post, new project, new images, route changes).
 
 **Production URL:** `https://seungjohan.vercel.app`  
-**Related docs:** [PRD.md](../PRD.md) · [blog_management_workflow.md](./blog_management_workflow.md) · [project_delivery_workflow.md](./project_delivery_workflow.md) · [analytics-seo-handoff.md](../docs/analytics-seo-handoff.md)
+**Related docs:** [CLAUDE.md](../CLAUDE.md) · [blog_management_workflow.md](./blog_management_workflow.md) · [project_delivery_workflow.md](./project_delivery_workflow.md)
 
 ---
 
@@ -12,12 +12,12 @@ Run this checklist **every time** before deploying to production. Repeat the sam
 From the repo root:
 
 ```bash
-npm run verify:assets    # local image paths exist under public/
-npm run generate:sitemap # rebuild public/sitemap.xml from posts + projects
-npm run build            # production bundle
+npm run check   # typecheck + prebuild gates + prerender + postbuild gates
 ```
 
-All three must pass with no errors before you deploy.
+That is the whole automated pass — `prebuild` runs typecheck, sitemap generation
+and asset verification; `postbuild` promotes the 404 page and runs the SEO gate.
+It must exit 0 before you deploy.
 
 ---
 
@@ -39,7 +39,8 @@ All three must pass with no errors before you deploy.
 
 ### Per-page metadata (`src/app/components/SEO.tsx`)
 
-Each public page should render `<SEO title=… description=… path=… />`:
+Each route exports a `meta` function built with `buildMeta({ … })` — there is no
+`<SEO />` component to render:
 
 - [ ] `/` — Home
 - [ ] `/about` — About
@@ -56,12 +57,14 @@ Check in browser DevTools → Elements → `<head>`:
 - [ ] Open Graph: `og:title`, `og:description`, `og:image`, `og:url`
 - [ ] Twitter card tags present
 
-### Root HTML (`index.html`)
+### Document shell (`src/app/root.tsx`)
 
-- [ ] Default title and description set (fallback before React hydrates)
-- [ ] `og:image` → `/og-image.svg`
+There is no source `index.html`; the shell is `root.tsx`.
+
+- [ ] `og:image` default → `/og-image.png` (set in `SEO.tsx`)
 - [ ] JSON-LD `Person` schema present
-- [ ] GA4 (`G-3F73D31SGZ`) and GTM (`GTM-W6QS7F94`) scripts still in `<head>`
+- [ ] GA4 (`G-3F73D31SGZ`) and GTM (`GTM-W6QS7F94`) still injected — note these
+      load *after* hydration by design, to avoid a JSON-LD hydration mismatch
 
 ### After deploy (manual, once per release)
 
@@ -73,18 +76,18 @@ Check in browser DevTools → Elements → `<head>`:
 
 ## 3. Blog content
 
-### Metadata (`src/app/data/posts.ts`)
+### Post files (`src/content/blog/<slug>/index.md`)
 
-For each post:
+One folder per post; the folder name is the slug and the URL.
 
-- [ ] `slug` is kebab-case and stable (do not change after publish)
-- [ ] `title`, `subtitle`, `date`, `tags`, `excerpt` filled
-- [ ] `sourceMarkdown` key matches a file in `src/imports/pasted_text/*.md`
-- [ ] `coverImage` path works (list cards + OG when used)
+- [ ] Folder name is kebab-case and stable (never change it after publish)
+- [ ] Frontmatter has `title`, `subtitle`, `date`, `tags`, `excerpt` — the build
+      fails if any is missing or empty
+- [ ] `coverImage` path resolves (listing cards + social preview)
 
-### Markdown source (`src/imports/pasted_text/`)
+### Body
 
-- [ ] Body lives in `.md`, not hardcoded in `BlogPost.tsx`
+- [ ] Body lives in the same `index.md`, never hardcoded in `BlogPost.tsx`
 - [ ] Images use explicit `/blog-images/...` paths or ordered placeholders (see [blog_management_workflow.md](./blog_management_workflow.md))
 - [ ] Index section: `### Index` + bullets matching `##` headings for inner links
 - [ ] Inline emphasis: `**bold**`, `_italic_`, blockquotes `>`, pull quotes / callout syntax if used
@@ -135,7 +138,7 @@ Naming: `{project-slug}_{number}.jpg` (e.g. `webeing_1.jpg`)
 
 ## 5. Navigation & routes
 
-- [ ] `src/app/routes.tsx` matches pages you intend to ship (magazine currently **disabled** in routes)
+- [ ] `src/app/routes.ts` matches the pages you intend to ship, and `react-router.config.ts` prerenders them
 - [ ] Footer and header links point to live routes only
 - [ ] Unknown URLs show `NotFound` (`path: "*"`)
 
@@ -157,7 +160,7 @@ Desktop + mobile width:
 
 ```bash
 git status          # review what ships
-npm run build       # final build
+npm run check       # final build + all gates
 # push / Vercel deploy
 ```
 
@@ -173,7 +176,7 @@ After deploy:
 
 | What changed | Update |
 |---|---|
-| New blog post | `posts.ts`, `pasted_text/*.md`, `BlogPost.tsx` SOURCE_MARKDOWN import, `public/blog-images/`, run sitemap |
-| New project | `projects.ts`, optional `ProjectCase.tsx`, `public/project-images/`, run sitemap |
-| New public route | `routes.tsx`, `generate:sitemap`, `<SEO />` on page |
-| Domain change | `SEO.tsx` SITE_URL, `robots.txt`, `index.html` og:image, regenerate sitemap with `SITE_URL=` |
+| New blog post | `src/content/blog/<slug>/index.md` + images in `public/blog-images/`. Nothing else. |
+| New project | `projects.ts` + images in `public/project-images/` |
+| New public route | `src/app/routes.ts` and the prerender list in `react-router.config.ts` |
+| Domain change | `SEO.tsx` SITE_URL and `public/robots.txt` (the sitemap and SEO gate both read SITE_URL from `SEO.tsx`) |

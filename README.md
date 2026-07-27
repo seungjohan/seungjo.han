@@ -52,20 +52,40 @@ scripts/              Build-time scripts (sitemap generation, asset verification
 docs/                 Project docs and engineering notes
 ```
 
+### Getting started
+
+Requires Node 22 (see `.nvmrc`).
+
+```
+npm ci              Install dependencies
+npm run dev         Start the dev server at http://localhost:5173
+```
+
 ### Commands
 
 ```
+npm run check       Typecheck + full build + every gate. Run this before pushing.
 npm run dev         Start the dev server
-npm run build       Prebuild (sitemap + asset verify) then prerender to build/client
+npm run build       prebuild -> prerender -> postbuild (see below)
 npm run typecheck   tsc --noEmit
 npm run preview     Serve the production build locally
 ```
+
+`npm run build` runs three gate stages, any of which can fail the build:
+
+1. **prebuild** — typecheck, sitemap generation, asset verification
+   (existence, exact case, and size budgets)
+2. **build** — prerenders every route in `react-router.config.ts` to static HTML
+3. **postbuild** — promotes the prerendered 404 to `404.html`, then runs the SEO
+   check (metadata, sitemap sync, duplicate body copy). Errors block; warnings do not.
 
 CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) runs typecheck + build on
 every push and pull request.
 
 ### Docs
 
+- [CLAUDE.md](CLAUDE.md) — **start here**: architecture, how to add content, the non-obvious rules
 - [STRATEGY.md](STRATEGY.md) — vision, technical principles, roadmap
-- [PRD.md](PRD.md) — product requirements
+- [docs/plans/next-checklist.md](docs/plans/next-checklist.md) — open work
+- [PRD.md](PRD.md) — historical, describes the pre-rearchitecture SPA. Do not follow.
 - [docs/](docs/) — engineering notes and handoffs
