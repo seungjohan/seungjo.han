@@ -45,10 +45,13 @@ export default function About() {
       {/* ── Portrait ── */}
       <div className="mb-12">
         <img
-          src="/favicon.svg"
-          alt="Seungjo Han"
+          src="/images/seungjo-han-portrait.jpg"
+          alt="Hand-drawn portrait of Seungjo Han"
+          width={1400}
+          height={1400}
           loading="eager"
           decoding="async"
+          fetchPriority="high"
           className="w-full object-contain"
           style={{ height: 'auto', display: 'block' }}
         />

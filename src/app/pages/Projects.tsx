@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { PROJECTS, type Project } from '../data/projects';
 import { buildMeta } from '../components/SEO';
+import ProjectNarrative from '../components/ProjectNarrative';
 
 export const meta = () =>
   buildMeta({
@@ -179,35 +180,10 @@ function ProjectCard({ project, selectedTags, onTagClick, index }: {
         </div>
         <p className="text-xs text-gray-400 mb-8">{project.client} · {project.year}</p>
 
-        {/* Impact */}
-        <div className="mb-7">
-          <p className="text-gray-400 uppercase tracking-wider mb-2.5" style={{ fontSize: '0.68rem' }}>📝&nbsp; Impact</p>
-          <p className="text-gray-700 leading-relaxed" style={{ fontSize: '0.95rem' }}>{project.impact}</p>
-        </div>
-
-        {/* What I Did */}
-        <div className="mb-7">
-          <p className="text-gray-400 uppercase tracking-wider mb-2.5" style={{ fontSize: '0.68rem' }}>🔧&nbsp; What I Did</p>
-          <p className="text-gray-700 leading-relaxed mb-4" style={{ fontSize: '0.95rem' }}>{project.whatIDid}</p>
-          <ul className="space-y-2.5">
-            {project.whatIDidBullets.map((bullet, bi) => (
-              <li key={bi} className="flex items-start gap-3">
-                <span className="text-gray-400 flex-shrink-0 mt-0.5" style={{ fontSize: '0.85rem' }}>→</span>
-                <span className="text-gray-600 leading-relaxed" style={{ fontSize: '0.9rem' }}>{bullet}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Outcome */}
-        <div>
-          <p className="text-gray-400 uppercase tracking-wider mb-2.5" style={{ fontSize: '0.68rem' }}>✅&nbsp; Outcome</p>
-          <div className="bg-gray-50 rounded-xl p-5">
-            <p className="text-gray-900 leading-relaxed" style={{ fontSize: '0.95rem', fontWeight: 500 }}>
-              {project.outcome}
-            </p>
-          </div>
-        </div>
+        {/* Outcome only. The full narrative (context, what I did) lives on the
+            detail page — the listing sells, the case study proves. Rendering the
+            whole body here duplicated every detail page's copy verbatim. */}
+        <ProjectNarrative project={project} variant="card" />
       </div>
     </motion.div>
   );
@@ -333,7 +309,7 @@ export default function Projects() {
             Featured case studies
           </h2>
           <p className="text-gray-500 max-w-lg leading-relaxed" style={{ fontSize: '0.95rem' }}>
-            Three deep dives into products I've owned end-to-end — plus two more projects below.
+            Products and ventures I've owned end-to-end, from validation through delivery.
           </p>
         </motion.div>
       </div>

@@ -92,38 +92,118 @@ if (invalidPublicPaths.size) {
   process.exit(1);
 }
 
+// Build the real, case-exact set of files on disk.
+//
+// The previous implementation used fs.existsSync(), which is case-INSENSITIVE on
+// macOS (APFS). That made the case-mismatch branch below unreachable on the dev
+// machine and warn-only on Linux, so a reference to `_7.jpg` when the file is
+// `_7.JPG` passed the gate and shipped. Vercel serves from Linux, where the
+// request 404s. Exact string membership is the only check that behaves the same
+// on both.
+function walk(dir, prefix = '') {
+  const found = new Map(); // web path -> bytes
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name.startsWith('.')) continue; // .DS_Store and friends
+    const abs = path.join(dir, entry.name);
+    const web = `${prefix}/${entry.name}`;
+    if (entry.isDirectory()) {
+      for (const [k, v] of walk(abs, web)) found.set(k, v);
+    } else {
+      found.set(web, fs.statSync(abs).size);
+    }
+  }
+  return found;
+}
+
+const onDisk = walk(publicDir);
+const lowerIndex = new Map([...onDisk.keys()].map(p => [p.toLowerCase(), p]));
+
 const missing = [];
 const caseMismatch = [];
 
 for (const webPath of referenced) {
-  const diskPath = path.join(publicDir, webPath);
-  if (fs.existsSync(diskPath)) continue;
+  if (onDisk.has(webPath)) continue;
+  const alt = lowerIndex.get(webPath.toLowerCase());
+  if (alt) caseMismatch.push({ webPath, found: alt });
+  else missing.push(webPath);
+}
 
-  const dir = path.dirname(diskPath);
-  const base = path.basename(diskPath);
-  const alt = fs
-    .readdirSync(dir, { withFileTypes: true })
-    .map(entry => entry.name)
-    .find(name => name.toLowerCase() === base.toLowerCase());
+// ─── Size budgets ─────────────────────────────────────────────────────────────
+// Per-class, not a single flat cap. A flat 100KB threshold fires on 29 of 35
+// files here, and the allowlist needed to silence it would swallow the gate.
+const SIZE_BUDGETS = [
+  // The favicon ships on every page view, so it gets the tightest budget.
+  { test: /^\/favicon\.[a-z0-9]+$/i, max: 15 * 1024, label: 'favicon' },
+  // Only fetched on "add to home screen", and it is a photograph at 180px.
+  { test: /^\/apple-touch-icon\.[a-z0-9]+$/i, max: 100 * 1024, label: 'apple touch icon' },
+  { test: /^\/og-image\.[a-z0-9]+$/i, max: 300 * 1024, label: 'social share image' },
+  { test: /^\/(blog-images|project-images|images)\//i, max: 500 * 1024, label: 'content image' },
+];
 
-  if (alt) {
-    caseMismatch.push({ webPath, found: `/${path.relative(publicDir, path.join(dir, alt)).replace(/\\/g, '/')}` });
-  } else {
-    missing.push(webPath);
+// Known outliers, tracked rather than hidden behind a loose threshold. Each needs
+// tooling this repo does not have (svgo / gifsicle); sips cannot compress a GIF or
+// an SVG without destroying it. Keep this list SHORT — it is technical debt, not an
+// escape hatch. A fourth entry means the budget is wrong or the habit has slipped.
+const KNOWN_OVERSIZED = new Set([
+  '/project-images/travel-cp_7.gif', // animated, needs gifsicle
+  '/project-images/busking-town_1.png', // flat-colour PNG, needs pngquant
+  '/project-images/webeing-hybrid-app.svg', // path-heavy vector, needs svgo
+]);
+
+const oversized = [];
+for (const [webPath, bytes] of onDisk) {
+  if (KNOWN_OVERSIZED.has(webPath)) continue;
+  const budget = SIZE_BUDGETS.find(b => b.test.test(webPath));
+  if (budget && bytes > budget.max) {
+    oversized.push({ webPath, bytes, max: budget.max, label: budget.label });
   }
 }
 
-if (caseMismatch.length) {
-  console.warn('\nCase/extension mismatches (works on macOS, may fail on Linux deploy):');
-  for (const item of caseMismatch) {
-    console.warn(`  ${item.webPath} -> use ${item.found}`);
+// ─── Report every class at once, then exit ────────────────────────────────────
+// Collect all problems before exiting so one run surfaces every issue rather
+// than making the caller re-run per error class.
+const kb = n => `${(n / 1024).toFixed(0)} KB`;
+let failed = false;
+
+if (invalidPublicPaths.size) {
+  failed = true;
+  console.error(`\n✗ Invalid public asset paths (${invalidPublicPaths.size})\n`);
+  for (const item of invalidPublicPaths) {
+    console.error(`  ${item}`);
+    console.error(`    fix: drop the "public/" prefix — paths are web-root-relative, e.g. "/blog-images/x.jpg"\n`);
   }
 }
 
 if (missing.length) {
-  console.error('\nMissing local assets:');
-  for (const item of missing) console.error(`  ${item}`);
-  process.exit(1);
+  failed = true;
+  console.error(`\n✗ Missing local assets (${missing.length})\n`);
+  for (const item of missing) {
+    console.error(`  ${item}`);
+    console.error(`    expected at: public${item}`);
+    console.error(`    fix: add the file, or correct the path in the file that references it\n`);
+  }
 }
 
-console.log(`Verified ${referenced.size} local asset reference(s).`);
+if (caseMismatch.length) {
+  failed = true;
+  console.error(`\n✗ Case mismatches (${caseMismatch.length}) — these 404 on Linux/Vercel\n`);
+  for (const item of caseMismatch) {
+    console.error(`  referenced: ${item.webPath}`);
+    console.error(`  on disk:    ${item.found}`);
+    console.error(`    fix: rename the file to match the reference, or update the reference\n`);
+  }
+}
+
+if (oversized.length) {
+  failed = true;
+  console.error(`\n✗ Assets over budget (${oversized.length})\n`);
+  for (const item of oversized.sort((a, b) => b.bytes - a.bytes)) {
+    console.error(`  ${item.webPath}`);
+    console.error(`    ${kb(item.bytes)} — budget for ${item.label} is ${kb(item.max)}`);
+    console.error(`    fix: re-encode or resize. Every visitor downloads this.\n`);
+  }
+}
+
+if (failed) process.exit(1);
+
+console.log(`Verified ${referenced.size} asset reference(s), ${onDisk.size} file(s) within budget.`);

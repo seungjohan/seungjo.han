@@ -42,7 +42,11 @@ export function Layout({ children }: { children: ReactNode }) {
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        {/* Raster, not the traced SVG. The source artwork is 17k paths / 9.4MB and
+            was downloaded on every page view to render at 32px. Original kept at
+            src/imports/brand/favicon-source.svg. */}
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <meta name="google-site-verification" content="5j9yeKVLbS4yrUq1ey-Uq18nC4ipWSoWjWEIu133Utc" />
         <Meta />
         <Links />

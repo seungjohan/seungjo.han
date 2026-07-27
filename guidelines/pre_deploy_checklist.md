@@ -125,9 +125,11 @@ Naming: `{project-slug}_{number}.jpg` (e.g. `webeing_1.jpg`)
 - [ ] `projects.ts` references `/project-images/...` paths
 - [ ] Hero carousel cycles and lightbox works on `/projects/{slug}`
 
-### Case study body (`src/app/pages/ProjectCase.tsx`)
+### Case study body (`src/app/data/projects.ts`)
 
-- [ ] Custom `CaseContent` branch exists for projects that need real copy (default is placeholder)
+- [ ] Every project has non-empty `impact`, `whatIDid`, `outcome` and at least one `whatIDidBullets` entry
+- [ ] Every claim in those fields is true and specific to that project — no placeholder or template copy
+- [ ] No project prose is hardcoded in `ProjectCase.tsx` / `Projects.tsx`; the body is data-driven via `ProjectNarrative`
 
 ---
 

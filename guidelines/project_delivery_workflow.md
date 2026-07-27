@@ -191,20 +191,33 @@ Still in `projects.ts`:
 
 - `title`, `description` — headline and intro on the detail page.
 - `role`, `team`, `duration`, `techStack` — meta grid under the title.
-- `impact`, `whatIDid`, `whatIDidBullets`, `outcome` — used on the expanded project panel on `/projects`, not in the long case-study body today.
+- `impact`, `whatIDid`, `whatIDidBullets`, `outcome` — the case-study body. Rendered on
+  both `/projects` (summary) and `/projects/{slug}` (full) via the shared
+  `ProjectNarrative` component.
 
-### Long case-study body (Problem, Solution, Process, …)
+### Case-study body
 
-The sections below the hero are defined in `ProjectCase.tsx` inside `CaseContent({ slug })`.
+The body is **data-driven**. There is no per-slug branch to edit and no hardcoded prose
+in any component.
 
-- Only `brand-identity-system` has custom sections today.
-- Every other slug uses the generic placeholder sections (`Problem`, `TL;DR`, `Solution`, …).
+To change a project's story, edit that project's entry in `src/app/data/projects.ts`:
 
-To customize a project’s story:
+| Field | Renders as |
+|---|---|
+| `outcome` | "Outcome" — shown first on the detail page, above the gallery |
+| `impact` | "Context" — the problem or market the work sat in |
+| `whatIDid` | "What I did" — intro sentence |
+| `whatIDidBullets` | arrow-prefixed list under "What I did" |
 
-1. Open `src/app/pages/ProjectCase.tsx`.
-2. Add a branch such as `if (slug === 'webeing') { return ( <> … </> ); }` before the generic fallback, mirroring the `brand-identity-system` block.
-3. Use the existing `<Section title="…" id="…">` component for each block.
+Rules:
+
+- Never hardcode project prose in `ProjectCase.tsx` or `Projects.tsx`. A slug-dispatch
+  branch containing JSX copy is how six pages ended up publishing fabricated metrics
+  ("reduced drop-off by 40%") for every real project. That pattern was removed
+  deliberately — do not reintroduce it.
+- Every claim in these fields must be true and specific to the project.
+- `impact`, `whatIDid`, and `outcome` must be non-empty and `whatIDidBullets` must have
+  at least one entry. `npm run verify:assets` fails the build otherwise.
 
 After edits, run `npm run dev` and open `/projects/your-slug` to preview.
 
