@@ -138,9 +138,9 @@ The problem this solved, for reference:
 - [x] **X14** — `rm -rf dist/` — stale pre-rearchitecture Vite output. Two stale docs point
       readers at `dist/index.html`.
 - [ ] **X15** — Declare `serve` as a devDependency; `preview` uses bare `npx`.
-- [ ] **E16** — Stop deploying `.DS_Store`; remove unreferenced `og-image.svg`.
+- [~] **E16** — `.DS_Store` was already gitignored so it never reached Vercel; local copies deleted. Unreferenced `public/og-image.svg` still present.
 - [ ] **E18** — Preserve the `process.env.SITE_URL` override when single-sourcing.
-- [ ] **T10** — `NotFound` canonical currently points at `/404`, not a real route.
+- [x] **T10** — Resolved by E3: `/404` is now a genuinely prerendered route, so its canonical is valid.
 
 ## 5. Known debt, tracked deliberately
 
