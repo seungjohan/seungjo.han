@@ -12,6 +12,12 @@ type SEOArgs = {
   path?: string;
   image?: string;
   type?: 'website' | 'article';
+  /**
+   * Robots directive, e.g. 'noindex, follow'. Set on pages that are prerendered
+   * but must not be indexed — the 404 page is served for every unmatched URL, so
+   * without this Google would index an unbounded set of junk URLs.
+   */
+  robots?: string;
   /** Extra JSON-LD blocks appended after the standard tags. */
   jsonLd?: object[];
 };
@@ -35,6 +41,7 @@ export function buildMeta({
   path = '/',
   image = DEFAULT_IMAGE,
   type = 'website',
+  robots,
   jsonLd = [],
 }: SEOArgs): MetaDescriptor[] {
   const fullTitle = title.includes(SITE_NAME) ? title : `${title} - ${SITE_NAME}`;
@@ -44,6 +51,7 @@ export function buildMeta({
   return [
     { title: fullTitle },
     { name: 'description', content: description },
+    ...(robots ? [{ name: 'robots', content: robots }] : []),
     { tagName: 'link', rel: 'canonical', href: url },
     { property: 'og:site_name', content: SITE_NAME },
     { property: 'og:title', content: fullTitle },

@@ -7,6 +7,10 @@ export const meta = () =>
     title: 'Page Not Found - Seungjo Han',
     description: 'The page you are looking for does not exist.',
     path: '/404',
+    // This page is served for every unmatched URL. Without noindex, each of those
+    // URLs becomes an indexable page; 'follow' still lets crawlers use the links
+    // back into the real site.
+    robots: 'noindex, follow',
   });
 
 export default function NotFound() {

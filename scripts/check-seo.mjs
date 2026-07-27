@@ -81,6 +81,11 @@ function parseHead(html) {
   return { title: titleMatch ? decodeEntities(titleMatch[1]).trim() : '', meta, canonical, h1Count };
 }
 
+// Routes that are prerendered on purpose but must never be indexed or listed in
+// the sitemap. Without this, prerendering /404 makes the sitemap-sync check below
+// report a blocking error and nothing deploys.
+const EXCLUDED_ROUTES = new Set(['/404', '/404.html']);
+
 // ─── Collect prerendered pages ────────────────────────────────────────────────
 function htmlFiles(dir) {
   const files = [];
@@ -104,10 +109,12 @@ if (!fs.existsSync(buildDir)) {
 }
 
 const files = htmlFiles(buildDir);
-const pages = files.map(file => {
-  const html = fs.readFileSync(file, 'utf8');
-  return { route: routeOf(file), html, ...parseHead(html) };
-});
+const pages = files
+  .map(file => {
+    const html = fs.readFileSync(file, 'utf8');
+    return { route: routeOf(file), html, ...parseHead(html) };
+  })
+  .filter(p => !EXCLUDED_ROUTES.has(p.route));
 
 // ─── Per-page checks ──────────────────────────────────────────────────────────
 for (const p of pages) {

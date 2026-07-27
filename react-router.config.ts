@@ -24,6 +24,10 @@ export default {
   ssr: false,
   prerender: [
     '/',
+    // Prerendered so Vercel can serve a real 404.html on filesystem miss. It is
+    // excluded from the sitemap and marked noindex — see scripts/check-seo.mjs
+    // EXCLUDED_ROUTES and pages/NotFound.tsx.
+    '/404',
     '/about',
     '/blog',
     '/projects',

@@ -1,6 +1,3 @@
 {
-  "outputDirectory": "build/client",
-  "rewrites": [
-    { "source": "/((?!sitemap.xml|robots.txt|assets/.*).*)", "destination": "/index.html" }
-  ]
+  "outputDirectory": "build/client"
 }
