@@ -209,6 +209,27 @@ function parseItems(relFile, urlPrefix) {
   });
 }
 
+// Blog posts live one-per-directory with YAML frontmatter, so keywords come from
+// the frontmatter block rather than a data file.
+function parseContentItems(relDir, urlPrefix) {
+  const dir = path.join(root, relDir);
+  return fs
+    .readdirSync(dir, { withFileTypes: true })
+    .filter(entry => entry.isDirectory() && fs.existsSync(path.join(dir, entry.name, 'index.md')))
+    .map(entry => {
+      const raw = fs.readFileSync(path.join(dir, entry.name, 'index.md'), 'utf8');
+      const front = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? '';
+      const kw = front.match(/^focusKeyword:\s*(.+)$/m);
+      const sec = front.match(/^secondaryKeywords:\s*\[(.*)\]$/m);
+      return {
+        route: `${urlPrefix}/${entry.name}`,
+        slug: entry.name,
+        focusKeyword: kw ? kw[1].trim() : null,
+        secondaryKeywords: sec ? sec[1].split(',').map(s => s.trim()).filter(Boolean) : [],
+      };
+    });
+}
+
 function stripTags(html) {
   return decodeEntities(
     html
@@ -275,7 +296,7 @@ function analyzeKeyword(page) {
     if (!ok) warnings.push(`  [${page.route}] focus keyword "${kw}" not in ${spot}`);
 }
 
-const items = [...parseItems('src/app/data/posts.ts', '/blog'), ...parseItems('src/app/data/projects.ts', '/projects')];
+const items = [...parseContentItems('src/content/blog', '/blog'), ...parseItems('src/app/data/projects.ts', '/projects')];
 const pageByRoute = new Map(pages.map(p => [p.route, p]));
 let missingKeyword = 0;
 for (const item of items) {

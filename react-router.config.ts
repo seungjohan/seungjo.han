@@ -1,11 +1,20 @@
 import type { Config } from '@react-router/dev/config';
 import fs from 'node:fs';
 
-// Slugs are regex-extracted (same approach as scripts/generate-sitemap.mjs)
-// so this config never has to import app modules.
+// Projects are still regex-extracted from the data file, so this config never
+// has to import app modules. Blog posts no longer need that: each post is a
+// directory under src/content/blog and the directory name is the slug, so a
+// listing is both simpler and impossible to silently miss.
 function slugsFrom(file: string): string[] {
   const content = fs.readFileSync(file, 'utf8');
   return [...content.matchAll(/^\s*slug:\s*['"]([^'"]+)['"]/gm)].map(m => m[1]);
+}
+
+function contentSlugs(dir: string): string[] {
+  return fs
+    .readdirSync(dir, { withFileTypes: true })
+    .filter(entry => entry.isDirectory() && fs.existsSync(`${dir}/${entry.name}/index.md`))
+    .map(entry => entry.name);
 }
 
 export default {
@@ -18,7 +27,7 @@ export default {
     '/about',
     '/blog',
     '/projects',
-    ...slugsFrom('src/app/data/posts.ts').map(slug => `/blog/${slug}`),
+    ...contentSlugs('src/content/blog').map(slug => `/blog/${slug}`),
     ...slugsFrom('src/app/data/projects.ts').map(slug => `/projects/${slug}`),
   ],
 } satisfies Config;

@@ -1,3 +1,14 @@
+---
+title: I'm a Proud Dokdo Security Police of Korea
+subtitle: Another way to protect our territory, 'Dokdo', and a way to love myself. 'Dokdo Security Police'
+date: December 2, 2022
+tags: [Life, Korea, Challenge]
+excerpt: I served 21 months as a Dokdo Security Police. This is the story of why I applied, what I found, and how it changed me.
+coverImage: /blog-images/im-a-proud-dokdo-security-police-of-korea_2.jpg
+focusKeyword: Dokdo Security Police
+secondaryKeywords: [Dokdo, Korea]
+---
+
 # I'm a Proud Dokdo Security Police of Korea
 
 ### Another way to protect our territory, 'Dokdo', and a way to love myself. 'Dokdo Security Police'

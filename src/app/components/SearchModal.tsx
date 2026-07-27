@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, X, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router';
-import { POSTS } from '../data/posts';
+import { POSTS } from '../content/posts';
 
 interface SearchModalProps {
   open: boolean;

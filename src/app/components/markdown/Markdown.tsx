@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link2 } from 'lucide-react';
 import { toast } from 'sonner';
-import type { Post } from '../../data/posts';
+import type { Post } from '../../content/posts';
 
 // ─── Anchor headings ───────────────────────────────────────────────────────────
 export function copyAnchorLink(id: string) {

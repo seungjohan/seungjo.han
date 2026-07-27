@@ -39,6 +39,12 @@ function localPathsFromText(text) {
   for (const match of text.matchAll(/['"`](?:https?:\/\/[^'"`]*?)?(\/(?:favicon|og-image)\.(?:svg|png))['"`]/g)) {
     paths.add(match[1]);
   }
+  // Unquoted YAML frontmatter values, e.g. `coverImage: /blog-images/x.jpg`.
+  // Without this the quote-delimited patterns above miss every cover image, and
+  // the gate reports success while verifying nothing about them.
+  for (const match of text.matchAll(/^\s*\w+:\s*(\/(?:blog-images|project-images|images)\/\S+)\s*$/gm)) {
+    paths.add(match[1]);
+  }
   return paths;
 }
 
@@ -53,33 +59,36 @@ function invalidPublicPathsFromText(text) {
   return paths;
 }
 
-const postsSource = read('src/app/data/posts.ts');
 const projectsSource = read('src/app/data/projects.ts');
-const markdownDir = path.join(root, 'src/imports/pasted_text');
+const blogDir = path.join(root, 'src/content/blog');
 const appSources = readSourceFiles(path.join(root, 'src/app'));
 
 const referenced = new Set([
   ...appSources.flatMap(source => [...localPathsFromText(source)]),
-  ...localPathsFromText(postsSource),
   ...localPathsFromText(projectsSource),
 ]);
 
 const invalidPublicPaths = new Set([
   ...appSources.flatMap(source => [...invalidPublicPathsFromText(source)]),
-  ...invalidPublicPathsFromText(postsSource),
   ...invalidPublicPathsFromText(projectsSource),
 ]);
 
-const postMarkdownKeys = [
-  ...postsSource.matchAll(/slug:\s*['"][^'"]+['"][\s\S]*?sourceMarkdown:\s*['"]([^'"]+)['"]/g),
-].map(([, key]) => key);
+// Every post is src/content/blog/<slug>/index.md. Iterating the directory means
+// a post cannot be skipped: the previous version looked up a hand-maintained key,
+// silently `continue`d when it did not resolve, and still reported success — so
+// one post's images were never verified at all.
+const postDirs = fs
+  .readdirSync(blogDir, { withFileTypes: true })
+  .filter(entry => entry.isDirectory())
+  .map(entry => entry.name);
 
-for (const key of postMarkdownKeys) {
-  const mdFile =
-    fs.readdirSync(markdownDir).find(name => name === `${key}.md`) ||
-    fs.readdirSync(markdownDir).find(name => name.replace(/\.md$/i, '') === key);
-  if (!mdFile) continue;
-  const markdown = fs.readFileSync(path.join(markdownDir, mdFile), 'utf8');
+for (const slug of postDirs) {
+  const mdPath = path.join(blogDir, slug, 'index.md');
+  if (!fs.existsSync(mdPath)) {
+    console.error(`\n✗ src/content/blog/${slug}/ has no index.md — every post directory must contain one.\n`);
+    process.exit(1);
+  }
+  const markdown = fs.readFileSync(mdPath, 'utf8');
   for (const p of localPathsFromText(markdown)) referenced.add(p);
   for (const p of invalidPublicPathsFromText(markdown)) invalidPublicPaths.add(p);
 }

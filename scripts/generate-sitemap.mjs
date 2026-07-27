@@ -16,9 +16,19 @@ function extractSlugs(relativeFile) {
   return [...content.matchAll(/^\s*slug:\s*['"]([^'"]+)['"]/gm)].map(m => m[1]);
 }
 
+// Blog posts are directories under src/content/blog; the directory name is the
+// slug. No parsing, so a post can never be silently omitted from the sitemap.
+function contentSlugs(relativeDir) {
+  const dir = path.join(root, relativeDir);
+  return fs
+    .readdirSync(dir, { withFileTypes: true })
+    .filter(entry => entry.isDirectory() && fs.existsSync(path.join(dir, entry.name, 'index.md')))
+    .map(entry => entry.name);
+}
+
 const staticPaths = ['/', '/about', '/projects', '/blog'];
 const projectSlugs = extractSlugs('src/app/data/projects.ts');
-const postSlugs = extractSlugs('src/app/data/posts.ts');
+const postSlugs = contentSlugs('src/content/blog');
 
 const urls = [
   ...staticPaths,

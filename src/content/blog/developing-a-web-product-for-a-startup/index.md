@@ -1,3 +1,14 @@
+---
+title: Developing a Web Product for an Early-stage Startup from scratch
+subtitle: You need to know software development to build your ideas into products.
+date: September 26, 2024
+tags: [Startup, Technology, Product]
+excerpt: How I went from zero programming knowledge to shipping a full-stack web product — and what that process taught me about building startups.
+coverImage: /blog-images/developing-a-web-product-for-an-early-stage-startup-from-scratch_1.JPEG
+focusKeyword: web product for a startup
+secondaryKeywords: [full-stack development, startup]
+---
+
 # Developing a Web Product for an Early-stage Startup from scratch
 
 ### You need to know software development to build your ideas into products.

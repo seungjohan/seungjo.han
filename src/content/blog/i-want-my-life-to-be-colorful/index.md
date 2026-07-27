@@ -1,3 +1,14 @@
+---
+title: I Want My Life to Be Colorful
+subtitle: Breaking free from a fluctuating sense of self-worth, knocking on the doors of the world, and learning to be honest with myself.
+date: February 6, 2026
+tags: [Life, Myself, Travel, Self-esteem, Challenge]
+excerpt: A personal reflection on travel, Dokdo, cold emails, startups, languages, kindness, music, and choosing a colorful life.
+coverImage: /blog-images/i-want-my-life-to-be-colorful_6.jpg
+focusKeyword: colorful life
+secondaryKeywords: [self-worth, travel]
+---
+
 # I Want My Life to Be Colorful
 
 ### Breaking free from a fluctuating sense of self-worth, knocking on the doors of the world, and learning to be honest with myself.

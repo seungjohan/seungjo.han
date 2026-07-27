@@ -1,3 +1,14 @@
+---
+title: Designing a Prototype for a Startup to turn your Ideas into Reality
+subtitle: Prototyping: to transform abstract ideas into tangible, realizable concepts.
+date: September 26, 2024
+tags: [Startup, Design, Product, Prototype]
+excerpt: What I learned from iterating through 5 prototype versions of a real startup — and why prototyping is the blueprint for everything you build.
+coverImage: https://substackcdn.com/image/fetch/$s_!6p6g!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F4b64ad48-2e39-4e52-8672-c1749fbaacae_1202x2014.png
+focusKeyword: prototype for a startup
+secondaryKeywords: [prototyping, startup ideas]
+---
+
 # Designing a Prototype for a Startup to turn your Ideas into Reality
 
 ### Prototyping: to transform abstract ideas into tangible, realizable concepts.
