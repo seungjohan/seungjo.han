@@ -62,7 +62,7 @@ The problem this solved, for reference:
 
 - [x] Restructure blog content into `src/content/blog/<slug>/index.md` with frontmatter
 - [x] Chose markdown-with-frontmatter over MDX and over stored HTML
-- [ ] Optional, later: same treatment for projects (would also finish X3)
+- [x] Same treatment for projects — `src/content/projects/<slug>/index.ts`, kept as TypeScript. Finished X3.
 
 ---
 
@@ -83,7 +83,7 @@ The problem this solved, for reference:
       to like-for-like routes and exclude `description`/`excerpt` literals. Measured
       baseline: a naive check fires on 7 legitimate duplicates.
 - [x] **E6** — Push the duplicate-body finding to `errors` + `exit 1`, not `warnings`.
-- [ ] **X3** — Single-source slugs. Four independent regexes parse `projects.ts` as raw text
+- [x] **X3** — Single-source slugs. Four independent regexes parse `projects.ts` as raw text
       (`react-router.config.ts:8`, `check-seo.mjs:198`, `generate-sitemap.mjs:16`,
       `verify-assets.mjs:74`). A slug written as a template literal silently breaks
       prerender, sitemap, and SEO analysis at once, with no diagnostics.
@@ -107,17 +107,17 @@ The problem this solved, for reference:
 - [~] **D12** — Dots as `<button aria-current>`; 44 px touch targets. **Detail page done;
       the listing card's dots and arrows are still `<span>`s with 28 px targets.**
 - [x] **D16** — Add a `focus-visible` outline utility. No focus styling exists anywhere.
-- [ ] **D10** — Remove Unsplash stock from portfolio images. LITER's three "portfolio
+- [x] **D10** — Remove Unsplash stock from portfolio images. LITER's three "portfolio
       images" are stock coffee-shop photos; nine `unsplash` refs across six projects, and
       `coverImage` is also the OG image source.
 - [x] **E11** — Add `npm run typecheck` to `prebuild`. Vercel never runs the CI workflow.
 - [x] **E12** — Data-shape assertion in `verify-assets.mjs`: fail on empty
       `impact`/`whatIDid`/`outcome` or zero bullets. Empty strings typecheck fine.
-- [ ] **E13** — `scripts/smoke.mjs`: post-deploy curls + 404 status + assert every
+- [x] **E13** — `scripts/smoke.mjs`: post-deploy curls + 404 status + assert every
       referenced asset returns `image/*` rather than `text/html`.
 - [ ] **E14** — `lastmod`: add an explicit `updated` field or drop the element. Ten of
       fourteen URLs have no date source.
-- [ ] **E15** — Guard `coverImage` in `ProjectCase.meta()`; an empty string yields an
+- [x] **E15** — Guard `coverImage` in `ProjectCase.meta()`; an empty string yields an
       `og:image` pointing at the home page.
 - [x] **X8** — Untrack `public/sitemap.xml`. Every build rewrites it, which defeats the
       repo's own "review what ships" step.
@@ -126,7 +126,7 @@ The problem this solved, for reference:
 - [x] **X12** — Split advisory from actionable in `check-seo.mjs`; delete the
       focus-keyword-in-slug check. It is 8 of 22 warnings and unactionable by the repo's
       own policy that slugs never change after publish.
-- [ ] **X13** — `platform`, `timeline`, `color` are required in the `Project` interface and
+- [x] **X13** — `platform`, `timeline`, `color` are required in the `Project` interface and
       referenced nowhere. Delete or surface them.
 - [ ] **D9** — `galleryFor()` helper so listing and detail share one image fallback.
 - [ ] **D13** — Per-image alt text instead of `project.title` on every image.
@@ -139,7 +139,8 @@ The problem this solved, for reference:
       readers at `dist/index.html`.
 - [ ] **X15** — Declare `serve` as a devDependency; `preview` uses bare `npx`.
 - [~] **E16** — `.DS_Store` was already gitignored so it never reached Vercel; local copies deleted. Unreferenced `public/og-image.svg` still present.
-- [ ] **E18** — Preserve the `process.env.SITE_URL` override when single-sourcing.
+- [ ] **E18** — Single-source `SITE_URL` into `generate-sitemap.mjs` (still its own copy),
+      preserving the `process.env.SITE_URL` override.
 - [x] **T10** — Resolved by E3: `/404` is now a genuinely prerendered route, so its canonical is valid.
 
 ## 5. Known debt, tracked deliberately
