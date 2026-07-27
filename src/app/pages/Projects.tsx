@@ -2,7 +2,7 @@ import { Link, useSearchParams } from 'react-router';
 import { motion } from 'motion/react';
 import { ArrowRight, Mail, Linkedin } from 'lucide-react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { PROJECTS, type Project } from '../data/projects';
 import { buildMeta } from '../components/SEO';
 import ProjectNarrative from '../components/ProjectNarrative';
@@ -60,15 +60,12 @@ function ProjectCard({ project, selectedTags, onTagClick, index }: {
   index: number;
 }) {
   const [imgIndex, setImgIndex] = useState(0);
-  const images = project.images ?? [project.coverImage];
+  const images = project.images?.length ? project.images : project.coverImage ? [project.coverImage] : [];
 
-  useEffect(() => {
-    if (images.length <= 1) return;
-    const id = setInterval(() => {
-      setImgIndex(i => (i + 1) % images.length);
-    }, 2000);
-    return () => clearInterval(id);
-  }, [images.length]);
+  // No auto-cycling here on purpose. Six cards render at once on this page, so
+  // auto-advance meant six independent animations running permanently while the
+  // reader is trying to read. The arrows below still work; the detail page keeps
+  // a slower, pausable carousel.
 
   const prev = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -173,12 +170,12 @@ function ProjectCard({ project, selectedTags, onTagClick, index }: {
           </h2>
           <Link
             to={`/projects/${project.slug}`}
-            className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-black transition-colors flex-shrink-0 mt-1"
+            className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-black transition-colors flex-shrink-0 mt-1"
           >
             View project <ArrowRight size={13} />
           </Link>
         </div>
-        <p className="text-xs text-gray-400 mb-8">{project.client} · {project.year}</p>
+        <p className="text-xs text-gray-500 mb-8">{project.client} · {project.year}</p>
 
         {/* Outcome only. The full narrative (context, what I did) lives on the
             detail page — the listing sells, the case study proves. Rendering the
@@ -282,7 +279,7 @@ export default function Projects() {
                 {s.number}
               </p>
               <p
-                className="text-gray-400 uppercase"
+                className="text-gray-500 uppercase"
                 style={{ fontSize: '0.65rem', letterSpacing: '0.1em' }}
               >
                 {s.label}
@@ -430,7 +427,7 @@ export default function Projects() {
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, delay: i * 0.06 }}
             >
-              <p className="text-xs text-gray-400 uppercase tracking-wider mb-4">{cat.category}</p>
+              <p className="text-xs text-gray-500 uppercase tracking-wider mb-4">{cat.category}</p>
               <ul className="space-y-2">
                 {cat.items.map(skill => (
                   <li key={skill} className="text-sm text-gray-700">{skill}</li>
@@ -471,7 +468,7 @@ export default function Projects() {
                 {s.number}
               </p>
               <p
-                className="text-gray-400 uppercase leading-tight"
+                className="text-gray-500 uppercase leading-tight"
                 style={{ fontSize: '0.65rem', letterSpacing: '0.1em' }}
               >
                 {s.label}

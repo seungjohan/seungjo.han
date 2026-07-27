@@ -220,7 +220,7 @@ export default function Layout() {
               {/* Pages column */}
               <div>
                 <p
-                  className="text-gray-400 uppercase mb-4"
+                  className="text-gray-500 uppercase mb-4"
                   style={{ fontSize: '0.65rem', letterSpacing: '0.1em' }}
                 >
                   Pages
@@ -243,7 +243,7 @@ export default function Layout() {
               {/* Connect column */}
               <div>
                 <p
-                  className="text-gray-400 uppercase mb-4"
+                  className="text-gray-500 uppercase mb-4"
                   style={{ fontSize: '0.65rem', letterSpacing: '0.1em' }}
                 >
                   Connect
@@ -268,7 +268,7 @@ export default function Layout() {
 
           {/* Bottom — copyright centered */}
           <div className="border-t border-gray-100 pt-6 flex justify-center">
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-500">
               © 2026 Seungjo Han. All rights reserved.
             </p>
           </div>

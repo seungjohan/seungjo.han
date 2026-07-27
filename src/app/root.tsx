@@ -1,5 +1,6 @@
 import { type ReactNode, useEffect } from 'react';
 import { Links, Meta, Outlet, Scripts } from 'react-router';
+import { MotionConfig } from 'motion/react';
 import '../styles/index.css';
 
 const GA_ID = 'G-3F73D31SGZ';
@@ -70,5 +71,12 @@ export function Layout({ children }: { children: ReactNode }) {
 }
 
 export default function Root() {
-  return <Outlet />;
+  // reducedMotion="user" disables transform/opacity animation on every motion.*
+  // component when the OS setting is on. The CSS block in styles/a11y.css covers
+  // the plain CSS transitions motion does not own.
+  return (
+    <MotionConfig reducedMotion="user">
+      <Outlet />
+    </MotionConfig>
+  );
 }

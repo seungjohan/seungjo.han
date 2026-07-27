@@ -1,0 +1,31 @@
+
+/* ─── Reduced motion ──────────────────────────────────────────────────────────
+   Covers the raw CSS transitions that motion/react does not own (image
+   crossfades, hover colour shifts). <MotionConfig reducedMotion="user"> in
+   root.tsx covers the motion.* components. Both are needed: neither alone
+   catches everything. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── Focus visibility ────────────────────────────────────────────────────────
+   The only focus-related rule previously in the codebase was `outline-none` on
+   the search input. Keyboard users had no visible focus anywhere. */
+:where(a, button, [role='button'], input, textarea, select, summary):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Controls sitting on top of photography need a light ring to stay visible. */
+:where(.on-media):focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}

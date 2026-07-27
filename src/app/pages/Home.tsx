@@ -150,7 +150,7 @@ export default function Home() {
                 >
                   {s.number}
                 </p>
-                <p className="text-gray-400 uppercase" style={{ fontSize: '0.65rem', letterSpacing: '0.08em' }}>
+                <p className="text-gray-500 uppercase" style={{ fontSize: '0.65rem', letterSpacing: '0.08em' }}>
                   {s.label}
                 </p>
               </motion.div>
@@ -164,7 +164,7 @@ export default function Home() {
       ══════════════════════════════════════════════════════════════════ */}
       <section className="max-w-4xl mx-auto px-6 py-20 md:py-28 border-b border-gray-100">
         <motion.p
-          className="text-gray-400 uppercase mb-12"
+          className="text-gray-500 uppercase mb-12"
           style={{ fontSize: '0.68rem', letterSpacing: '0.14em' }}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -184,7 +184,7 @@ export default function Home() {
               transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
               <p
-                className="text-gray-400 uppercase mb-3"
+                className="text-gray-500 uppercase mb-3"
                 style={{ fontSize: '0.65rem', letterSpacing: '0.1em' }}
               >
                 {p.label}
@@ -209,7 +209,7 @@ export default function Home() {
       <section className="max-w-4xl mx-auto px-6 py-16 md:py-20 border-b border-gray-100">
         <div className="flex items-baseline justify-between mb-10">
           <motion.p
-            className="text-gray-400 uppercase"
+            className="text-gray-500 uppercase"
             style={{ fontSize: '0.68rem', letterSpacing: '0.14em' }}
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -219,7 +219,7 @@ export default function Home() {
           </motion.p>
           <Link
             to="/projects"
-            className="text-xs text-gray-400 hover:text-black transition-colors"
+            className="text-xs text-gray-500 hover:text-black transition-colors"
           >
             All projects →
           </Link>
@@ -271,7 +271,7 @@ export default function Home() {
       <section className="max-w-4xl mx-auto px-6 py-16 md:py-20 border-b border-gray-100">
         <div className="flex items-baseline justify-between mb-10">
           <motion.p
-            className="text-gray-400 uppercase"
+            className="text-gray-500 uppercase"
             style={{ fontSize: '0.68rem', letterSpacing: '0.14em' }}
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -281,7 +281,7 @@ export default function Home() {
           </motion.p>
           <Link
             to="/blog"
-            className="text-xs text-gray-400 hover:text-black transition-colors"
+            className="text-xs text-gray-500 hover:text-black transition-colors"
           >
             All posts →
           </Link>

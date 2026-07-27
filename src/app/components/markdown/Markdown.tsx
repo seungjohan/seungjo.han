@@ -215,9 +215,13 @@ function MarkdownImage({
 
   return (
     <figure className={`blog-image blog-image-${size}`}>
+      {/* Blog posts carry up to nine full-width photographs; one post pulled
+          ~20MB with every image eager. Body images are always below the fold. */}
       <img
         src={src}
         alt={alt}
+        loading="lazy"
+        decoding="async"
         onError={() => setMissing(true)}
         onClick={() => onOpen(src, alt)}
         className="cursor-zoom-in"

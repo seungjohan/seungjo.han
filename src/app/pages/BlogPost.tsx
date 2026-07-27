@@ -75,7 +75,7 @@ function PostCard({ post }: { post: (typeof POSTS)[0] }) {
         <img src={post.coverImage} alt={post.title} className="w-full aspect-[16/9] object-cover" />
       ) : (
         <div className="w-full aspect-[16/9] bg-gray-100 flex items-center justify-center">
-          <span className="text-xs text-gray-400 tracking-widest uppercase">{post.tags[0]}</span>
+          <span className="text-xs text-gray-500 tracking-widest uppercase">{post.tags[0]}</span>
         </div>
       )}
 
@@ -131,7 +131,7 @@ export default function BlogPost() {
         {/* ← Back link */}
         <Link
           to="/blog"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-400
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500
                      hover:text-black transition-colors mb-10"
         >
           <ArrowLeft size={14} /> Writing
@@ -180,14 +180,14 @@ export default function BlogPost() {
           {post.tags[0] && (
             <Link
               to={`/blog?tag=${encodeURIComponent(post.tags[0])}`}
-              className="text-xs text-gray-400 hover:text-black transition-colors"
+              className="text-xs text-gray-500 hover:text-black transition-colors"
               style={{ letterSpacing: '0.12em' }}
             >
               {post.tags[0]}
             </Link>
           )}
           {/* Right: date only */}
-          <span className="text-xs text-gray-400 flex-shrink-0">
+          <span className="text-xs text-gray-500 flex-shrink-0">
             {formatDate(post.date)}
           </span>
         </div>
@@ -208,7 +208,7 @@ export default function BlogPost() {
           {post.tags[0] && (
             <Link
               to={`/blog?tag=${encodeURIComponent(post.tags[0])}`}
-              className="text-xs text-gray-400 hover:text-black transition-colors"
+              className="text-xs text-gray-500 hover:text-black transition-colors"
               style={{ letterSpacing: '0.12em' }}
             >
               {post.tags[0]}
@@ -220,7 +220,7 @@ export default function BlogPost() {
                 .then(() => { toast.success('Link copied!'); })
                 .catch(() => {});
             }}
-            className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-black transition-colors"
+            className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-black transition-colors"
           >
             <Link2 size={12} /> Share
           </button>
