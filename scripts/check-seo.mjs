@@ -161,6 +161,68 @@ function reportDuplicates(field, label) {
 reportDuplicates(p => p.title, 'title');
 reportDuplicates(p => p.meta.description, 'description');
 
+// ─── Duplicate body copy ──────────────────────────────────────────────────────
+// This is the regression test for the fabricated case-study copy: six project
+// pages once shipped byte-identical invented metrics, and every head-metadata
+// check above passed because their titles and descriptions were distinct.
+//
+// Scoping matters more than the check itself. A naive whole-page comparison fires
+// on legitimate content — an index page quite properly repeats each item's
+// description or excerpt — so this compares only within a route family and
+// ignores paragraphs that came from a summary field.
+function summaryFieldTexts() {
+  const texts = new Set();
+  const projects = fs.readFileSync(path.join(root, 'src/app/data/projects.ts'), 'utf8');
+  for (const m of projects.matchAll(/description:\s*'((?:[^'\\]|\\.)*)'/g)) {
+    texts.add(decodeEntities(m[1].replace(/\\'/g, "'")).replace(/\s+/g, ' ').trim());
+  }
+  const blogDir = path.join(root, 'src/content/blog');
+  for (const entry of fs.readdirSync(blogDir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const md = path.join(blogDir, entry.name, 'index.md');
+    if (!fs.existsSync(md)) continue;
+    const front = fs.readFileSync(md, 'utf8').match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? '';
+    for (const key of ['excerpt', 'subtitle']) {
+      const v = front.match(new RegExp(`^${key}:\\s*(.+)$`, 'm'));
+      if (v) texts.add(v[1].trim().replace(/\s+/g, ' '));
+    }
+  }
+  return texts;
+}
+
+function routeFamily(route) {
+  const m = route.match(/^\/(blog|projects)\//);
+  return m ? m[1] : null; // only detail pages participate
+}
+
+const summaries = summaryFieldTexts();
+const MIN_PARAGRAPH = 60;
+const bodyIndex = new Map(); // family -> paragraph text -> [routes]
+
+for (const p of pages) {
+  const family = routeFamily(p.route);
+  if (!family) continue;
+  const region = contentRegion(p.html);
+  const paragraphs = [...region.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)]
+    .map(m => stripTags(m[1]))
+    .filter(t => t.length >= MIN_PARAGRAPH && !summaries.has(t));
+  for (const text of new Set(paragraphs)) {
+    const key = `${family}::${text}`;
+    if (!bodyIndex.has(key)) bodyIndex.set(key, { text, routes: [] });
+    bodyIndex.get(key).routes.push(p.route);
+  }
+}
+
+for (const { text, routes } of bodyIndex.values()) {
+  if (routes.length < 2) continue;
+  errors.push(
+    `  identical body paragraph on ${routes.join(', ')}:\n` +
+      `    "${text.slice(0, 90)}…"\n` +
+      `    cause: these pages render the same copy — usually a shared placeholder or fallback\n` +
+      `    fix:   give each page its own content, or remove the duplicated block`,
+  );
+}
+
 // ─── Sitemap sync: every prerendered route must be listed ─────────────────────
 const sitemapPath = path.join(publicDir, 'sitemap.xml');
 if (!fs.existsSync(sitemapPath)) {
@@ -248,13 +310,23 @@ function stripTags(html) {
 const has = (haystack, needle) => haystack.toLowerCase().includes(needle.toLowerCase());
 const slugify = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
+/**
+ * The article body with site chrome removed. Extracted so the duplicate-body
+ * check and the link count agree on what "content" means — previously this
+ * region was computed inside contentLinks and thrown away, so there was nothing
+ * reusable and a body check would have had to re-derive it (and get it wrong).
+ */
+function contentRegion(html) {
+  const mainStart = html.search(/<main\b[^>]*>/i);
+  const mainEnd = html.search(/<\/main>/i);
+  const region = mainStart >= 0 && mainEnd > mainStart ? html.slice(mainStart, mainEnd) : html;
+  return region.replace(/<(nav|footer|header)\b[\s\S]*?<\/\1>/gi, ' ');
+}
+
 // Stage 3 — internal & external links, scoped to the article body (strip the
 // site chrome so shared nav/footer links don't count as "content" links).
 function contentLinks(html) {
-  const mainStart = html.search(/<main\b[^>]*>/i);
-  const mainEnd = html.search(/<\/main>/i);
-  let region = mainStart >= 0 && mainEnd > mainStart ? html.slice(mainStart, mainEnd) : html;
-  region = region.replace(/<(nav|footer|header)\b[\s\S]*?<\/\1>/gi, ' ');
+  const region = contentRegion(html);
   let internal = 0, external = 0;
   for (const m of region.matchAll(/<a\b[^>]*href="([^"]*)"/gi)) {
     const href = m[1];
@@ -298,7 +370,13 @@ function analyzeKeyword(page) {
   }
 
   // Escalate only the highest-value gaps to warnings (still non-blocking).
-  const critical = { title: checks[0][1], description: checks[1][1], slug: checks[2][1] };
+  //
+  // Deliberately excludes the slug. A published URL must never change — see
+  // guidelines/blog_management_workflow.md and pre_deploy_checklist.md — so
+  // "keyword not in slug" is unactionable by policy on every existing page. It
+  // accounted for 8 of 22 warnings, which is how a warning list becomes noise
+  // nobody reads. The slug placement is still shown in the report above.
+  const critical = { title: checks[0][1], description: checks[1][1] };
   for (const [spot, ok] of Object.entries(critical))
     if (!ok) warnings.push(`  [${page.route}] focus keyword "${kw}" not in ${spot}`);
 }

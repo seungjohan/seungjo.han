@@ -7,7 +7,7 @@
     "dev": "react-router dev",
     "generate:sitemap": "node scripts/generate-sitemap.mjs",
     "verify:assets": "node scripts/verify-assets.mjs",
-    "prebuild": "npm run generate:sitemap && npm run verify:assets",
+    "prebuild": "npm run typecheck && npm run generate:sitemap && npm run verify:assets",
     "build": "react-router build",
     "postbuild": "npm run finalize:404 && npm run check:seo",
     "check:seo": "node scripts/check-seo.mjs",

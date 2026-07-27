@@ -137,6 +137,30 @@ for (const webPath of referenced) {
   else missing.push(webPath);
 }
 
+// ─── Project content shape ────────────────────────────────────────────────────
+// TypeScript requires these fields but cannot require them to be non-empty, and
+// `impact: ''` renders a heading over nothing. The narrative fields are the whole
+// case study, so an empty one is a blank page shipped silently.
+const shapeProblems = [];
+{
+  const slugMatches = [...projectsSource.matchAll(/^\s*slug:\s*['"]([^'"]+)['"]/gm)];
+  for (const [i, m] of slugMatches.entries()) {
+    const block = projectsSource.slice(m.index, slugMatches[i + 1]?.index ?? projectsSource.length);
+    const slug = m[1];
+
+    for (const field of ['impact', 'whatIDid', 'outcome']) {
+      const v = block.match(new RegExp(`${field}:\\s*['"]((?:[^'"\\\\]|\\\\.)*)['"]`));
+      if (!v || !v[1].trim()) {
+        shapeProblems.push(`${slug}: "${field}" is missing or empty`);
+      }
+    }
+
+    const bullets = block.match(/whatIDidBullets:\s*\[([\s\S]*?)\]/);
+    const count = bullets ? [...bullets[1].matchAll(/['"][^'"]+['"]/g)].length : 0;
+    if (count === 0) shapeProblems.push(`${slug}: "whatIDidBullets" has no entries`);
+  }
+}
+
 // ─── Size budgets ─────────────────────────────────────────────────────────────
 // Per-class, not a single flat cap. A flat 100KB threshold fires on 29 of 35
 // files here, and the allowlist needed to silence it would swallow the gate.
@@ -201,6 +225,18 @@ if (caseMismatch.length) {
     console.error(`  on disk:    ${item.found}`);
     console.error(`    fix: rename the file to match the reference, or update the reference\n`);
   }
+}
+
+if (shapeProblems.length) {
+  failed = true;
+  console.error(`\n✗ Project content incomplete (${shapeProblems.length})\n`);
+  for (const item of shapeProblems) {
+    console.error(`  ${item}`);
+  }
+  console.error(
+    `\n  These fields are the case-study body in src/app/data/projects.ts.\n` +
+      `  An empty one renders a heading with nothing under it.\n`,
+  );
 }
 
 if (oversized.length) {
