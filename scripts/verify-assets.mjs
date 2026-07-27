@@ -191,19 +191,8 @@ const SIZE_BUDGETS = [
   { test: /^\/(blog-images|project-images|images)\//i, max: 500 * 1024, label: 'content image' },
 ];
 
-// Known outliers, tracked rather than hidden behind a loose threshold. Each needs
-// tooling this repo does not have (svgo / gifsicle); sips cannot compress a GIF or
-// an SVG without destroying it. Keep this list SHORT — it is technical debt, not an
-// escape hatch. A fourth entry means the budget is wrong or the habit has slipped.
-const KNOWN_OVERSIZED = new Set([
-  '/project-images/travel-cp_7.gif', // animated, needs gifsicle
-  '/project-images/busking-town_1.png', // flat-colour PNG, needs pngquant
-  '/project-images/webeing-hybrid-app.svg', // path-heavy vector, needs svgo
-]);
-
 const oversized = [];
 for (const [webPath, bytes] of onDisk) {
-  if (KNOWN_OVERSIZED.has(webPath)) continue;
   const budget = SIZE_BUDGETS.find(b => b.test.test(webPath));
   if (budget && bytes > budget.max) {
     oversized.push({ webPath, bytes, max: budget.max, label: budget.label });

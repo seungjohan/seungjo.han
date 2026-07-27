@@ -104,8 +104,8 @@ The problem this solved, for reference:
 - [x] **D7** — Raise `text-gray-400` → `gray-500` for meaning-bearing text (~2.8:1 contrast).
 - [x] **D8** — Carousel: 2000 ms → 5000 ms, pause on hover/focus/`document.hidden`, and
       remove auto-cycling from the listing entirely (six run at once there today).
-- [~] **D12** — Dots as `<button aria-current>`; 44 px touch targets. **Detail page done;
-      the listing card's dots and arrows are still `<span>`s with 28 px targets.**
+- [x] **D12** — Dots and arrows are buttons with `aria-current` and 44 px hit areas on both
+      pages. Also fixed the invalid `<button>` inside `<a>` nesting found while doing it.
 - [x] **D16** — Add a `focus-visible` outline utility. No focus styling exists anywhere.
 - [x] **D10** — Remove Unsplash stock from portfolio images. LITER's three "portfolio
       images" are stock coffee-shop photos; nine `unsplash` refs across six projects, and
@@ -115,45 +115,46 @@ The problem this solved, for reference:
       `impact`/`whatIDid`/`outcome` or zero bullets. Empty strings typecheck fine.
 - [x] **E13** — `scripts/smoke.mjs`: post-deploy curls + 404 status + assert every
       referenced asset returns `image/*` rather than `text/html`.
-- [ ] **E14** — `lastmod`: add an explicit `updated` field or drop the element. Ten of
+- [x] **E14** — `lastmod`: add an explicit `updated` field or drop the element. Ten of
       fourteen URLs have no date source.
 - [x] **E15** — Guard `coverImage` in `ProjectCase.meta()`; an empty string yields an
       `og:image` pointing at the home page.
 - [x] **X8** — Untrack `public/sitemap.xml`. Every build rewrites it, which defeats the
       repo's own "review what ships" step.
-- [ ] **X9/X10/X11** — `verify-assets.mjs` error messages: add provenance (which file
+- [x] **X9/X10/X11** — `verify-assets.mjs` error messages: add provenance (which file
       references the asset); stop silently skipping unmatched `sourceMarkdown` keys.
 - [x] **X12** — Split advisory from actionable in `check-seo.mjs`; delete the
       focus-keyword-in-slug check. It is 8 of 22 warnings and unactionable by the repo's
       own policy that slugs never change after publish.
 - [x] **X13** — `platform`, `timeline`, `color` are required in the `Project` interface and
       referenced nowhere. Delete or surface them.
-- [ ] **D9** — `galleryFor()` helper so listing and detail share one image fallback.
-- [ ] **D13** — Per-image alt text instead of `project.title` on every image.
+- [x] **D9** — `galleryFor()` helper so listing and detail share one image fallback.
+- [x] **D13** — Per-image alt text instead of `project.title` on every image.
 
 ## 4. P3 — nice to have
 
-- [ ] **D14** — Prev/next project navigation. The detail page currently dead-ends.
-- [ ] **D15** — Surface `timeline`/`platform`/`year`/`client` in the meta row.
+- [x] **D14** — Prev/next project navigation. The detail page currently dead-ends.
+- [x] **D15** — Surface `timeline`/`platform`/`year`/`client` in the meta row.
 - [x] **X14** — `rm -rf dist/` — stale pre-rearchitecture Vite output. Two stale docs point
       readers at `dist/index.html`.
-- [ ] **X15** — Declare `serve` as a devDependency; `preview` uses bare `npx`.
-- [~] **E16** — `.DS_Store` was already gitignored so it never reached Vercel; local copies deleted. Unreferenced `public/og-image.svg` still present.
-- [ ] **E18** — Single-source `SITE_URL` into `generate-sitemap.mjs` (still its own copy),
+- [x] **X15** — Declare `serve` as a devDependency; `preview` uses bare `npx`.
+- [x] **E16** — `.DS_Store` was already gitignored so it never reached Vercel; local copies
+      deleted. Unreferenced `public/og-image.svg` removed.
+- [x] **E18** — Single-source `SITE_URL` into `generate-sitemap.mjs` (still its own copy),
       preserving the `process.env.SITE_URL` override.
 - [x] **T10** — Resolved by E3: `/404` is now a genuinely prerendered route, so its canonical is valid.
 
-## 5. Known debt, tracked deliberately
+## 5. Known debt — CLEARED
 
-Three assets are exempted from the size budget in `verify-assets.mjs` because `sips`
-cannot compress them without damage. They need real tooling:
+All three formerly-exempt assets now meet their budgets on merit, so the
+`KNOWN_OVERSIZED` exemption list has been deleted from `verify-assets.mjs` rather
+than carried:
 
-- [ ] `project-images/travel-cp_7.gif` (1.1 MB) — needs `gifsicle`
-- [ ] `project-images/busking-town_1.png` (891 KB) — needs `pngquant`
-- [ ] `project-images/webeing-hybrid-app.svg` (630 KB) — needs `svgo`
-
-Keep that exemption list short. A fourth entry means the budget is wrong or the habit
-has slipped.
+- [x] `travel-cp_7.gif` 1.1 MB → 468 KB (`gifsicle -O3 --lossy=120 --colors 64`, full resolution kept)
+- [x] `busking-town_1.png` 891 KB → 243 KB (`pngquant`)
+- [x] `webeing-hybrid-app.svg` 630 KB → 185 KB — it was two base64 PNGs inside an SVG
+      wrapper, so `svgo` achieved 0%. Compressed the embedded rasters and re-embedded
+      them, leaving the SVG's structure and positioning untouched.
 
 ## 6. Environment
 
