@@ -172,9 +172,15 @@ reportDuplicates(p => p.meta.description, 'description');
 // ignores paragraphs that came from a summary field.
 function summaryFieldTexts() {
   const texts = new Set();
-  const projects = fs.readFileSync(path.join(root, 'src/app/data/projects.ts'), 'utf8');
-  for (const m of projects.matchAll(/description:\s*'((?:[^'\\]|\\.)*)'/g)) {
-    texts.add(decodeEntities(m[1].replace(/\\'/g, "'")).replace(/\s+/g, ' ').trim());
+  const projectsDir = path.join(root, 'src/content/projects');
+  for (const entry of fs.readdirSync(projectsDir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const file = path.join(projectsDir, entry.name, 'index.ts');
+    if (!fs.existsSync(file)) continue;
+    const src = fs.readFileSync(file, 'utf8');
+    for (const m of src.matchAll(/description:\s*'((?:[^'\\]|\\.)*)'/g)) {
+      texts.add(decodeEntities(m[1].replace(/\\'/g, "'")).replace(/\s+/g, ' ').trim());
+    }
   }
   const blogDir = path.join(root, 'src/content/blog');
   for (const entry of fs.readdirSync(blogDir, { withFileTypes: true })) {
@@ -262,20 +268,34 @@ if (!sameAs || !/https?:\/\//.test(sameAs[1]))
 // a subheading, the intro, an image alt — and how often does it appear?
 const keywordLines = [];
 
-function parseItems(relFile, urlPrefix) {
-  const src = fs.readFileSync(path.join(root, relFile), 'utf8');
-  const slugMatches = [...src.matchAll(/slug:\s*['"]([^'"]+)['"]/g)];
-  return slugMatches.map((m, i) => {
-    const block = src.slice(m.index, slugMatches[i + 1]?.index ?? src.length);
-    const kw = block.match(/focusKeyword:\s*['"]([^'"]+)['"]/);
-    const sec = block.match(/secondaryKeywords:\s*\[([^\]]*)\]/);
-    return {
-      route: `${urlPrefix}/${m[1]}`,
-      slug: m[1],
-      focusKeyword: kw ? kw[1] : null,
-      secondaryKeywords: sec ? [...sec[1].matchAll(/['"]([^'"]+)['"]/g)].map(x => x[1]) : [],
-    };
-  });
+/**
+ * Keyword metadata for one content type. Both blog posts and projects are one
+ * directory per item, so nothing here parses a slug out of source text — the
+ * directory name is the slug.
+ */
+function readField(text, key) {
+  const m = text.match(new RegExp(`${key}:\\s*['"]([^'"]+)['"]`));
+  return m ? m[1] : null;
+}
+function readList(text, key) {
+  const m = text.match(new RegExp(`${key}:\\s*\\[([^\\]]*)\\]`));
+  return m ? [...m[1].matchAll(/['"]([^'"]+)['"]/g)].map(x => x[1]) : [];
+}
+
+function parseProjectItems(relDir, urlPrefix) {
+  const dir = path.join(root, relDir);
+  return fs
+    .readdirSync(dir, { withFileTypes: true })
+    .filter(e => e.isDirectory() && fs.existsSync(path.join(dir, e.name, 'index.ts')))
+    .map(e => {
+      const src = fs.readFileSync(path.join(dir, e.name, 'index.ts'), 'utf8');
+      return {
+        route: `${urlPrefix}/${e.name}`,
+        slug: e.name,
+        focusKeyword: readField(src, 'focusKeyword'),
+        secondaryKeywords: readList(src, 'secondaryKeywords'),
+      };
+    });
 }
 
 // Blog posts live one-per-directory with YAML frontmatter, so keywords come from
@@ -381,7 +401,7 @@ function analyzeKeyword(page) {
     if (!ok) warnings.push(`  [${page.route}] focus keyword "${kw}" not in ${spot}`);
 }
 
-const items = [...parseContentItems('src/content/blog', '/blog'), ...parseItems('src/app/data/projects.ts', '/projects')];
+const items = [...parseContentItems('src/content/blog', '/blog'), ...parseProjectItems('src/content/projects', '/projects')];
 const pageByRoute = new Map(pages.map(p => [p.route, p]));
 let missingKeyword = 0;
 for (const item of items) {

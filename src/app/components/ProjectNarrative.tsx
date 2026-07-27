@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import type { Project } from '../data/projects';
+import type { Project } from '../content/projects';
 
 /**
  * The case-study body, rendered from project data.

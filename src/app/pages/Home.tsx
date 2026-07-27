@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 import { POSTS } from '../content/posts';
-import { PROJECTS } from '../data/projects';
+import { PROJECTS } from '../content/projects';
 import { buildMeta, PERSON_JSON_LD } from '../components/SEO';
 
 export const meta = () =>

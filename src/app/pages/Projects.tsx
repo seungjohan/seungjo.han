@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { ArrowRight, Mail, Linkedin } from 'lucide-react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { PROJECTS, type Project } from '../data/projects';
+import { PROJECTS, type Project } from '../content/projects';
 import { buildMeta } from '../components/SEO';
 import ProjectNarrative from '../components/ProjectNarrative';
 

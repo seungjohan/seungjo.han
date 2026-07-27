@@ -11,24 +11,19 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
 const SITE_URL = process.env.SITE_URL || 'https://seungjohan.vercel.app';
 
-function extractSlugs(relativeFile) {
-  const content = fs.readFileSync(path.join(root, relativeFile), 'utf8');
-  return [...content.matchAll(/^\s*slug:\s*['"]([^'"]+)['"]/gm)].map(m => m[1]);
-}
-
-// Blog posts are directories under src/content/blog; the directory name is the
-// slug. No parsing, so a post can never be silently omitted from the sitemap.
-function contentSlugs(relativeDir) {
+// Both content types are one directory per item and the directory name is the
+// slug. No parsing, so an item can never be silently omitted from the sitemap.
+function contentSlugs(relativeDir, entryFile) {
   const dir = path.join(root, relativeDir);
   return fs
     .readdirSync(dir, { withFileTypes: true })
-    .filter(entry => entry.isDirectory() && fs.existsSync(path.join(dir, entry.name, 'index.md')))
+    .filter(entry => entry.isDirectory() && fs.existsSync(path.join(dir, entry.name, entryFile)))
     .map(entry => entry.name);
 }
 
 const staticPaths = ['/', '/about', '/projects', '/blog'];
-const projectSlugs = extractSlugs('src/app/data/projects.ts');
-const postSlugs = contentSlugs('src/content/blog');
+const projectSlugs = contentSlugs('src/content/projects', 'index.ts');
+const postSlugs = contentSlugs('src/content/blog', 'index.md');
 
 const urls = [
   ...staticPaths,

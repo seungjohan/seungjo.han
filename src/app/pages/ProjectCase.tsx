@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ChevronLeft, ChevronRight, ExternalLink, X } from 'lucide-react';
 import { motion } from 'motion/react';
-import { PROJECTS } from '../data/projects';
+import { PROJECTS } from '../content/projects';
 import { buildMeta } from '../components/SEO';
 import ProjectNarrative from '../components/ProjectNarrative';
 
@@ -15,7 +15,9 @@ export function meta({ params }: { params: { slug?: string } }) {
     title: project.title,
     description: project.description,
     path: `/projects/${project.slug}`,
-    image: project.coverImage,
+    // Omit when empty so buildMeta falls back to the site default. Passing ''
+    // resolves to SITE_URL + '/', i.e. an og:image pointing at the home page.
+    ...(project.coverImage ? { image: project.coverImage } : {}),
   });
 }
 

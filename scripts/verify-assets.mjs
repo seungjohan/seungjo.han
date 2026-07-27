@@ -59,18 +59,33 @@ function invalidPublicPathsFromText(text) {
   return paths;
 }
 
-const projectsSource = read('src/app/data/projects.ts');
 const blogDir = path.join(root, 'src/content/blog');
+const projectsDir = path.join(root, 'src/content/projects');
 const appSources = readSourceFiles(path.join(root, 'src/app'));
+
+// One directory per project; the directory name is the slug.
+const projectDirs = fs
+  .readdirSync(projectsDir, { withFileTypes: true })
+  .filter(e => e.isDirectory())
+  .map(e => e.name);
+
+const projectSources = projectDirs.map(slug => {
+  const file = path.join(projectsDir, slug, 'index.ts');
+  if (!fs.existsSync(file)) {
+    console.error(`\n✗ src/content/projects/${slug}/ has no index.ts — every project directory must contain one.\n`);
+    process.exit(1);
+  }
+  return { slug, src: fs.readFileSync(file, 'utf8') };
+});
 
 const referenced = new Set([
   ...appSources.flatMap(source => [...localPathsFromText(source)]),
-  ...localPathsFromText(projectsSource),
+  ...projectSources.flatMap(({ src }) => [...localPathsFromText(src)]),
 ]);
 
 const invalidPublicPaths = new Set([
   ...appSources.flatMap(source => [...invalidPublicPathsFromText(source)]),
-  ...invalidPublicPathsFromText(projectsSource),
+  ...projectSources.flatMap(({ src }) => [...invalidPublicPathsFromText(src)]),
 ]);
 
 // Every post is src/content/blog/<slug>/index.md. Iterating the directory means
@@ -91,14 +106,6 @@ for (const slug of postDirs) {
   const markdown = fs.readFileSync(mdPath, 'utf8');
   for (const p of localPathsFromText(markdown)) referenced.add(p);
   for (const p of invalidPublicPathsFromText(markdown)) invalidPublicPaths.add(p);
-}
-
-if (invalidPublicPaths.size) {
-  console.error('\nInvalid public asset paths:');
-  for (const item of invalidPublicPaths) {
-    console.error(`  ${item} -> remove the public prefix`);
-  }
-  process.exit(1);
 }
 
 // Build the real, case-exact set of files on disk.
@@ -142,23 +149,14 @@ for (const webPath of referenced) {
 // `impact: ''` renders a heading over nothing. The narrative fields are the whole
 // case study, so an empty one is a blank page shipped silently.
 const shapeProblems = [];
-{
-  const slugMatches = [...projectsSource.matchAll(/^\s*slug:\s*['"]([^'"]+)['"]/gm)];
-  for (const [i, m] of slugMatches.entries()) {
-    const block = projectsSource.slice(m.index, slugMatches[i + 1]?.index ?? projectsSource.length);
-    const slug = m[1];
-
-    for (const field of ['impact', 'whatIDid', 'outcome']) {
-      const v = block.match(new RegExp(`${field}:\\s*['"]((?:[^'"\\\\]|\\\\.)*)['"]`));
-      if (!v || !v[1].trim()) {
-        shapeProblems.push(`${slug}: "${field}" is missing or empty`);
-      }
-    }
-
-    const bullets = block.match(/whatIDidBullets:\s*\[([\s\S]*?)\]/);
-    const count = bullets ? [...bullets[1].matchAll(/['"][^'"]+['"]/g)].length : 0;
-    if (count === 0) shapeProblems.push(`${slug}: "whatIDidBullets" has no entries`);
+for (const { slug, src } of projectSources) {
+  for (const field of ['impact', 'whatIDid', 'outcome']) {
+    const v = src.match(new RegExp(`${field}:\\s*['"]((?:[^'"\\\\]|\\\\.)*)['"]`));
+    if (!v || !v[1].trim()) shapeProblems.push(`${slug}: "${field}" is missing or empty`);
   }
+  const bullets = src.match(/whatIDidBullets:\s*\[([\s\S]*?)\]/);
+  const count = bullets ? [...bullets[1].matchAll(/['"][^'"]+['"]/g)].length : 0;
+  if (count === 0) shapeProblems.push(`${slug}: "whatIDidBullets" has no entries`);
 }
 
 // ─── Size budgets ─────────────────────────────────────────────────────────────
@@ -234,7 +232,7 @@ if (shapeProblems.length) {
     console.error(`  ${item}`);
   }
   console.error(
-    `\n  These fields are the case-study body in src/app/data/projects.ts.\n` +
+    `\n  These fields are the case-study body in src/content/projects/<slug>/index.ts.\n` +
       `  An empty one renders a heading with nothing under it.\n`,
   );
 }
