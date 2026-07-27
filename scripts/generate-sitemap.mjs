@@ -9,7 +9,19 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
-const SITE_URL = process.env.SITE_URL || 'https://seungjohan.vercel.app';
+// Single-sourced from SEO.tsx so the sitemap can never claim a different origin
+// than the canonical tags the app renders. The env override still wins, for
+// generating a sitemap for a preview deploy.
+function readSiteUrl() {
+  const seo = fs.readFileSync(path.join(root, 'src/app/components/SEO.tsx'), 'utf8');
+  const m = seo.match(/const SITE_URL\s*=\s*['"]([^'"]+)['"]/);
+  if (!m) {
+    console.error('\n✗ Could not read SITE_URL from src/app/components/SEO.tsx\n');
+    process.exit(1);
+  }
+  return m[1].replace(/\/$/, '');
+}
+const SITE_URL = (process.env.SITE_URL || readSiteUrl()).replace(/\/$/, '');
 
 // Both content types are one directory per item and the directory name is the
 // slug. No parsing, so an item can never be silently omitted from the sitemap.
@@ -31,12 +43,12 @@ const urls = [
   ...postSlugs.map(slug => `/blog/${slug}`),
 ];
 
-const today = new Date().toISOString().slice(0, 10);
+// No <lastmod>. It is optional, and the previous version stamped *today* on
+// every URL on every build — so a page untouched for two years claimed to have
+// changed this morning. Search engines discount an always-fresh lastmod, which
+// makes it worse than absent. Restore it only with a real per-item date.
 const body = urls
-  .map(
-    loc =>
-      `  <url><loc>${SITE_URL}${loc === '/' ? '' : loc}</loc><lastmod>${today}</lastmod></url>`
-  )
+  .map(loc => `  <url><loc>${SITE_URL}${loc === '/' ? '' : loc}</loc></url>`)
   .join('\n');
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>

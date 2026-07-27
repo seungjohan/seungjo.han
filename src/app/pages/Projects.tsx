@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { ArrowRight, Mail, Linkedin } from 'lucide-react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { PROJECTS, type Project } from '../content/projects';
+import { PROJECTS, galleryFor, imageAlt, type Project } from '../content/projects';
 import { buildMeta } from '../components/SEO';
 import ProjectNarrative from '../components/ProjectNarrative';
 
@@ -60,7 +60,7 @@ function ProjectCard({ project, selectedTags, onTagClick, index }: {
   index: number;
 }) {
   const [imgIndex, setImgIndex] = useState(0);
-  const images = project.images?.length ? project.images : project.coverImage ? [project.coverImage] : [];
+  const images = galleryFor(project);
 
   // No auto-cycling here on purpose. Six cards render at once on this page, so
   // auto-advance meant six independent animations running permanently while the
@@ -86,51 +86,65 @@ function ProjectCard({ project, selectedTags, onTagClick, index }: {
       className="border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 transition-colors"
       style={{ scrollMarginTop: '90px' }}
     >
-      {/* Cover image — cycling */}
-      <Link to={`/projects/${project.slug}`} className="group block">
-        <div className="relative overflow-hidden" style={{ aspectRatio: '16/8' }}>
+      {/* Cover image — the Link wraps ONLY the image. The gallery controls are
+          siblings, not children: a <button> inside an <a> is invalid HTML, the
+          same nesting class this repo already fixed once for <a> inside <a>. */}
+      <div className="relative overflow-hidden" style={{ aspectRatio: '16/8' }}>
+        <Link to={`/projects/${project.slug}`} className="group block absolute inset-0">
           {images.map((src, i) => (
             <img
               key={src}
               src={src}
-              alt={project.title}
+              alt={i === imgIndex ? imageAlt(project, i, images.length) : ''}
+              loading={index === 0 && i === 0 ? 'eager' : 'lazy'}
+              decoding="async"
               className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
               style={{ opacity: i === imgIndex ? 1 : 0 }}
             />
           ))}
+        </Link>
 
-          {/* Left / Right arrows — vertically centered */}
-          {images.length > 1 && (
-            <>
-              <button
-                onClick={prev}
-                className="absolute left-3 top-1/2 -translate-y-1/2 z-10
-                           flex items-center justify-center w-7 h-7 rounded-full
-                           bg-black/20 hover:bg-black/40
-                           text-white transition-all duration-200"
-                aria-label="Previous image"
-              >
+        {/* Left / Right arrows — vertically centered */}
+        {images.length > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={prev}
+              className="on-media absolute left-1 top-1/2 -translate-y-1/2 z-10
+                         flex items-center justify-center w-11 h-11 text-white"
+              aria-label="Previous image"
+            >
+              <span className="flex items-center justify-center w-7 h-7 rounded-full bg-black/20 hover:bg-black/40 transition-all duration-200">
                 <ChevronLeft size={15} />
-              </button>
-              <button
-                onClick={next}
-                className="absolute right-3 top-1/2 -translate-y-1/2 z-10
-                           flex items-center justify-center w-7 h-7 rounded-full
-                           bg-black/20 hover:bg-black/40
-                           text-white transition-all duration-200"
-                aria-label="Next image"
-              >
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={next}
+              className="on-media absolute right-1 top-1/2 -translate-y-1/2 z-10
+                         flex items-center justify-center w-11 h-11 text-white"
+              aria-label="Next image"
+            >
+              <span className="flex items-center justify-center w-7 h-7 rounded-full bg-black/20 hover:bg-black/40 transition-all duration-200">
                 <ChevronRight size={15} />
-              </button>
-            </>
-          )}
+              </span>
+            </button>
+          </>
+        )}
 
-          {/* Dot indicators */}
-          {images.length > 1 && (
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-              {images.map((_, i) => (
+        {/* Dot indicators */}
+        {images.length > 1 && (
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex z-10">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={e => { e.preventDefault(); setImgIndex(i); }}
+                aria-label={`Go to image ${i + 1}`}
+                aria-current={i === imgIndex}
+                className="on-media flex items-center justify-center w-6 h-11"
+              >
                 <span
-                  key={i}
                   className="block rounded-full transition-all duration-300"
                   style={{
                     width: i === imgIndex ? 16 : 6,
@@ -138,11 +152,11 @@ function ProjectCard({ project, selectedTags, onTagClick, index }: {
                     backgroundColor: i === imgIndex ? 'white' : 'rgba(255,255,255,0.45)',
                   }}
                 />
-              ))}
-            </div>
-          )}
-        </div>
-      </Link>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Card body */}
       <div className="p-8">

@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ChevronLeft, ChevronRight, ExternalLink, X } from 'lucide-react';
 import { motion } from 'motion/react';
-import { PROJECTS } from '../content/projects';
+import { PROJECTS, galleryFor, imageAlt, siblingsOf } from '../content/projects';
 import { buildMeta } from '../components/SEO';
 import ProjectNarrative from '../components/ProjectNarrative';
 
@@ -32,6 +32,12 @@ export default function ProjectCase() {
   const [imgIndex, setImgIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
+  // Shared with the listing card so the two pages cannot disagree about which
+  // images belong to a project. Declared before the effects below so the
+  // carousel and lightbox reason about the same list that actually renders.
+  const images = project ? galleryFor(project) : [];
+  const { prev, next } = siblingsOf(slug ?? '');
+
   useEffect(() => {
     setImgIndex(0);
   }, [slug]);
@@ -42,17 +48,16 @@ export default function ProjectCase() {
   // ran every 2s with no pause of any kind, which is below any readable
   // threshold and has no WCAG 2.2.2 stop mechanism.
   useEffect(() => {
-    const imageCount = project?.images?.length ?? 0;
-    if (imageCount <= 1) return;
+    if (images.length <= 1) return;
     if (paused || lightboxIndex !== null) return;
     if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const id = setInterval(() => {
       if (document.hidden) return;
-      setImgIndex(i => (i + 1) % imageCount);
+      setImgIndex(i => (i + 1) % images.length);
     }, 5000);
     return () => clearInterval(id);
-  }, [project?.images, paused, lightboxIndex]);
+  }, [images.length, paused, lightboxIndex]);
 
   // Lightbox: ESC to close, arrows to move, scroll locked, focus restored to the
   // trigger. The markup declared role="dialog" aria-modal="true" while
@@ -63,7 +68,7 @@ export default function ProjectCase() {
 
   useEffect(() => {
     if (lightboxIndex === null) return;
-    const count = project?.images?.length ?? 0;
+    const count = images.length;
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setLightboxIndex(null);
@@ -81,15 +86,7 @@ export default function ProjectCase() {
       document.body.style.overflow = previousOverflow;
       triggerRef.current?.focus();
     };
-  }, [lightboxIndex, project?.images]);
-
-  // Single source for the gallery. `images` is typed non-optional but nothing
-  // validates it is non-empty, so fall back to the cover and then to nothing.
-  const images = project?.images?.length
-    ? project.images
-    : project?.coverImage
-      ? [project.coverImage]
-      : [];
+  }, [lightboxIndex, images.length]);
 
   if (!project) {
     return (
@@ -150,6 +147,14 @@ export default function ProjectCase() {
 
           {/* Meta */}
           <div className="grid gap-4 max-w-2xl">
+            <div className="grid gap-2 sm:grid-cols-[7rem_1fr]">
+              <p className="text-xs text-gray-500 uppercase tracking-wider mb-0.5">Client</p>
+              <p className="text-sm text-gray-900">{project.client}</p>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-[7rem_1fr]">
+              <p className="text-xs text-gray-500 uppercase tracking-wider mb-0.5">Year</p>
+              <p className="text-sm text-gray-900">{project.year}</p>
+            </div>
             <div className="grid gap-2 sm:grid-cols-[7rem_1fr]">
               <p className="text-xs text-gray-500 uppercase tracking-wider mb-0.5">Role</p>
               <p className="text-sm text-gray-900">{project.role}</p>
@@ -217,7 +222,7 @@ export default function ProjectCase() {
                 <img
                   key={`${src}-${i}`}
                   src={src}
-                  alt={i === imgIndex ? `${project.title} — image ${i + 1} of ${images.length}` : ''}
+                  alt={i === imgIndex ? imageAlt(project, i, images.length) : ''}
                   loading={i === 0 ? 'eager' : 'lazy'}
                   decoding="async"
                   {...(i === 0 ? { fetchPriority: 'high' as const } : {})}
@@ -279,9 +284,36 @@ export default function ProjectCase() {
       )}
 
       {/* ── Case study body ── data-driven, shared with the listing page ── */}
-      <div className="max-w-4xl mx-auto px-6 pt-4 pb-16">
+      <div className="max-w-4xl mx-auto px-6 pt-4 pb-10">
         <ProjectNarrative project={project} variant="detail" />
       </div>
+
+      {/* ── Prev / next ── the page previously dead-ended, with the only exit a
+           back link at the top of a long scroll. ── */}
+      {(prev || next) && (
+        <nav className="max-w-4xl mx-auto px-6 pb-20" aria-label="More projects">
+          <div className="border-t border-gray-100 pt-8 flex justify-between gap-6">
+            {prev ? (
+              <Link to={`/projects/${prev.slug}`} className="group max-w-[45%]">
+                <span className="block text-xs uppercase tracking-wider text-gray-500 mb-1">Previous</span>
+                <span className="block text-gray-900 group-hover:underline underline-offset-4" style={{ fontSize: '0.95rem' }}>
+                  {prev.title}
+                </span>
+              </Link>
+            ) : (
+              <span />
+            )}
+            {next && (
+              <Link to={`/projects/${next.slug}`} className="group max-w-[45%] text-right">
+                <span className="block text-xs uppercase tracking-wider text-gray-500 mb-1">Next</span>
+                <span className="block text-gray-900 group-hover:underline underline-offset-4" style={{ fontSize: '0.95rem' }}>
+                  {next.title}
+                </span>
+              </Link>
+            )}
+          </div>
+        </nav>
+      )}
 
       {lightboxIndex !== null && (
         <div
@@ -328,7 +360,7 @@ export default function ProjectCase() {
               the image itself should not dismiss it. Backdrop, X and ESC all close. */}
           <img
             src={images[lightboxIndex]}
-            alt={`${project.title} — image ${lightboxIndex + 1} of ${images.length}`}
+            alt={imageAlt(project, lightboxIndex, images.length)}
             className="max-w-full max-h-full object-contain rounded-md cursor-default"
             onClick={e => e.stopPropagation()}
           />

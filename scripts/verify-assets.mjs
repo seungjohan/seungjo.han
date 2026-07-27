@@ -22,10 +22,26 @@ function readSourceFiles(dir) {
     if (entry.isDirectory()) {
       files.push(...readSourceFiles(fullPath));
     } else if (/\.(ts|tsx|js|jsx|md|html)$/i.test(entry.name)) {
-      files.push(fs.readFileSync(fullPath, 'utf8'));
+      files.push({ file: path.relative(root, fullPath), text: fs.readFileSync(fullPath, 'utf8') });
     }
   }
   return files;
+}
+
+/**
+ * Which files reference each asset path. Without this the gate could only say
+ * "/blog-images/x.jpg is missing" and leave you to grep the repo for it.
+ */
+const provenance = new Map();
+function note(webPath, file) {
+  if (!provenance.has(webPath)) provenance.set(webPath, new Set());
+  provenance.get(webPath).add(file);
+}
+function collect(text, file, into, fn) {
+  for (const p of fn(text)) {
+    into.add(p);
+    note(p, file);
+  }
 }
 
 function localPathsFromText(text) {
@@ -78,15 +94,18 @@ const projectSources = projectDirs.map(slug => {
   return { slug, src: fs.readFileSync(file, 'utf8') };
 });
 
-const referenced = new Set([
-  ...appSources.flatMap(source => [...localPathsFromText(source)]),
-  ...projectSources.flatMap(({ src }) => [...localPathsFromText(src)]),
-]);
+const referenced = new Set();
+const invalidPublicPaths = new Set();
 
-const invalidPublicPaths = new Set([
-  ...appSources.flatMap(source => [...invalidPublicPathsFromText(source)]),
-  ...projectSources.flatMap(({ src }) => [...invalidPublicPathsFromText(src)]),
-]);
+for (const { file, text } of appSources) {
+  collect(text, file, referenced, localPathsFromText);
+  collect(text, file, invalidPublicPaths, invalidPublicPathsFromText);
+}
+for (const { slug, src } of projectSources) {
+  const file = `src/content/projects/${slug}/index.ts`;
+  collect(src, file, referenced, localPathsFromText);
+  collect(src, file, invalidPublicPaths, invalidPublicPathsFromText);
+}
 
 // Every post is src/content/blog/<slug>/index.md. Iterating the directory means
 // a post cannot be skipped: the previous version looked up a hand-maintained key,
@@ -104,8 +123,9 @@ for (const slug of postDirs) {
     process.exit(1);
   }
   const markdown = fs.readFileSync(mdPath, 'utf8');
-  for (const p of localPathsFromText(markdown)) referenced.add(p);
-  for (const p of invalidPublicPathsFromText(markdown)) invalidPublicPaths.add(p);
+  const rel = `src/content/blog/${slug}/index.md`;
+  collect(markdown, rel, referenced, localPathsFromText);
+  collect(markdown, rel, invalidPublicPaths, invalidPublicPathsFromText);
 }
 
 // Build the real, case-exact set of files on disk.
@@ -201,6 +221,7 @@ if (invalidPublicPaths.size) {
   console.error(`\n✗ Invalid public asset paths (${invalidPublicPaths.size})\n`);
   for (const item of invalidPublicPaths) {
     console.error(`  ${item}`);
+    console.error(`    referenced by: ${[...(provenance.get(item) ?? ['unknown'])].join(', ')}`);
     console.error(`    fix: drop the "public/" prefix — paths are web-root-relative, e.g. "/blog-images/x.jpg"\n`);
   }
 }
@@ -210,8 +231,9 @@ if (missing.length) {
   console.error(`\n✗ Missing local assets (${missing.length})\n`);
   for (const item of missing) {
     console.error(`  ${item}`);
-    console.error(`    expected at: public${item}`);
-    console.error(`    fix: add the file, or correct the path in the file that references it\n`);
+    console.error(`    referenced by: ${[...(provenance.get(item) ?? ['unknown'])].join(', ')}`);
+    console.error(`    expected at:   public${item}`);
+    console.error(`    fix: add the file, or correct the path in the file above\n`);
   }
 }
 
@@ -221,6 +243,7 @@ if (caseMismatch.length) {
   for (const item of caseMismatch) {
     console.error(`  referenced: ${item.webPath}`);
     console.error(`  on disk:    ${item.found}`);
+    console.error(`  from:       ${[...(provenance.get(item.webPath) ?? ['unknown'])].join(', ')}`);
     console.error(`    fix: rename the file to match the reference, or update the reference\n`);
   }
 }

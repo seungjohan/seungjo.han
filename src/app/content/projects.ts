@@ -73,3 +73,28 @@ export const PROJECTS: Project[] = Object.entries(FILES)
     return { slug, ...data };
   })
   .sort((a, b) => ORDER.indexOf(a.slug) - ORDER.indexOf(b.slug));
+
+/**
+ * The images to show for a project, in order.
+ *
+ * One helper so the listing card and the detail page cannot disagree about what
+ * "this project's images" means — they previously had two different fallbacks,
+ * one of which was dead code and the other unguarded. An empty result is valid
+ * and means "render no gallery at all", not "render an empty box".
+ */
+export function galleryFor(project: Project): string[] {
+  if (project.images?.length) return project.images;
+  return project.coverImage ? [project.coverImage] : [];
+}
+
+/** Alt text for one gallery slide. Duplicate alt across a page is an SEO negative. */
+export function imageAlt(project: Project, index: number, total: number): string {
+  return total > 1 ? `${project.title} — image ${index + 1} of ${total}` : project.title;
+}
+
+/** Previous and next project in display order, for detail-page navigation. */
+export function siblingsOf(slug: string): { prev?: Project; next?: Project } {
+  const i = PROJECTS.findIndex(p => p.slug === slug);
+  if (i === -1) return {};
+  return { prev: PROJECTS[i - 1], next: PROJECTS[i + 1] };
+}
