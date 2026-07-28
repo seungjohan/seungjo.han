@@ -1,5 +1,5 @@
 import { useSearchParams, useNavigate } from 'react-router';
-import { POSTS, type Post } from '../data/posts';
+import { POSTS, type Post } from '../content/posts';
 import { motion } from 'motion/react';
 import { buildMeta } from '../components/SEO';
 
@@ -50,7 +50,7 @@ export default function Blog() {
           A man who hasn't figured out how to live his life yet, but is trying to make it as colorful and diverse as possible.
         </p>
         <p>
-          My Personas: Writer, Ex-founder, Dokdo security guard, Product manager, Software engineer, Multilingual learner (Korean, English, Español, and Français), Triathlete, Pianist, Composer, Gardener, Cook, Son, and Brother
+          My Personas: Writer, Ex-founder, Dokdo security police, Product manager, Software engineer, Multilingual learner (Korean, English, Español, and Français), Triathlete, Pianist, Composer, Gardener, Cook, Son, and Brother
         </p>
       </div>
 
@@ -111,14 +111,14 @@ export default function Blog() {
                 {/* Meta row: date · tags                     magazine → */}
                 <div className="flex items-center justify-between gap-3 flex-wrap">
                   <div className="flex items-center gap-3 flex-wrap">
-                    <time className="text-xs text-gray-400">{formatDate(post.date)}</time>
+                    <time className="text-xs text-gray-500">{formatDate(post.date)}</time>
                     <span className="text-gray-200 text-xs">·</span>
                     <div className="flex gap-3">
                       {post.tags.slice(0, 3).map(tag => (
                         <button
                           key={tag}
                           onClick={e => { e.stopPropagation(); toggleTag(tag); }}
-                          className="text-xs text-gray-400 hover:text-black transition-colors"
+                          className="text-xs text-gray-500 hover:text-black transition-colors"
                         >
                           {tag}
                         </button>

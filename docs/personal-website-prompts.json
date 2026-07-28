@@ -897,7 +897,7 @@
       ],
       "duplicate_sessions": 2,
       "ide_context": "# Context from my IDE setup:\n\n## Active file: src/app/pages/About.tsx\n\n## Open tabs:\n- About.tsx: src/app/pages/About.tsx\n- vercel.json: vercel.json\n- ProjectCase.tsx: src/app/pages/ProjectCase.tsx\n- .gitignore: .gitignore\n- AdminLogin.tsx: src/app/pages/admin/AdminLogin.tsx",
-      "text": "- in the blog, the section above, context\nI'd like to change to this.\n\nWriting -> Blog\ncontext in the below:\nA man who hasn't figured out how to live his life yet, but is trying to make it as colorful and diverse as possible.\n\nMy Personas: Writer, Ex-founder, Dokdo security guard, Product manager, Software engineer, Multilingual learner (Korean, English, Español, and Français), Triathlete, Pianist, Composer, Gardener, Cook, Son, and Brother\n\n- in the page 'about'\ncan you show all the size of the picture?\nchange the context into this in the below\nSeungjo Han\nProduct manager, Multilingual learner, Triathlete, Composer, Cook, Thinker, and Listener"
+      "text": "- in the blog, the section above, context\nI'd like to change to this.\n\nWriting -> Blog\ncontext in the below:\nA man who hasn't figured out how to live his life yet, but is trying to make it as colorful and diverse as possible.\n\nMy Personas: Writer, Ex-founder, Dokdo security police, Product manager, Software engineer, Multilingual learner (Korean, English, Español, and Français), Triathlete, Pianist, Composer, Gardener, Cook, Son, and Brother\n\n- in the page 'about'\ncan you show all the size of the picture?\nchange the context into this in the below\nSeungjo Han\nProduct manager, Multilingual learner, Triathlete, Composer, Cook, Thinker, and Listener"
     },
     {
       "id": 51,
