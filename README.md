@@ -87,5 +87,5 @@ every push and pull request.
 - [CLAUDE.md](CLAUDE.md) — **start here**: architecture, how to add content, the non-obvious rules
 - [STRATEGY.md](STRATEGY.md) — vision, technical principles, roadmap
 - [docs/plans/next-checklist.md](docs/plans/next-checklist.md) — open work
-- [PRD.md](PRD.md) — historical, describes the pre-rearchitecture SPA. Do not follow.
+- [PRD.md](PRD.md) — product intent: purpose, audience, non-goals, quality bar, backlog
 - [docs/](docs/) — engineering notes and handoffs

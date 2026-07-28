@@ -82,7 +82,17 @@ Custom markdown syntax this repo supports: `{quote=normal|line|box|marks}`,
 
 ### A project
 
-Edit `src/app/data/projects.ts`. All fields are required.
+One folder, the same rule as a blog post:
+
+```
+src/content/projects/<slug>/index.ts
+```
+
+The **directory name is the slug** and the URL. The file default-exports a
+`ProjectData` object; the type is in `src/app/content/projects.ts`. All fields
+are required. Add the slug to `ORDER` in that same file to place it on the
+listing — a slug missing from `ORDER` sorts to the front, which is loud enough
+to notice.
 
 The case-study body comes from four fields and renders through the shared
 `ProjectNarrative` component on both the listing and the detail page:
@@ -112,20 +122,26 @@ matches case-exactly for this reason — Vercel serves from Linux, where
 `/x.jpg` does not find `X.JPG`.
 
 **Asset size budgets are enforced.** favicon 15KB, apple-touch-icon 100KB,
-og-image 300KB, content images 500KB. Three known outliers are listed in
-`KNOWN_OVERSIZED` in `verify-assets.mjs`; keep that list short.
+og-image 300KB, content images 500KB. There is **no exemption list** — the old
+`KNOWN_OVERSIZED` array was deleted once the last three offenders were
+re-encoded. Do not reintroduce it; re-encode the asset instead.
 
-**Project slugs are still regex-parsed** from `projects.ts` by
-`react-router.config.ts`, `generate-sitemap.mjs` and `check-seo.mjs`. Write
-`slug: 'value'` with straight quotes on its own line. A template literal or a
-computed slug silently breaks prerendering, the sitemap, and SEO analysis at
-once, with no error. (Blog posts are immune — they come from directory names.)
+**Slugs come from directory names, for both content types.** `react-router.config.ts`,
+`generate-sitemap.mjs` and `check-seo.mjs` all read the directory listing. They
+used to regex-scrape `slug: '...'` out of TypeScript as raw text, where a
+template literal or a computed slug silently broke prerendering, the sitemap and
+SEO analysis at once with no error. Keep it that way — never reintroduce a slug
+field that a build script has to parse.
 
 **`public/sitemap.xml` is generated and untracked.** Do not edit it by hand.
 
-## Files to ignore
+## Other documents
 
-`PRD.md` is marked historical and describes the old Vite SPA — do not follow it.
+`PRD.md` is current as of v5.0 and holds **product intent** — purpose, audience,
+non-goals, the quality bar, backlog. It deliberately contains no implementation
+detail, so it does not compete with this file. Read it for *why*; read this for
+*how*.
+
 `prompt.md` and `log.md` are session history, not instructions. The `guidelines/`
 documents predate the current architecture and are only partly accurate; prefer
 this file.

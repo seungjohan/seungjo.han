@@ -156,7 +156,21 @@ than carried:
       wrapper, so `svgo` achieved 0%. Compressed the embedded rasters and re-embedded
       them, leaving the SVG's structure and positioning untouched.
 
-## 6. Environment
+## 6. Documentation
+
+- [x] **PRD.md rewritten as v5.0** — deferred at the premise gate, closed July 28.
+      Cut from 959 lines to ~230 by removing the implementation mirror (file trees,
+      DOM structure, Tailwind classes, animation constants, page copy) that had been
+      wrong since `8aafb93` and duplicated `CLAUDE.md`. It now carries product intent
+      only — purpose, audience, non-goals with reasons, the quality bar, backlog —
+      which is the property that should stop it drifting a third time. Changelog
+      preserved.
+- [x] Corrected four stale claims in `CLAUDE.md` that this branch's own changes
+      invalidated: the project path (`src/app/data/projects.ts` no longer exists),
+      the `KNOWN_OVERSIZED` exemption list (deleted), the slug-regex warning (slugs
+      now come from directory names), and the "PRD is historical" note.
+
+## 7. Environment
 
 - [ ] Codex CLI is installed but its vendored binary is missing
       (`@openai/codex-darwin-x64/vendor/x86_64-apple-darwin/codex/codex`, ENOENT), so all
