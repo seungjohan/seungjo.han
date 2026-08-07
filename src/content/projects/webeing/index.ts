@@ -11,6 +11,9 @@ const project: ProjectData = {
     '/project-images/webeing-hybrid-app.svg',
     '/project-images/webeing-flyer.PNG',
   ],
+  // 1075x992 and 845x1200 portrait. Under the default cover crop they lost their
+  // top and bottom to the wide frame, so they scale down to fit it instead.
+  imageFit: 'contain',
   role: 'Co-founder · Product Owner · Software Engineer',
   team: '2 co-founders, 1 designer, 5 software engineers',
   duration: '18 months',

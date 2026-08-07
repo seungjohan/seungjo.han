@@ -43,10 +43,50 @@ export default function Layout() {
 
   useEffect(() => setMobileOpen(false), [location.pathname]);
 
-  // ── Scroll to top on every route change ────────────────────────────────────
+  // ── Scroll on navigation ───────────────────────────────────────────────────
+  // A hash has to win over scroll-to-top. This effect used to scroll to 0
+  // unconditionally, including on first mount, so opening a copied heading link
+  // (/blog/post#some-heading) undid the browser's own jump and landed at the top
+  // of the article instead.
+  //
+  // Scrolling once is not enough either: the article grows by ~900px after first
+  // paint as motion reveals run and images load, which moves the target several
+  // hundred pixels down. So re-align each frame until the target's position holds
+  // still, then stop. Offset comes from the heading's own scroll-margin-top, so
+  // the sticky 64px header never covers it.
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [location.pathname]);
+    if (!location.hash) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      return;
+    }
+
+    const id = decodeURIComponent(location.hash.slice(1));
+    let raf = 0;
+    let frames = 0;
+    let lastTop = -1;
+    let stable = 0;
+
+    const align = () => {
+      const el = document.getElementById(id);
+      if (el) {
+        const top = Math.round(el.getBoundingClientRect().top + window.scrollY);
+        if (top === lastTop) {
+          stable += 1;
+        } else {
+          stable = 0;
+          lastTop = top;
+          const offset = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+          window.scrollTo({ top: Math.max(0, top - offset), behavior: 'instant' });
+        }
+      }
+      frames += 1;
+      // Give up after ~3s so a bad id can never spin forever.
+      if (stable < 8 && frames < 180) raf = requestAnimationFrame(align);
+    };
+
+    raf = requestAnimationFrame(align);
+    return () => cancelAnimationFrame(raf);
+  }, [location.pathname, location.hash]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -69,23 +109,23 @@ export default function Layout() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-paper flex flex-col">
       <Toaster position="top-center" richColors />
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
       <AnchorNav />
 
       {/* ── HEADER ───────────────────────────────────────────────────────── */}
       <header
-        className={`sticky top-0 z-40 bg-white transition-shadow duration-300
-          ${scrolled ? 'shadow-[0_1px_0_rgba(0,0,0,0.08)]' : 'border-b border-gray-100'}`}
+        className={`sticky top-0 z-40 bg-paper transition-shadow duration-300
+          ${scrolled ? 'shadow-[0_1px_0_rgba(0,0,0,0.08)]' : 'border-b border-rule'}`}
       >
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between gap-6">
+        <div className="max-w-5xl mx-auto px-8 h-16 flex items-center justify-between gap-6">
 
           {/* Left: Name */}
           <Link
             to="/"
             onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}
-            className="text-black hover:opacity-60 transition-opacity flex-shrink-0"
+            className="font-serif text-ink hover:opacity-60 transition-opacity flex-shrink-0"
             style={{ fontSize: '1rem', letterSpacing: '-0.01em' }}
           >
             Seungjo Han
@@ -100,19 +140,19 @@ export default function Layout() {
                 onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}
                 className={`transition-colors text-sm ${
                   isActive(to, exact)
-                    ? 'text-black'
-                    : 'text-gray-500 hover:text-black'
+                    ? 'text-ink'
+                    : 'text-ink-2 hover:text-umber'
                 }`}
               >
                 {label}
               </Link>
             ))}
 
-            <span className="w-px h-4 bg-gray-200" />
+            <span className="w-px h-4 bg-rule" />
 
             <button
               onClick={() => setSearchOpen(true)}
-              className="text-gray-500 hover:text-black transition-colors p-1"
+              className="text-ink-2 hover:text-umber transition-colors p-1"
               aria-label="Search"
               title="Search (⌘K)"
             >
@@ -121,7 +161,7 @@ export default function Layout() {
 
             <button
               onClick={copyLink}
-              className="text-gray-500 hover:text-black transition-colors p-1"
+              className="text-ink-2 hover:text-umber transition-colors p-1"
               aria-label="Copy link"
               title="Copy link"
             >
@@ -133,21 +173,21 @@ export default function Layout() {
           <div className="flex md:hidden items-center gap-3">
             <button
               onClick={() => setSearchOpen(true)}
-              className="text-gray-500 hover:text-black transition-colors p-1"
+              className="text-ink-2 hover:text-umber transition-colors p-1"
               aria-label="Search"
             >
               <Search size={18} />
             </button>
             <button
               onClick={copyLink}
-              className="text-gray-500 hover:text-black transition-colors p-1"
+              className="text-ink-2 hover:text-umber transition-colors p-1"
               aria-label="Copy link"
             >
               <Link2 size={18} />
             </button>
             <button
               onClick={() => setMobileOpen(v => !v)}
-              className="text-gray-700 hover:text-black transition-colors p-1"
+              className="text-ink-2 hover:text-umber transition-colors p-1"
               aria-label="Menu"
             >
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
@@ -159,20 +199,20 @@ export default function Layout() {
         <AnimatePresence>
           {mobileOpen && (
             <motion.div
-              className="md:hidden border-t border-gray-100 bg-white overflow-hidden"
+              className="md:hidden border-t border-rule bg-paper overflow-hidden"
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="max-w-6xl mx-auto px-6 py-5 flex flex-col gap-4">
+              <div className="max-w-5xl mx-auto px-8 py-5 flex flex-col gap-4">
                 {NAV_LINKS.map(({ to, label, exact }) => (
                   <Link
                     key={to}
                     to={to}
                     onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}
                     className={`text-sm transition-colors ${
-                      isActive(to, exact) ? 'text-black' : 'text-gray-500'
+                      isActive(to, exact) ? 'text-ink' : 'text-ink-2'
                     }`}
                   >
                     {label}
@@ -190,8 +230,8 @@ export default function Layout() {
       </main>
 
       {/* ── FOOTER ───────────────────────────────────────────────────────── */}
-      <footer className="border-t border-gray-100 mt-20">
-        <div className="max-w-4xl mx-auto px-6 pt-12 pb-8">
+      <footer className="border-t border-rule mt-20">
+        <div className="max-w-5xl mx-auto px-8 pt-12 pb-8">
 
           {/* Top row: identity left · page+connect right */}
           <div className="flex flex-col sm:flex-row sm:justify-between gap-10 mb-12">
@@ -199,17 +239,17 @@ export default function Layout() {
             {/* Left — identity */}
             <div>
               <p
-                className="text-gray-900 mb-1"
+                className="font-serif text-ink mb-1"
                 style={{ fontSize: '0.95rem', fontWeight: 400, letterSpacing: '-0.01em' }}
               >
                 Seungjo Han
               </p>
-              <p className="text-gray-400" style={{ fontSize: '0.82rem' }}>
+              <p className="text-ink-2" style={{ fontSize: '0.875rem' }}>
                 Product Manager
               </p>
               <div className="flex flex-col mt-1" style={{ gap: '0.2rem' }}>
                 {['Writer', 'Composer', 'Triathlete', 'Multilingual learner'].map(t => (
-                  <p key={t} className="text-gray-400" style={{ fontSize: '0.82rem' }}>{t}</p>
+                  <p key={t} className="text-ink-2" style={{ fontSize: '0.875rem' }}>{t}</p>
                 ))}
               </div>
             </div>
@@ -220,8 +260,8 @@ export default function Layout() {
               {/* Pages column */}
               <div>
                 <p
-                  className="text-gray-500 uppercase mb-4"
-                  style={{ fontSize: '0.65rem', letterSpacing: '0.1em' }}
+                  className="text-ink-2 uppercase mb-4"
+                  style={{ fontSize: '0.75rem', letterSpacing: '0.1em' }}
                 >
                   Pages
                 </p>
@@ -231,8 +271,8 @@ export default function Layout() {
                       key={to}
                       to={to}
                       onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}
-                      className="text-gray-500 hover:text-black transition-colors"
-                      style={{ fontSize: '0.85rem' }}
+                      className="text-ink-2 hover:text-umber transition-colors"
+                      style={{ fontSize: '0.875rem' }}
                     >
                       {label}
                     </Link>
@@ -243,8 +283,8 @@ export default function Layout() {
               {/* Connect column */}
               <div>
                 <p
-                  className="text-gray-500 uppercase mb-4"
-                  style={{ fontSize: '0.65rem', letterSpacing: '0.1em' }}
+                  className="text-ink-2 uppercase mb-4"
+                  style={{ fontSize: '0.75rem', letterSpacing: '0.1em' }}
                 >
                   Connect
                 </p>
@@ -255,8 +295,8 @@ export default function Layout() {
                       href={href}
                       target={external ? '_blank' : undefined}
                       rel={external ? 'noopener noreferrer' : undefined}
-                      className="text-gray-500 hover:text-black transition-colors"
-                      style={{ fontSize: '0.85rem' }}
+                      className="text-ink-2 hover:text-umber transition-colors"
+                      style={{ fontSize: '0.875rem' }}
                     >
                       {label}
                     </a>
@@ -267,8 +307,8 @@ export default function Layout() {
           </div>
 
           {/* Bottom — copyright centered */}
-          <div className="border-t border-gray-100 pt-6 flex justify-center">
-            <p className="text-xs text-gray-500">
+          <div className="border-t border-rule pt-6 flex justify-center">
+            <p className="text-xs text-ink-2">
               © 2026 Seungjo Han. All rights reserved.
             </p>
           </div>

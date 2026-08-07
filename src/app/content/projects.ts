@@ -26,6 +26,20 @@ export interface ProjectData {
   description: string;
   /** Gallery. Empty is valid — the detail page omits the gallery entirely. */
   images: string[];
+  /**
+   * How this project's images sit inside their frame. Omit for `'cover'`.
+   * The frame size never changes either way — this only affects the image.
+   *
+   * `'cover'`   — default. Image fills the frame and whatever overflows is
+   *               cropped. Right for landscape photos and screenshots.
+   * `'contain'` — image is scaled down until all of it fits, so nothing is
+   *               cropped. For portrait or square assets that would otherwise
+   *               lose their top and bottom.
+   *
+   * A field rather than a `slug === 'webeing'` branch in the component, because
+   * this repo has been bitten twice by per-slug branches in components.
+   */
+  imageFit?: 'cover' | 'contain';
   /** Listing card and social preview. Empty falls back to the site default OG image. */
   coverImage: string;
   role: string;

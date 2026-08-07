@@ -48,6 +48,16 @@ export function Layout({ children }: { children: ReactNode }) {
             src/imports/brand/favicon-source.svg. */}
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        {/* Newsreader for reading, Instrument Sans for interface. See
+            src/styles/fonts.css for why the link lives here and not in an
+            @import. display=swap so text paints in the fallback immediately
+            rather than blocking on the webfont. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&family=Instrument+Sans:wght@400;500;600&display=swap"
+        />
         <meta name="google-site-verification" content="5j9yeKVLbS4yrUq1ey-Uq18nC4ipWSoWjWEIu133Utc" />
         <Meta />
         <Links />

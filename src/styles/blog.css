@@ -1,30 +1,37 @@
 /* Blog post body typography and image layout.
    Moved out of BlogPost.tsx's inline <style> — an inline <style> text node
    causes a React hydration mismatch under prerendering. */
+          /* Spacing ladder. The rule these numbers encode:
+             space above a section > space between paragraphs > space between lines.
+             Previously heading-top-gap-h2 (2rem) was smaller than one line of leading
+             (1.8 x 1.125rem = 2.025rem), which inverted the top of that ladder and made
+             a section break the weakest visual signal in the article. */
           .prose-content {
             --blog-body-size: 1.125rem;
-            --blog-line-height: 1.8;
-            --blog-paragraph-gap: 1.1rem;
-            --blog-heading-top-gap-h2: 2rem;
-            --blog-heading-top-gap-h3: 1.65rem;
-            --blog-heading-top-gap-h4: 1.35rem;
-            --blog-heading-bottom-gap: 0.7rem;
+            --blog-line-height: 1.65;
+            --blog-paragraph-gap: 1.7rem;
+            --blog-heading-top-gap-h2: 4.5rem;
+            --blog-heading-top-gap-h3: 3rem;
+            --blog-heading-top-gap-h4: 2.25rem;
+            --blog-heading-bottom-gap: 0.8rem;
             --blog-image-gap-top: 1.25rem;
             --blog-image-gap-bottom: 0.35rem;
             --blog-caption-gap-top: 0.45rem;
             --blog-caption-gap-bottom: 1.15rem;
           }
+          /* Leading tightens as size grows. The ladder used to run the other way
+             (small 1.72 -> xlarge 1.92), which made the largest text the airiest. */
           .prose-content .blog-text-small {
             --blog-body-size: 0.96rem;
             --blog-line-height: 1.72;
           }
           .prose-content .blog-text-large {
             --blog-body-size: 1.16rem;
-            --blog-line-height: 1.86;
+            --blog-line-height: 1.6;
           }
           .prose-content .blog-text-xlarge {
             --blog-body-size: 1.28rem;
-            --blog-line-height: 1.92;
+            --blog-line-height: 1.55;
           }
           .prose-content p {
             color: #374151;
@@ -306,8 +313,9 @@
             padding: 0.1rem 0.25rem;
             font-size: 0.9em;
           }
+          /* Emphasis stays in the body face. This used to force Georgia, which
+             switched typeface mid-sentence and read as a rendering fault. */
           .prose-content em {
-            font-family: Georgia, 'Times New Roman', serif;
             font-style: italic;
           }
           .prose-content strong { font-weight: 600; color: #111827; }

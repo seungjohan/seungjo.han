@@ -2,7 +2,7 @@
   "schema_version": "3.0",
   "generated_at": "2026-07-11",
   "generated_by": "Claude Code (Sonnet 5)",
-  "description": "Flat, queryable log of real user prompts for the seungjo.han personal website project, extracted directly from local Codex CLI session transcripts (~/.codex/sessions/**/*.jsonl). Supersedes prior hand-copied/corrupted exports. Assistant responses excluded.",
+  "description": "Flat, queryable log of real user prompts for the seungjohan.com personal website project, extracted directly from local Codex CLI session transcripts (~/.codex/sessions/**/*.jsonl). Supersedes prior hand-copied/corrupted exports. Assistant responses excluded.",
   "notes": [
     "agent=\"codex\" for all current records: verified via each session's \"originator\" field (codex_vscode / Codex Desktop / codex-tui). No entries in this dataset originate from the Cursor IDE, despite some historical folder names containing the word \"Cursor\" (e.g. ~/CursorProject) -- that is a directory name, not a tool signal.",
     "prd_version_context is inferred by matching date_kst against the version-bump dates already recorded in log.md (nearest version at or before that date). It approximates \"what version this prompt was contributing to\", not an exact per-commit mapping.",
@@ -466,7 +466,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e73b5-e780-7a32-afee-9f1f5066b56f",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [],
       "duplicate_sessions": 1,
@@ -489,7 +489,7 @@
         "design-system"
       ],
       "duplicate_sessions": 2,
-      "ide_context": "# Files mentioned by the user:\n\n## updated version.zip: /Users/seungjohan/Downloads/website/updated version.zip\n\n## src.zip: /Users/seungjohan/Cursor/seungjohan/seungjo.han/src.zip",
+      "ide_context": "# Files mentioned by the user:\n\n## updated version.zip: /Users/seungjohan/Downloads/website/updated version.zip\n\n## src.zip: /Users/seungjohan/Cursor/seungjohan/seungjohan.com/src.zip",
       "text": "I made a design my project with Figma make with version 1 first and I deployed it already.\nBut the problem is I updated design with Figma make and since I deployed and modified some files, I don't know where to touch can you check the original version, updated version and help me update to the new design?\n\nI don't want to touch some parts which was made for deploying and setting.\nAfter using original one, I asked Codex to help me out setting the project until the deployment. So, apart from that can you recheck once more? especially with the alignment or design since I only fix the design with Figma make?"
     },
     {
@@ -530,7 +530,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e797c-490b-7212-96c3-93dc8d5e548f",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [
         "blog",
@@ -549,7 +549,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e797c-490b-7212-96c3-93dc8d5e548f",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [
         "projects"
@@ -566,7 +566,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e797c-490b-7212-96c3-93dc8d5e548f",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [
         "media"
@@ -583,7 +583,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e797c-490b-7212-96c3-93dc8d5e548f",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [],
       "duplicate_sessions": 1,
@@ -598,7 +598,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e797c-490b-7212-96c3-93dc8d5e548f",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [
         "blog",
@@ -616,7 +616,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e797c-490b-7212-96c3-93dc8d5e548f",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [],
       "duplicate_sessions": 1,
@@ -631,7 +631,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e797c-490b-7212-96c3-93dc8d5e548f",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [
         "projects"
@@ -648,7 +648,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e797c-490b-7212-96c3-93dc8d5e548f",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [
         "blog",
@@ -666,7 +666,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e797c-490b-7212-96c3-93dc8d5e548f",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [
         "blog",
@@ -684,7 +684,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e8357-686c-73d0-98bf-e10cad76ef5f",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [
         "blog",
@@ -704,7 +704,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e8357-686c-73d0-98bf-e10cad76ef5f",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [
         "home"
@@ -721,7 +721,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e8357-686c-73d0-98bf-e10cad76ef5f",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [
         "blog",
@@ -740,7 +740,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e8357-686c-73d0-98bf-e10cad76ef5f",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [
         "projects"
@@ -757,7 +757,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e8357-686c-73d0-98bf-e10cad76ef5f",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [
         "blog",
@@ -795,7 +795,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e8b9f-a3a8-7de1-8042-b8787bce2bf0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [
         "projects",
@@ -814,7 +814,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e8b9f-a3a8-7de1-8042-b8787bce2bf0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [
         "projects",
@@ -832,7 +832,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019e92fc-5f1e-7c53-a3c3-001bcaab34e9",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.1",
       "tags": [
         "projects",
@@ -870,7 +870,7 @@
       "agent": "codex",
       "tool_surface": "Codex Desktop",
       "session_id": "019f4026-1f0c-7831-a930-9e795d8fa57c",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.9",
       "tags": [
         "projects",
@@ -878,7 +878,7 @@
       ],
       "duplicate_sessions": 1,
       "ide_context": "# Context from my IDE setup:\n\n## Active file: .gitignore\n\n## Open tabs:\n- .gitignore: .gitignore\n- AdminLogin.tsx: src/app/pages/admin/AdminLogin.tsx\n- AdminPosts.tsx: src/app/pages/admin/AdminPosts.tsx\n- AdminDashboard.tsx: src/app/pages/admin/AdminDashboard.tsx\n- AdminAnalytics.tsx: src/app/pages/admin/AdminAnalytics.tsx",
-      "text": "- I like the way you leave the log, but can you make a log for the prompts I wrote as well for building this project?\n\n- put /Users/seungjohan/Cursor/seungjohan/seungjo.han/src/app/pages/admin\nthis in gitignore"
+      "text": "- I like the way you leave the log, but can you make a log for the prompts I wrote as well for building this project?\n\n- put /Users/seungjohan/Cursor/seungjohan/seungjohan.com/src/app/pages/admin\nthis in gitignore"
     },
     {
       "id": 50,
@@ -888,7 +888,7 @@
       "agent": "codex",
       "tool_surface": "Codex Desktop",
       "session_id": "019f4026-1f0c-7831-a930-9e795d8fa57c",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.9",
       "tags": [
         "blog",
@@ -907,7 +907,7 @@
       "agent": "codex",
       "tool_surface": "Codex Desktop",
       "session_id": "019f4084-b88f-7ed1-a15b-6b5e3b0718bb",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.9",
       "tags": [
         "home",
@@ -925,7 +925,7 @@
       "agent": "codex",
       "tool_surface": "Codex Desktop",
       "session_id": "019f4084-b88f-7ed1-a15b-6b5e3b0718bb",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.9",
       "tags": [
         "home",
@@ -943,7 +943,7 @@
       "agent": "codex",
       "tool_surface": "Codex Desktop",
       "session_id": "019f4084-b88f-7ed1-a15b-6b5e3b0718bb",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.9",
       "tags": [
         "about",
@@ -962,7 +962,7 @@
       "agent": "codex",
       "tool_surface": "Codex Desktop",
       "session_id": "019f4084-b88f-7ed1-a15b-6b5e3b0718bb",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.9",
       "tags": [
         "blog",
@@ -980,14 +980,14 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019f40db-eb9c-7932-b609-cfbbaf4ffb9a",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.9",
       "tags": [
         "admin-security"
       ],
       "duplicate_sessions": 2,
       "ide_context": null,
-      "text": "in my git\nthis directory is still in my git by the previous commit\nI need to exclude that directory from entire commit and history\ncan you help me delete that one in my git repo?\n/Users/seungjohan/Cursor/seungjohan/seungjo.han/src/app/pages/admin"
+      "text": "in my git\nthis directory is still in my git by the previous commit\nI need to exclude that directory from entire commit and history\ncan you help me delete that one in my git repo?\n/Users/seungjohan/Cursor/seungjohan/seungjohan.com/src/app/pages/admin"
     },
     {
       "id": 56,
@@ -997,7 +997,7 @@
       "agent": "codex",
       "tool_surface": "codex_vscode",
       "session_id": "019f4a3e-e980-7990-9794-4fc9788e4b76",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "4.9",
       "tags": [
         "projects",
@@ -1015,7 +1015,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [
         "integrations",
@@ -1033,7 +1033,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [
         "deployment"
@@ -1050,7 +1050,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [],
       "duplicate_sessions": 1,
@@ -1065,7 +1065,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [
         "integrations"
@@ -1082,7 +1082,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [
         "integrations"
@@ -1099,7 +1099,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [],
       "duplicate_sessions": 1,
@@ -1114,7 +1114,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [],
       "duplicate_sessions": 1,
@@ -1129,7 +1129,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [],
       "duplicate_sessions": 1,
@@ -1144,7 +1144,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [
         "integrations"
@@ -1161,7 +1161,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [],
       "duplicate_sessions": 1,
@@ -1176,7 +1176,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [
         "admin-security",
@@ -1194,7 +1194,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [
         "admin-security",
@@ -1212,7 +1212,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [
         "admin-security",
@@ -1230,7 +1230,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [
         "integrations",
@@ -1248,7 +1248,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [
         "admin-security"
@@ -1265,7 +1265,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [
         "admin-security"
@@ -1282,7 +1282,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [
         "admin-security"
@@ -1299,7 +1299,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [
         "prompt-archive"
@@ -1316,7 +1316,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [
         "admin-security",
@@ -1334,7 +1334,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [
         "deployment"
@@ -1351,7 +1351,7 @@
       "agent": "claude-code",
       "tool_surface": "claude_code_cli",
       "session_id": "de6dd55d-fed8-4264-bd95-f1b2190119a0",
-      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjo.han",
+      "project_path": "/Users/seungjohan/Cursor/seungjohan/seungjohan.com",
       "prd_version_context": "5.3",
       "tags": [
         "prompt-archive"

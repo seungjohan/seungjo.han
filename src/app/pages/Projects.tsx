@@ -2,7 +2,7 @@ import { Link, useSearchParams } from 'react-router';
 import { motion } from 'motion/react';
 import { ArrowRight, Mail, Linkedin } from 'lucide-react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { PROJECTS, galleryFor, imageAlt, type Project } from '../content/projects';
 import { buildMeta } from '../components/SEO';
 import ProjectNarrative from '../components/ProjectNarrative';
@@ -62,10 +62,23 @@ function ProjectCard({ project, selectedTags, onTagClick, index }: {
   const [imgIndex, setImgIndex] = useState(0);
   const images = galleryFor(project);
 
-  // No auto-cycling here on purpose. Six cards render at once on this page, so
-  // auto-advance meant six independent animations running permanently while the
-  // reader is trying to read. The arrows below still work; the detail page keeps
-  // a slower, pausable carousel.
+  // Auto-advance on the same 5s cadence as the detail page, so a reader who sees
+  // both does not meet two different behaviours. It pauses on hover and on
+  // keyboard focus, honours prefers-reduced-motion, and stops when the tab is
+  // hidden. Six cards do run at once here, which is why the pause matters.
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    if (paused) return;
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const id = setInterval(() => {
+      if (document.hidden) return;
+      setImgIndex(i => (i + 1) % images.length);
+    }, 5000);
+    return () => clearInterval(id);
+  }, [images.length, paused]);
 
   const prev = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -88,8 +101,17 @@ function ProjectCard({ project, selectedTags, onTagClick, index }: {
     >
       {/* Cover image — the Link wraps ONLY the image. The gallery controls are
           siblings, not children: a <button> inside an <a> is invalid HTML, the
-          same nesting class this repo already fixed once for <a> inside <a>. */}
-      <div className="relative overflow-hidden" style={{ aspectRatio: '16/8' }}>
+          same nesting class this repo already fixed once for <a> inside <a>.
+          One fixed frame for every card so the grid never reflows as images
+          cycle, and cover so the image always fills it with no empty space. */}
+      <div
+        className="relative overflow-hidden"
+        style={{ aspectRatio: '16/8' }}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocusCapture={() => setPaused(true)}
+        onBlurCapture={() => setPaused(false)}
+      >
         <Link to={`/projects/${project.slug}`} className="group block absolute inset-0">
           {images.map((src, i) => (
             <img
@@ -98,7 +120,9 @@ function ProjectCard({ project, selectedTags, onTagClick, index }: {
               alt={i === imgIndex ? imageAlt(project, i, images.length) : ''}
               loading={index === 0 && i === 0 ? 'eager' : 'lazy'}
               decoding="async"
-              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+              className={`absolute inset-0 w-full h-full transition-opacity duration-700 ${
+                project.imageFit === 'contain' ? 'object-contain' : 'object-cover'
+              }`}
               style={{ opacity: i === imgIndex ? 1 : 0 }}
             />
           ))}
@@ -304,7 +328,7 @@ export default function Projects() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════
-          FEATURED CASE STUDIES intro
+          projects & case studies intro
       ══════════════════════════════════════════════════════════════════ */}
       <div className="pt-14 pb-8">
         <motion.div
@@ -317,7 +341,7 @@ export default function Projects() {
             className="text-gray-900 mb-3"
             style={{ fontSize: '1.35rem', fontWeight: 400, letterSpacing: '-0.01em' }}
           >
-            Featured case studies
+            Projects &amp; Case studies
           </h2>
           <p className="text-gray-500 max-w-lg leading-relaxed" style={{ fontSize: '0.95rem' }}>
             Products and ventures I've owned end-to-end, from validation through delivery.

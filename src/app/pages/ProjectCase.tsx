@@ -199,8 +199,12 @@ export default function ProjectCase() {
           transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         >
           <div
+            /* One fixed frame for every project so the page never resizes as the
+               carousel advances. 3/2 rather than the old 16/7: at 848px wide that
+               is 565px tall instead of 370px, so images keep much more of their
+               height under the cover crop. */
             className="rounded-2xl overflow-hidden relative"
-            style={{ aspectRatio: '16/7' }}
+            style={{ aspectRatio: '3/2' }}
             role="group"
             aria-roledescription="carousel"
             aria-label={`${project.title} images`}
@@ -226,7 +230,9 @@ export default function ProjectCase() {
                   loading={i === 0 ? 'eager' : 'lazy'}
                   decoding="async"
                   {...(i === 0 ? { fetchPriority: 'high' as const } : {})}
-                  className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+                  className={`absolute inset-0 w-full h-full transition-opacity duration-700 ${
+                    project.imageFit === 'contain' ? 'object-contain' : 'object-cover'
+                  }`}
                   style={{ opacity: i === imgIndex ? 1 : 0 }}
                 />
               ))}

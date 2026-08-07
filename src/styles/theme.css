@@ -1,6 +1,33 @@
 @custom-variant dark (&:is(.dark *));
 
+/* ─── Site palette ────────────────────────────────────────────────────────────
+   Sampled from the painted portrait on /about, which was the only object on the
+   site with any personality and was doing nothing where it sat. A canvas sample
+   of its dominant values gave a warm umber (#604830), a sage mid-tone and a warm
+   near-black (#181818). Those became the system.
+
+   Rules this encodes:
+   - Paper is never #ffffff. Every reference site worth copying sits on a tinted
+     white; pure white was the one thing ours did that none of them did.
+   - --umber is THE accent and it is rationed. Three roles only: the eyebrow
+     rule, project roles, and hover/active states. The moment it appears in a
+     fourth place it stops being a highlight and becomes a theme.
+   - --ink-2 replaces gray-400 for text. gray-400 measured ~2.5:1 on white and
+     failed WCAG AA in 16 places. --ink-2 is 7.0:1 on --paper.
+   ─────────────────────────────────────────────────────────────────────────── */
 :root {
+  /* Background is white for now, by the owner's call. The rest of the palette
+     still comes from the portrait, so the accent and the ink stay warm against
+     it. If the hairlines ever read as dirty on pure white, --rule is the knob;
+     if the whole thing ever wants to warm up, --paper goes back to #faf8f4. */
+  --paper: #ffffff;
+  --paper-2: #f4f3f1;
+  --ink: #1a1a18;
+  --ink-2: #5b554b;
+  --rule: #e2ddd2;
+  --umber: #604830;
+  --umber-lt: #8a6a44;
+
   --font-size: 16px;
   --background: #ffffff;
   --foreground: oklch(0.145 0 0);
@@ -79,6 +106,18 @@
 }
 
 @theme inline {
+  /* Site palette -> Tailwind utilities: bg-paper, text-ink, text-ink-2,
+     border-rule, text-umber, and font-serif / font-sans. */
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-rule: var(--rule);
+  --color-umber: var(--umber);
+  --color-umber-lt: var(--umber-lt);
+  --font-serif: var(--font-serif-stack);
+  --font-sans: var(--font-sans-stack);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -120,9 +159,11 @@
 }
 
 @layer base {
+  /* Was #7c3aed — a purple belonging to no system, inherited from a shadcn
+     scaffold and the only chroma anywhere on the site. Now the site accent. */
   ::selection {
-    background: #7c3aed;
-    color: #ffffff;
+    background: var(--umber);
+    color: var(--paper);
   }
 
   * {
@@ -130,7 +171,9 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans-stack);
   }
 
   /**

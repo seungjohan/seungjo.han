@@ -1,4 +1,4 @@
-# seungjo.han
+# seungjohan.com
 
 Personal portfolio and blog site — built as both a professional showcase and a living
 laboratory for agentic engineering workflows.
@@ -52,26 +52,16 @@ scripts/              Build-time scripts (sitemap generation, asset verification
 docs/                 Project docs and engineering notes
 ```
 
-### Getting started
+### Before pushing or deploying
 
 Requires Node 22 (see `.nvmrc`).
 
 ```
-npm ci              Install dependencies
-npm run dev         Start the dev server at http://localhost:5173
+npm run check
 ```
 
-### Commands
-
-```
-npm run check       Typecheck + full build + every gate. Run this before pushing.
-npm run dev         Start the dev server
-npm run build       prebuild -> prerender -> postbuild (see below)
-npm run typecheck   tsc --noEmit
-npm run preview     Serve the production build locally
-```
-
-`npm run build` runs three gate stages, any of which can fail the build:
+Nothing ships until that passes. It runs three gate stages, any of which can fail
+the build:
 
 1. **prebuild** — typecheck, sitemap generation, asset verification
    (existence, exact case, and size budgets)

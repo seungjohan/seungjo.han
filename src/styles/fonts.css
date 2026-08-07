@@ -1,0 +1,24 @@
+/* Typefaces.
+   This file was 0 bytes until now, which is why the site rendered in whatever
+   sans the OS happened to resolve — SF on macOS, Segoe on Windows, Roboto on
+   Android. It was a different site on every platform.
+
+   Two faces, split strictly by job:
+     serif  — reading and display. Long-form blog body, headlines, project
+              titles. A serif reads as a person writing rather than a product
+              surface, which is what this site is.
+     sans   — interface. Navigation, labels, metadata, dates, buttons.
+
+   Loaded via <link> in root.tsx rather than @import here: an @import inside a
+   stylesheet cannot start downloading until the stylesheet itself has parsed,
+   which serialises two round trips. Keep the link in the document head.
+
+   Korean note: Newsreader carries no Hangul, so 위빙 and 한승조 fall back to the
+   platform Korean face. If Korean ever needs to sit in the same voice, add
+   Pretendard to the sans stack rather than changing the serif. */
+
+:root {
+  --font-serif-stack: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-sans-stack: 'Instrument Sans', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', Roboto, sans-serif;
+}

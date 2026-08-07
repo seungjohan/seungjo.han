@@ -1,6 +1,4 @@
-import { Link, useNavigate } from 'react-router';
-import { motion } from 'motion/react';
-import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router';
 import { POSTS } from '../content/posts';
 import { PROJECTS } from '../content/projects';
 import { buildMeta, PERSON_JSON_LD } from '../components/SEO';
@@ -14,36 +12,36 @@ export const meta = () =>
     jsonLd: [PERSON_JSON_LD],
   });
 
-// ─── Pillars — three powerful "why" blocks ────────────────────────────────────
-const PILLARS = [
-  {
-    label: 'Entrepreneur',
-    headline: 'I build to solve real problems.',
-    body: 'Founded a B2B2C startup from scratch. Validated, shipped, and iterated with real customers — not just mockups.',
-  },
-  {
-    label: 'Technologist',
-    headline: 'I speak the language of code.',
-    body: 'Software background in CS + entrepreneurship. I sit at the table with engineers and move at the speed of the team.',
-  },
-  {
-    label: 'Global Builder',
-    headline: "I've shipped across three continents.",
-    body: 'Built products with teams in the US, Kazakhstan, and Europe. Comfortable in ambiguity, fast in alignment.',
-  },
-  {
-    label: 'Hands-on Mindset',
-    headline: 'I act, not just advise.',
-    body: 'I am curious about business opportunities, and solve problems through projects, meeting customers, and taking action.',
-  },
-];
+/**
+ * Homepage.
+ *
+ * Three things about this file that are deliberate, because each replaces
+ * something that was here before and should not come back:
+ *
+ * 1. No PILLARS array, no STATS array. Both were content prose living in a
+ *    component, which CLAUDE.md forbids. The four stat figures also duplicated
+ *    three of the six on /projects, and the unverifiable ones ("88% engineering
+ *    team retention rate") cost more credibility than they bought. Real,
+ *    checkable numbers now live inside each project's `outcome` field, attached
+ *    to the story that makes them mean something.
+ *
+ * 2. Projects render `outcome` and `role`, not `description`. A recruiter
+ *    deciding in under a minute needs to know what this person did and what
+ *    happened, not what the company was. `role` is required on every project and
+ *    was previously not shown anywhere on this page.
+ *
+ * 3. No `initial={{ opacity: 0 }}` reveals. Those shipped into the prerendered
+ *    HTML as inline style="opacity:0" on 37 elements, so with JS off or slow the
+ *    page was blank, and the ~900px of layout growth they caused after first
+ *    paint is what broke every heading deep-link on the blog.
+ */
 
-const STATS = [
-  { number: '10M+', label: 'Users Impacted' },
-  { number: '12+',  label: 'Products Shipped' },
-  { number: '6',    label: 'Years Building' },
-  { number: '500+', label: 'Customer Interviews' },
-];
+/** Blog covers can be remote (one post still points at Substack's CDN). Only
+ *  local paths are shown here, so the homepage never depends on someone else's
+ *  server staying up. */
+function isLocalImage(src: string | undefined): src is string {
+  return typeof src === 'string' && src.startsWith('/');
+}
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr);
@@ -52,318 +50,184 @@ function formatDate(dateStr: string) {
 }
 
 export default function Home() {
-  const navigate       = useNavigate();
-  const projects       = PROJECTS.slice(0, 3);
-  const posts          = POSTS.slice(0, 3);
+  const projects = PROJECTS.slice(0, 3);
+  const posts = POSTS.filter(p => isLocalImage(p.coverImage)).slice(0, 3);
 
   return (
-    <div>
-      {/* ══════════════════════════════════════════════════════════════════
-          HERO — bold, declarative, YC-style
-      ══════════════════════════════════════════════════════════════════ */}
-      <section className="max-w-4xl mx-auto px-6 pt-24 md:pt-36 pb-20 md:pb-28">
+    <div className="max-w-5xl mx-auto px-8">
 
-        <motion.p
-          className="text-gray-400 mb-6 uppercase"
-          style={{ fontSize: '0.68rem', letterSpacing: '0.14em' }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          Product Manager · Republic of Korea
-        </motion.p>
+      {/* ── Hero ──────────────────────────────────────────────────────────
+          The portrait is the highlight. It was buried on /about, and it is the
+          only object on the site with real personality. The entire palette is
+          sampled from it. */}
+      <section className="pt-20 pb-20 md:pt-24 md:pb-24">
+        <div className="grid md:grid-cols-[1fr_20rem] gap-10 md:gap-14 items-start">
+          <div>
+            <p className="flex items-center gap-3 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-umber mb-6">
+              Product Manager · Seoul, Korea
+              <span aria-hidden className="flex-1 max-w-32 h-px bg-rule" />
+            </p>
 
-        {/* Primary statement — the largest text on the page */}
-        <motion.h1
-          className="text-gray-900 mb-6"
-          style={{
-            fontSize: 'clamp(2.4rem, 6.5vw, 4.8rem)',
-            fontWeight: 500,
-            lineHeight: 1.04,
-            letterSpacing: '-0.035em',
-          }}
-          initial={{ opacity: 0, y: 22 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.85, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-        >
-          I build products<br />
-          from&nbsp;0&nbsp;to&nbsp;1.
-        </motion.h1>
-
-        <motion.p
-          className="text-gray-500 max-w-lg mb-10 leading-relaxed"
-          style={{ fontSize: '1.05rem' }}
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-        >
-          Product Manager obsessed with shipping things that actually matter —
-          across mobile, payments, and platforms, with 10M+ users impacted.
-        </motion.p>
-
-        <motion.div
-          className="flex items-center gap-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.25 }}
-        >
-          <Link
-            to="/projects"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-black text-white
-                       rounded-full text-sm hover:bg-gray-800 transition-colors"
-          >
-            See my work <ArrowRight size={13} />
-          </Link>
-          <Link
-            to="/about"
-            className="text-sm text-gray-500 hover:text-black transition-colors"
-          >
-            About me →
-          </Link>
-        </motion.div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════════════
-          STATS STRIP
-      ══════════════════════════════════════════════════════════════════ */}
-      <div className="border-y border-gray-100 bg-gray-50/40">
-        <div className="max-w-4xl mx-auto px-6 py-8">
-          <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 gap-6"
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.6 }}
-          >
-            {STATS.map((s, i) => (
-              <motion.div
-                key={s.label}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.07, duration: 0.5 }}
-                className="text-center md:text-left"
-              >
-                <p
-                  className="text-gray-900 mb-0.5"
-                  style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.2rem)', fontWeight: 500, letterSpacing: '-0.03em' }}
-                >
-                  {s.number}
-                </p>
-                <p className="text-gray-500 uppercase" style={{ fontSize: '0.65rem', letterSpacing: '0.08em' }}>
-                  {s.label}
-                </p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </div>
-
-      {/* ══════════════════════════════════════════════════════════════════
-          THREE PILLARS — the "why me" section
-      ══════════════════════════════════════════════════════════════════ */}
-      <section className="max-w-4xl mx-auto px-6 py-20 md:py-28 border-b border-gray-100">
-        <motion.p
-          className="text-gray-500 uppercase mb-12"
-          style={{ fontSize: '0.68rem', letterSpacing: '0.14em' }}
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          What I bring
-        </motion.p>
-
-        <div className="grid grid-cols-2 gap-10 md:gap-12">
-          {PILLARS.map((p, i) => (
-            <motion.div
-              key={p.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+            <h1
+              className="font-serif font-normal text-ink mb-6 text-balance"
+              style={{
+                fontSize: 'clamp(2.6rem, 5.4vw, 4rem)',
+                lineHeight: 1.06,
+                letterSpacing: '-0.022em',
+              }}
             >
-              <p
-                className="text-gray-500 uppercase mb-3"
-                style={{ fontSize: '0.65rem', letterSpacing: '0.1em' }}
+              I build products from&nbsp;0 to&nbsp;1, and I write about{' '}
+              <em className="italic text-umber">what it costs</em>.
+            </h1>
+
+            <p className="font-serif text-ink-2 mb-9 max-w-xl text-[1.3125rem] leading-[1.55]">
+              Six years turning ambiguous problems into shipped products, across a
+              B2B2C startup I co-founded, a metaverse music venue, and teams in the
+              US, Kazakhstan and Europe.
+            </p>
+
+            <div className="flex items-center gap-7 text-[0.9375rem]">
+              <Link
+                to="/projects"
+                className="inline-flex items-center gap-2 bg-ink text-paper font-medium
+                           px-5 py-3 rounded-sm hover:bg-umber transition-colors"
               >
-                {p.label}
-              </p>
-              <p
-                className="text-gray-900 mb-3 leading-snug"
-                style={{ fontSize: '1.1rem', fontWeight: 500, letterSpacing: '-0.01em' }}
-              >
-                {p.headline}
-              </p>
-              <p className="text-gray-500 leading-relaxed" style={{ fontSize: '0.9rem' }}>
-                {p.body}
-              </p>
-            </motion.div>
-          ))}
+                My work →
+              </Link>
+              <Link to="/about" className="text-ink-2 hover:text-umber transition-colors">
+                About me →
+              </Link>
+            </div>
+          </div>
+
+          <div className="max-w-[17rem] md:max-w-none">
+            <img
+              src="/images/seungjo-han-portrait.jpg"
+              alt="Painted portrait of Seungjo Han"
+              width={640}
+              height={640}
+              className="w-full rounded-sm block"
+            />
+          </div>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════════════════
-          PROJECTS
-      ══════════════════════════════════════════════════════════════════ */}
-      <section className="max-w-4xl mx-auto px-6 py-16 md:py-20 border-b border-gray-100">
-        <div className="flex items-baseline justify-between mb-10">
-          <motion.p
-            className="text-gray-500 uppercase"
-            style={{ fontSize: '0.68rem', letterSpacing: '0.14em' }}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
+      {/* ── Selected work — no thumbnails, on purpose ─────────────────────
+          The six project covers are five different kinds of image (photo,
+          screenshot, an SVG mockup) and one is an empty string. In a row they
+          read as an accident, and a 300px screenshot of a B2B2C app teaches a
+          reader nothing that the sentence does not. */}
+      <section className="py-16 border-t border-rule">
+        <div className="flex items-baseline justify-between gap-8 mb-10">
+          <h2 className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-ink-2">
             Projects
-          </motion.p>
-          <Link
-            to="/projects"
-            className="text-xs text-gray-500 hover:text-black transition-colors"
-          >
+          </h2>
+          <Link to="/projects" className="text-[0.8125rem] text-ink-2 hover:text-umber transition-colors">
             All projects →
           </Link>
         </div>
 
-        <div className="divide-y divide-gray-100">
-          {projects.map((project, i) => (
-            <motion.div
-              key={project.slug}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-20px' }}
-              transition={{ duration: 0.45, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <Link
-                to={`/projects/${project.slug}`}
-                className="group flex items-start justify-between py-5 gap-6"
-              >
-                <div className="min-w-0 flex-1">
-                  <p
-                    className="text-gray-900 group-hover:text-black transition-colors mb-1"
-                    style={{ fontSize: '0.95rem', fontWeight: 400 }}
-                  >
-                    {project.title}
-                  </p>
-                  <p className="text-gray-400 line-clamp-1" style={{ fontSize: '0.8rem' }}>
-                    {project.description}
-                  </p>
-                </div>
-                <div className="flex items-center gap-5 flex-shrink-0">
-                  <div className="text-right">
-                    <p className="text-xs text-gray-300">{project.year}</p>
-                    <p className="text-xs text-gray-300 mt-0.5">{project.client}</p>
-                  </div>
-                  <ArrowRight
-                    size={14}
-                    className="text-gray-300 group-hover:text-black transition-colors"
-                  />
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+        {projects.map(project => (
+          <Link
+            key={project.slug}
+            to={`/projects/${project.slug}`}
+            className="group block py-7 border-b border-rule first:border-t"
+          >
+            <div className="flex items-baseline justify-between gap-6">
+              <h3 className="font-serif text-2xl font-medium tracking-[-0.012em] text-ink group-hover:text-umber transition-colors">
+                {project.title}
+              </h3>
+              <span className="text-xs text-ink-2 whitespace-nowrap tracking-wide">
+                {project.year}
+              </span>
+            </div>
+            <p className="text-xs font-medium uppercase tracking-[0.05em] text-umber mt-2 mb-2.5">
+              {project.role}
+            </p>
+            <p className="font-serif text-[1.0625rem] leading-relaxed text-ink-2 max-w-2xl">
+              {project.outcome}
+            </p>
+          </Link>
+        ))}
       </section>
 
-      {/* ══════════════════════════════════════════════════════════════════
-          WRITING
-      ══════════════════════════════════════════════════════════════════ */}
-      <section className="max-w-4xl mx-auto px-6 py-16 md:py-20 border-b border-gray-100">
-        <div className="flex items-baseline justify-between mb-10">
-          <motion.p
-            className="text-gray-500 uppercase"
-            style={{ fontSize: '0.68rem', letterSpacing: '0.14em' }}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
+      {/* ── Writing — images live here and only here ──────────────────────
+          The page had no images at all, which is why every section looked like
+          every other one. These covers are real photographs, consistent in kind,
+          and the only colour on the site. Text-dense work then a visual writing
+          block is what gives the page a change of rhythm. */}
+      <section className="py-16 border-t border-rule">
+        <div className="flex items-baseline justify-between gap-8 mb-10">
+          <h2 className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-ink-2">
             Writing
-          </motion.p>
-          <Link
-            to="/blog"
-            className="text-xs text-gray-500 hover:text-black transition-colors"
-          >
+          </h2>
+          <Link to="/blog" className="text-[0.8125rem] text-ink-2 hover:text-umber transition-colors">
             All posts →
           </Link>
         </div>
 
-        <div className="divide-y divide-gray-100">
-          {posts.map((post, i) => (
-            <motion.div
-              key={post.slug}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-20px' }}
-              transition={{ duration: 0.45, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
-              className="group flex items-baseline justify-between py-5 gap-6 cursor-pointer"
-              onClick={() => {
-                window.scrollTo({ top: 0, behavior: 'instant' });
-                navigate(`/blog/${post.slug}`);
-              }}
-            >
-              <div className="min-w-0 flex-1">
-                <p
-                  className="text-gray-900 group-hover:text-black transition-colors mb-1"
-                  style={{ fontSize: '0.95rem', fontWeight: 400 }}
-                >
-                  {post.title}
-                </p>
-                <p className="text-gray-400 line-clamp-1" style={{ fontSize: '0.8rem' }}>
-                  {post.excerpt}
-                </p>
+        <div className="grid sm:grid-cols-3 gap-8">
+          {posts.map(post => (
+            <Link key={post.slug} to={`/blog/${post.slug}`} className="group block">
+              <div className="aspect-[4/3] overflow-hidden rounded-sm bg-paper-2 mb-4">
+                <img
+                  src={post.coverImage}
+                  alt=""
+                  loading="lazy"
+                  className="w-full h-full object-cover block
+                             transition-transform duration-500 ease-out group-hover:scale-[1.035]"
+                />
               </div>
-              <time className="text-xs text-gray-300 flex-shrink-0">{formatDate(post.date)}</time>
-            </motion.div>
+              <p className="text-[0.6875rem] uppercase tracking-[0.1em] text-ink-2 mb-2">
+                {formatDate(post.date)}
+                {post.tags[0] ? ` · ${post.tags[0]}` : ''}
+              </p>
+              <h3 className="font-serif text-[1.1875rem] font-medium leading-snug tracking-[-0.01em] text-ink mb-1.5 group-hover:text-umber transition-colors">
+                {post.title}
+              </h3>
+              <p className="text-sm leading-relaxed text-ink-2">{post.excerpt}</p>
+            </Link>
           ))}
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════════════════
-          CONTACT — bold closer, YC-style
-      ══════════════════════════════════════════════════════════════════ */}
-      <section className="max-w-4xl mx-auto px-6 py-20 md:py-28">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.65 }}
+      {/* ── Contact ───────────────────────────────────────────────────────── */}
+      <section className="py-16 border-t border-rule">
+        <h2
+          className="font-serif font-normal text-ink mb-7 max-w-lg"
+          style={{
+            fontSize: 'clamp(1.75rem, 3.4vw, 2.5rem)',
+            lineHeight: 1.15,
+            letterSpacing: '-0.02em',
+          }}
         >
-          <h2
-            className="text-gray-900 mb-5"
-            style={{
-              fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)',
-              fontWeight: 500,
-              lineHeight: 1.1,
-              letterSpacing: '-0.03em',
-            }}
+          Building something where ambiguity is the hard part? I&rsquo;d like to hear about it.
+        </h2>
+        <div className="flex flex-wrap gap-6 text-[0.9375rem]">
+          <a
+            href="mailto:seungjohan.kr@gmail.com"
+            className="text-ink border-b border-rule pb-0.5 hover:text-umber hover:border-umber transition-colors"
           >
-            Let's build something<br className="hidden md:block" /> worth making.
-          </h2>
-          <p className="text-gray-500 mb-8 max-w-sm leading-relaxed" style={{ fontSize: '0.95rem' }}>
-            Open to PM roles, advisory work, and interesting conversations.
-            I respond to every email.
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <a
-              href="mailto:seungjohan.kr@gmail.com"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-black text-white
-                         rounded-full text-sm hover:bg-gray-800 transition-colors"
-            >
-              Email me
-            </a>
-            <a
-              href="https://www.linkedin.com/in/seungjohan/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-200
-                         text-gray-700 rounded-full text-sm hover:border-gray-400 transition-colors"
-            >
-              LinkedIn
-            </a>
-          </div>
-        </motion.div>
+            seungjohan.kr@gmail.com
+          </a>
+          <a
+            href="https://www.linkedin.com/in/seungjohan/"
+            target="_blank"
+            rel="noreferrer"
+            className="text-ink border-b border-rule pb-0.5 hover:text-umber hover:border-umber transition-colors"
+          >
+            LinkedIn
+          </a>
+          <a
+            href="https://github.com/seungjohan"
+            target="_blank"
+            rel="noreferrer"
+            className="text-ink border-b border-rule pb-0.5 hover:text-umber hover:border-umber transition-colors"
+          >
+            GitHub
+          </a>
+        </div>
       </section>
-
     </div>
   );
 }
