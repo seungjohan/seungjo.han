@@ -1,0 +1,24 @@
+{
+  "https://cloud.protopie.io/p/5efc557dd0ac65ff150213fc?ui=true&scaleToFit=true&enableHotspotHints=true&cursorType=touch&mockup=true&bgColor=%23F5F5F5&bgImage=undefined&playSpeed=1": {
+    "title": "ProtoPie Cloud",
+    "description": "ProtoPie Cloud lets you share, review, and approve your work. Move beyond unintuitive screenshots and written spec descriptions.",
+    "image": "https://cdn.protopie.io/cloud/og/cloud_main_share.png",
+    "siteName": "ProtoPie Cloud",
+    "url": "https://cloud.protopie.io/p/5efc557dd0ac65ff150213fc?ui=true&scaleToFit=true&enableHotspotHints=true&cursorType=touch&mockup=true&bgColor=%23F5F5F5&bgImage=undefined&playSpeed=1",
+    "posts": [
+      "designing-a-prototype-for-a-startup"
+    ],
+    "fetchedAt": "2026-08-14"
+  },
+  "https://github.com/seungjohan/webeing": {
+    "title": "GitHub - seungjohan/webeing: [Django Project] Startup Webeing as Full-Stack developer and CEO",
+    "description": "[Django Project] Startup Webeing as Full-Stack developer and CEO - seungjohan/webeing",
+    "image": "https://opengraph.githubassets.com/feab031002199f7dff555b925f225453d5511193d5a5294e4a49108bdfdf11a5/seungjohan/webeing",
+    "siteName": "GitHub",
+    "url": "https://github.com/seungjohan/webeing",
+    "posts": [
+      "developing-a-web-product-for-a-startup"
+    ],
+    "fetchedAt": "2026-08-14"
+  }
+}

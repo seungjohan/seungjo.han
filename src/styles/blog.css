@@ -103,23 +103,136 @@
             color: #111827;
             border-color: #d1d5db;
           }
+          /* Headings are ink at rest and plum on hover. They are links (they copy
+             an anchor), but colouring them at rest would put purple on every
+             heading in the post, so the colour only appears on intent. */
           .article-title-anchor {
             color: inherit;
             text-decoration: none;
             font-weight: 400;
+            transition: color 0.15s;
+          }
+          .article-title-anchor:hover {
+            color: var(--plum);
           }
           .anchor-heading-text {
             min-width: 0;
           }
           .prose-content a {
-            color: #111827;
+            color: var(--plum);
             text-decoration: underline;
             text-underline-offset: 3px;
+            transition: color 0.15s;
+          }
+          .prose-content a:hover {
+            color: var(--plum-lt);
+          }
+          /* Bold inside a link takes the link's colour. Without this, a link
+             written as [**text**](url) is painted by .prose-content strong and
+             renders as black bold text that never reacts to hover. */
+          .prose-content a strong,
+          .prose-content a em {
+            color: inherit;
           }
           .prose-content .anchor-heading .anchor-heading-text {
             color: inherit;
             text-decoration: none;
             font-weight: 700;
+            transition: color 0.15s;
+          }
+          .prose-content .anchor-heading .anchor-heading-text:hover {
+            color: var(--plum);
+          }
+          /* Link preview card. Only for a link that occupies its own block.
+             FIXED SIZE, deliberately: the card is always --card-h tall and the
+             thumbnail always --card-thumb-w wide, whatever the image or the
+             title happen to be. Nothing about the content can resize it, so
+             every card in a post is identical and the page rhythm holds. The
+             image is cropped into its box; the text clamps. */
+          .prose-content .link-preview {
+            --card-h: 132px;
+            --card-thumb-w: 152px;
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            height: var(--card-h);
+            margin: 1.75rem 0;
+            border: 1px solid var(--rule);
+            border-radius: 6px;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            transition: border-color 0.15s, box-shadow 0.15s;
+          }
+          .prose-content .link-preview:hover {
+            border-color: var(--plum);
+            box-shadow: 0 1px 10px rgba(22, 22, 26, 0.07);
+          }
+          .prose-content .link-preview-thumb {
+            flex: 0 0 var(--card-thumb-w);
+            width: var(--card-thumb-w);
+            height: 100%;
+            background: var(--paper-2);
+            overflow: hidden;
+          }
+          .prose-content .link-preview-thumb img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            margin: 0;
+            border-radius: 0;
+          }
+          .prose-content .link-preview-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.32rem;
+            padding: 1.1rem 1.3rem;
+            min-width: 0;
+            flex: 1 1 auto;
+            overflow: hidden;
+          }
+          .prose-content .link-preview-title {
+            font-weight: 600;
+            font-size: 0.88rem;
+            line-height: 1.35;
+            color: var(--ink);
+            transition: color 0.15s;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+          .prose-content .link-preview:hover .link-preview-title {
+            color: var(--plum);
+          }
+          .prose-content .link-preview-desc {
+            font-size: 0.78rem;
+            line-height: 1.45;
+            color: var(--ink-2);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+          .prose-content .link-preview-host {
+            font-size: 0.72rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--ink-2);
+            margin-top: 0.15rem;
+          }
+          @media (max-width: 560px) {
+            /* Still a fixed size, just a shorter one. The thumbnail narrows
+               rather than the card growing. */
+            .prose-content .link-preview {
+              --card-h: 116px;
+              --card-thumb-w: 100px;
+            }
+            .prose-content .link-preview-body {
+              padding: 0.85rem 1rem;
+            }
           }
           .prose-content blockquote {
             position: relative;
@@ -158,7 +271,7 @@
           .prose-content .blog-quote-marks::after {
             position: absolute;
             color: #d1d5db;
-            font-family: Georgia, serif;
+            font-family: var(--font-serif-stack);
             font-size: 3.25rem;
             line-height: 1;
           }
@@ -184,20 +297,26 @@
           .prose-content .blog-index-list li {
             margin-bottom: 0.55rem;
           }
+          /* Index entries hovered to plum, whole row at once. The nested strong
+             inherits rather than setting its own colour, otherwise the lead of
+             each entry stays black while the rest of the row changes. */
           .prose-content .blog-index-link {
-            color: #4b5563;
+            color: var(--ink-2);
             text-decoration: none;
             display: inline;
+            transition: color 0.15s;
           }
-          .prose-content .blog-index-link:hover {
-            color: #111827;
+          .prose-content .blog-index-link:hover,
+          .prose-content .blog-index-link:hover strong {
+            color: var(--plum);
           }
           .prose-content .blog-index-link strong {
             font-weight: 600;
-            color: #111827;
+            color: var(--ink);
+            transition: color 0.15s;
           }
           .prose-content .blog-index-marker {
-            color: #4b5563;
+            color: var(--ink-2);
           }
           .prose-content li {
             color: #374151;

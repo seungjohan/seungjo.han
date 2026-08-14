@@ -1,13 +1,13 @@
 {
   "name": "seungjo-han",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.5.1.0",
   "type": "module",
   "scripts": {
     "dev": "react-router dev",
     "generate:sitemap": "node scripts/generate-sitemap.mjs",
     "verify:assets": "node scripts/verify-assets.mjs",
-    "prebuild": "npm run typecheck && npm run generate:sitemap && npm run verify:assets",
+    "prebuild": "npm run typecheck && npm run previews && npm run generate:sitemap && npm run verify:assets",
     "build": "react-router build",
     "check": "npm run build",
     "postbuild": "npm run finalize:404 && npm run check:seo",
@@ -15,7 +15,8 @@
     "typecheck": "tsc --noEmit",
     "preview": "serve build/client",
     "finalize:404": "node scripts/finalize-404.mjs",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "previews": "node scripts/fetch-link-previews.mjs"
   },
   "dependencies": {
     "@react-router/node": "7.13.0",

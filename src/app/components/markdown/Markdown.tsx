@@ -1,7 +1,97 @@
 import { useState } from 'react';
 import { Link2 } from 'lucide-react';
 import { toast } from 'sonner';
-import type { Post } from '../../content/posts';
+import { POSTS, type Post } from '../../content/posts';
+import linkPreviews from '../../content/link-previews.json';
+
+// ─── Link preview cards ────────────────────────────────────────────────────────
+// A link that sits alone in its own block becomes a card. Links inside a
+// sentence stay inline — a card mid-paragraph would break the reading.
+// Data is fetched at build time by scripts/fetch-link-previews.mjs; if a URL is
+// missing from the cache (fetch failed, host down) the caller falls back to a
+// normal paragraph, so a preview is never required for the post to render.
+type LinkPreview = {
+  title: string;
+  description?: string;
+  image?: string;
+  siteName?: string;
+  url: string;
+};
+
+const PREVIEWS = linkPreviews as Record<string, LinkPreview>;
+
+const STANDALONE_LINK = /^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/;
+
+// Explicit opt-in: {preview=URL} on its own line renders a card there without
+// touching the surrounding prose. Use it when the link itself needs to stay
+// inline mid-sentence but a card is wanted after the paragraph.
+const PREVIEW_MARKER = /^\{preview=(\S+?)\}$/;
+
+const SITE_URL = 'https://seungjohan.vercel.app';
+
+/**
+ * Previews for the site's own posts are built from local content, never fetched.
+ * Fetching production would make the build depend on the last deploy and could
+ * serve a stale title for a post that was just edited.
+ */
+function internalPreview(url: string): LinkPreview | null {
+  const path = url.startsWith(SITE_URL) ? url.slice(SITE_URL.length) : url.startsWith('/') ? url : null;
+  const slug = path?.match(/^\/blog\/([^/?#]+)/)?.[1];
+  if (!slug) return null;
+  const post = POSTS.find(p => p.slug === slug);
+  if (!post) return null;
+  return {
+    title: post.title,
+    description: post.excerpt,
+    image: post.coverImage,
+    siteName: 'Seungjo Han',
+    url: `${SITE_URL}/blog/${post.slug}`,
+  };
+}
+
+function resolvePreview(url: string): LinkPreview | null {
+  return internalPreview(url) ?? PREVIEWS[url] ?? null;
+}
+
+function LinkPreviewCard({ href, label }: { href: string; label: string }) {
+  const preview = resolvePreview(href);
+  if (!preview) return null;
+
+  let host = '';
+  try { host = new URL(href).hostname.replace(/^www\./, ''); } catch { host = ''; }
+
+  // A card pointing at this site navigates in place; only external links open a
+  // new tab. The marker form passes no label, so avoid a dangling separator.
+  const internal = Boolean(internalPreview(href));
+
+  return (
+    <a
+      className="link-preview"
+      href={href}
+      {...(internal ? {} : { target: '_blank', rel: 'noreferrer' })}
+      aria-label={label ? `${label} — ${preview.title}` : preview.title}
+    >
+      {preview.image && (
+        <span className="link-preview-thumb">
+          {/* Remote og:image by design: downloading it would put a third-party
+              asset into public/ and under the repo's size budgets. */}
+          <img src={preview.image} alt="" loading="lazy" decoding="async" />
+        </span>
+      )}
+      <span className="link-preview-body">
+        <span className="link-preview-title">{preview.title}</span>
+        {preview.description && (
+          <span className="link-preview-desc">{preview.description}</span>
+        )}
+        <span className="link-preview-host">
+          {preview.siteName && preview.siteName !== host
+            ? `${preview.siteName} · ${host}`
+            : host}
+        </span>
+      </span>
+    </a>
+  );
+}
 
 // ─── Anchor headings ───────────────────────────────────────────────────────────
 export function copyAnchorLink(id: string) {
@@ -303,6 +393,30 @@ export function MarkdownContent({
     let block = blocks[i];
 
     if (block === '---' || block === '* * *') {
+      continue;
+    }
+
+    // A block that is nothing but a link renders as a preview card. If the URL
+    // has no cached preview the card returns null and we fall through to the
+    // normal paragraph path, so the link still renders as an inline link.
+    const marker = block.match(PREVIEW_MARKER);
+    if (marker) {
+      const card = <LinkPreviewCard key={i} href={marker[1]} label="" />;
+      // A marker pointing at a URL with no preview renders nothing rather than
+      // leaving `{preview=...}` visible in the post.
+      if (resolvePreview(marker[1])) rendered.push(card);
+      continue;
+    }
+
+    const standalone = block.match(STANDALONE_LINK);
+    if (standalone && resolvePreview(standalone[2])) {
+      rendered.push(
+        <LinkPreviewCard
+          key={i}
+          href={standalone[2]}
+          label={standalone[1].replace(/\*\*/g, '').replace(/\\_/g, '_')}
+        />,
+      );
       continue;
     }
 

@@ -63,7 +63,9 @@ We decided to enhance our service by incorporating a map API to make pickups mor
 
 To enhance a user-friendly experience, we deliberated on **which features each page would require** and **the most effective locations for these features on the page**. As a result, we benchmarked other existing websites to provide us with inspiration.
 
-The best benchmarking often comes from studying competitors within the same industry, as their websites tend to be user-friendly and familiar to consumers. We referenced websites from companies such as 'Too Good To Go', 'Delivery Hero', and Korean food-delivery services such as 'Baemin (배달의 민족)', 'Yogiyo (요기요)', and 'Last Order (라스트오더)'. For a more detailed explanation of our prototyping process, please refer to my [previous post](https://seungjohan.substack.com/p/designing-a-prototype-for-a-startup).
+The best benchmarking often comes from studying competitors within the same industry, as their websites tend to be user-friendly and familiar to consumers. We referenced websites from companies such as 'Too Good To Go', 'Delivery Hero', and Korean food-delivery services such as 'Baemin (배달의 민족)', 'Yogiyo (요기요)', and 'Last Order (라스트오더)'. For a more detailed explanation of our prototyping process, please refer to my [previous post](https://seungjohan.vercel.app/blog/designing-a-prototype-for-a-startup).
+
+{preview=https://seungjohan.vercel.app/blog/designing-a-prototype-for-a-startup}
 
 ---
 
