@@ -63,7 +63,7 @@ export default function Home() {
       <section className="pt-20 pb-20 md:pt-24 md:pb-24">
         <div className="grid md:grid-cols-[1fr_20rem] gap-10 md:gap-14 items-start">
           <div>
-            <p className="flex items-center gap-3 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-umber mb-6">
+            <p className="flex items-center gap-3 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-ink-2 mb-6">
               Product Manager · Seoul, Korea
               <span aria-hidden className="flex-1 max-w-32 h-px bg-rule" />
             </p>
@@ -77,7 +77,7 @@ export default function Home() {
               }}
             >
               I build products from&nbsp;0 to&nbsp;1, and I write about{' '}
-              <em className="italic text-umber">what it costs</em>.
+              <em className="italic text-plum">what it costs</em>.
             </h1>
 
             <p className="font-serif text-ink-2 mb-9 max-w-xl text-[1.3125rem] leading-[1.55]">
@@ -90,11 +90,11 @@ export default function Home() {
               <Link
                 to="/projects"
                 className="inline-flex items-center gap-2 bg-ink text-paper font-medium
-                           px-5 py-3 rounded-sm hover:bg-umber transition-colors"
+                           px-5 py-3 rounded-sm hover:bg-plum transition-colors"
               >
                 My work →
               </Link>
-              <Link to="/about" className="text-ink-2 hover:text-umber transition-colors">
+              <Link to="/about" className="text-ink-2 hover:text-plum transition-colors">
                 About me →
               </Link>
             </div>
@@ -122,7 +122,7 @@ export default function Home() {
           <h2 className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-ink-2">
             Projects
           </h2>
-          <Link to="/projects" className="text-[0.8125rem] text-ink-2 hover:text-umber transition-colors">
+          <Link to="/projects" className="text-[0.8125rem] text-ink-2 hover:text-plum transition-colors">
             All projects →
           </Link>
         </div>
@@ -134,14 +134,14 @@ export default function Home() {
             className="group block py-7 border-b border-rule first:border-t"
           >
             <div className="flex items-baseline justify-between gap-6">
-              <h3 className="font-serif text-2xl font-medium tracking-[-0.012em] text-ink group-hover:text-umber transition-colors">
+              <h3 className="font-serif text-2xl font-medium tracking-[-0.012em] text-ink group-hover:text-plum transition-colors">
                 {project.title}
               </h3>
               <span className="text-xs text-ink-2 whitespace-nowrap tracking-wide">
                 {project.year}
               </span>
             </div>
-            <p className="text-xs font-medium uppercase tracking-[0.05em] text-umber mt-2 mb-2.5">
+            <p className="text-xs font-medium uppercase tracking-[0.05em] text-ink-2 mt-2 mb-2.5">
               {project.role}
             </p>
             <p className="font-serif text-[1.0625rem] leading-relaxed text-ink-2 max-w-2xl">
@@ -161,7 +161,7 @@ export default function Home() {
           <h2 className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-ink-2">
             Writing
           </h2>
-          <Link to="/blog" className="text-[0.8125rem] text-ink-2 hover:text-umber transition-colors">
+          <Link to="/blog" className="text-[0.8125rem] text-ink-2 hover:text-plum transition-colors">
             All posts →
           </Link>
         </div>
@@ -182,7 +182,7 @@ export default function Home() {
                 {formatDate(post.date)}
                 {post.tags[0] ? ` · ${post.tags[0]}` : ''}
               </p>
-              <h3 className="font-serif text-[1.1875rem] font-medium leading-snug tracking-[-0.01em] text-ink mb-1.5 group-hover:text-umber transition-colors">
+              <h3 className="font-serif text-[1.1875rem] font-medium leading-snug tracking-[-0.01em] text-ink mb-1.5 group-hover:text-plum transition-colors">
                 {post.title}
               </h3>
               <p className="text-sm leading-relaxed text-ink-2">{post.excerpt}</p>
@@ -206,7 +206,7 @@ export default function Home() {
         <div className="flex flex-wrap gap-6 text-[0.9375rem]">
           <a
             href="mailto:seungjohan.kr@gmail.com"
-            className="text-ink border-b border-rule pb-0.5 hover:text-umber hover:border-umber transition-colors"
+            className="text-ink border-b border-rule pb-0.5 hover:text-plum hover:border-plum transition-colors"
           >
             seungjohan.kr@gmail.com
           </a>
@@ -214,7 +214,7 @@ export default function Home() {
             href="https://www.linkedin.com/in/seungjohan/"
             target="_blank"
             rel="noreferrer"
-            className="text-ink border-b border-rule pb-0.5 hover:text-umber hover:border-umber transition-colors"
+            className="text-ink border-b border-rule pb-0.5 hover:text-plum hover:border-plum transition-colors"
           >
             LinkedIn
           </a>
@@ -222,7 +222,7 @@ export default function Home() {
             href="https://github.com/seungjohan"
             target="_blank"
             rel="noreferrer"
-            className="text-ink border-b border-rule pb-0.5 hover:text-umber hover:border-umber transition-colors"
+            className="text-ink border-b border-rule pb-0.5 hover:text-plum hover:border-plum transition-colors"
           >
             GitHub
           </a>

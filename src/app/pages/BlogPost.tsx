@@ -81,7 +81,7 @@ function PostCard({ post }: { post: (typeof POSTS)[0] }) {
 
       <div className="p-5">
         <h3
-          className="text-gray-900 group-hover:text-black mb-2 leading-snug transition-colors"
+          className="font-serif text-gray-900 group-hover:text-plum mb-2 leading-snug transition-colors"
           style={{ fontSize: '0.95rem', fontWeight: 400 }}
         >
           {post.title}
@@ -116,7 +116,7 @@ export default function BlogPost() {
     return (
       <div className="max-w-2xl mx-auto px-6 py-24 text-center">
         <p className="text-gray-500 mb-4">Post not found.</p>
-        <Link to="/blog" className="text-black underline underline-offset-4 text-sm">
+        <Link to="/blog" className="text-plum hover:text-plum-lt transition-colors underline underline-offset-4 text-sm">
           ← Back to Writing
         </Link>
       </div>
@@ -132,7 +132,7 @@ export default function BlogPost() {
         <Link
           to="/blog"
           className="inline-flex items-center gap-1.5 text-sm text-gray-500
-                     hover:text-black transition-colors mb-10"
+                     hover:text-plum transition-colors mb-10"
         >
           <ArrowLeft size={14} /> Writing
         </Link>
@@ -140,7 +140,7 @@ export default function BlogPost() {
         {/* Title */}
         <h1
           id={slugify(post.title)}
-          className="article-title-heading text-gray-900 mb-4"
+          className="article-title-heading font-serif text-gray-900 mb-4"
           style={{
             fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
             fontWeight: 400,
@@ -180,7 +180,7 @@ export default function BlogPost() {
           {post.tags[0] && (
             <Link
               to={`/blog?tag=${encodeURIComponent(post.tags[0])}`}
-              className="text-xs text-gray-500 hover:text-black transition-colors"
+              className="text-xs text-gray-500 hover:text-plum transition-colors"
               style={{ letterSpacing: '0.12em' }}
             >
               {post.tags[0]}
@@ -208,7 +208,7 @@ export default function BlogPost() {
           {post.tags[0] && (
             <Link
               to={`/blog?tag=${encodeURIComponent(post.tags[0])}`}
-              className="text-xs text-gray-500 hover:text-black transition-colors"
+              className="text-xs text-gray-500 hover:text-plum transition-colors"
               style={{ letterSpacing: '0.12em' }}
             >
               {post.tags[0]}
@@ -220,7 +220,7 @@ export default function BlogPost() {
                 .then(() => { toast.success('Link copied!'); })
                 .catch(() => {});
             }}
-            className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-black transition-colors"
+            className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-plum transition-colors"
           >
             <Link2 size={12} /> Share
           </button>
@@ -235,7 +235,7 @@ export default function BlogPost() {
               <h2 style={{ fontSize: '1rem', fontWeight: 500 }}>Related</h2>
               <Link
                 to="/blog"
-                className="flex items-center gap-1 text-sm text-gray-500 hover:text-black transition-colors"
+                className="flex items-center gap-1 text-sm text-gray-500 hover:text-plum transition-colors"
               >
                 All posts →
               </Link>

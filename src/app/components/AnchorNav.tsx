@@ -89,7 +89,7 @@ export function AnchorNav() {
                 ${anchor.level === 2 ? 'pl-6' : ''}
                 ${anchor.level === 3 ? 'pl-9' : ''}
                 ${anchor.level >= 4 ? 'pl-12' : ''}
-                ${isActive ? 'text-black' : 'text-gray-400 hover:text-gray-600'}`}
+                ${isActive ? 'text-black' : 'text-gray-400 hover:text-plum'}`}
               style={{ fontSize: anchor.level === 1 ? '0.76rem' : '0.72rem' }}
             >
               {/* Active dot */}

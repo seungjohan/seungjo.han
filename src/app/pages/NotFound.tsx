@@ -20,7 +20,7 @@ export default function NotFound() {
         <SearchX size={22} strokeWidth={1.5} />
       </div>
       <p className="mb-3 text-xs uppercase tracking-[0.14em] text-gray-400">404</p>
-      <h1 className="mb-4 text-gray-900" style={{ fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 400 }}>
+      <h1 className="font-serif mb-4 text-gray-900" style={{ fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontWeight: 400 }}>
         Page not found
       </h1>
       <p className="mx-auto mb-8 max-w-md leading-relaxed text-gray-500" style={{ fontSize: '0.95rem' }}>

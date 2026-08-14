@@ -42,7 +42,7 @@ export default function Blog() {
 
   return (
     <section className="max-w-3xl mx-auto px-6 py-16 md:py-24">
-      <h1 className="mb-2" style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 400 }}>
+      <h1 className="font-serif mb-2" style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 400 }}>
         Blog
       </h1>
       <div className="text-gray-500 mb-10 space-y-4" style={{ fontSize: '0.95rem' }}>
@@ -99,7 +99,7 @@ export default function Blog() {
                 }}
               >
                 <h2
-                  className="text-gray-900 group-hover:text-black mb-2 transition-colors"
+                  className="font-serif text-gray-900 group-hover:text-plum mb-2 transition-colors"
                   style={{ fontSize: '1.1rem', fontWeight: 400 }}
                 >
                   {post.title}
@@ -118,7 +118,7 @@ export default function Blog() {
                         <button
                           key={tag}
                           onClick={e => { e.stopPropagation(); toggleTag(tag); }}
-                          className="text-xs text-gray-500 hover:text-black transition-colors"
+                          className="text-xs text-gray-500 hover:text-plum transition-colors"
                         >
                           {tag}
                         </button>

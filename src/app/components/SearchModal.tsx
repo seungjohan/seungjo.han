@@ -83,7 +83,7 @@ export function SearchModal({ open, onClose }: SearchModalProps) {
                   className="flex-1 outline-none text-gray-900 placeholder-gray-400 bg-transparent"
                   style={{ fontSize: '1rem' }}
                 />
-                <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
+                <button onClick={onClose} className="text-gray-400 hover:text-plum transition-colors">
                   <X size={18} />
                 </button>
               </div>
@@ -99,7 +99,7 @@ export function SearchModal({ open, onClose }: SearchModalProps) {
                                    flex items-start gap-4 transition-colors group"
                       >
                         <div className="flex-1 min-w-0">
-                          <p className="text-gray-900 group-hover:text-black truncate">
+                          <p className="text-gray-900 group-hover:text-plum truncate">
                             {post.title}
                           </p>
                           <p className="text-sm text-gray-500 truncate mt-0.5">
@@ -108,7 +108,7 @@ export function SearchModal({ open, onClose }: SearchModalProps) {
                         </div>
                         <ArrowRight
                           size={16}
-                          className="text-gray-300 group-hover:text-gray-500 flex-shrink-0 mt-1 transition-colors"
+                          className="text-gray-300 group-hover:text-plum flex-shrink-0 mt-1 transition-colors"
                         />
                       </button>
                     </li>

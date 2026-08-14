@@ -193,7 +193,7 @@ function ProjectCard({ project, selectedTags, onTagClick, index }: {
               className={`px-3 py-1 rounded-full text-xs transition-colors border ${
                 selectedTags.includes(tag)
                   ? 'bg-black text-white border-black'
-                  : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400 hover:text-gray-900'
+                  : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400 hover:text-plum'
               }`}
             >
               {tag}
@@ -203,12 +203,12 @@ function ProjectCard({ project, selectedTags, onTagClick, index }: {
 
         {/* Title + link */}
         <div className="flex items-start justify-between gap-4 mb-1">
-          <h2 className="text-gray-900" style={{ fontSize: '1.4rem', fontWeight: 400, letterSpacing: '-0.01em' }}>
+          <h2 className="font-serif text-gray-900" style={{ fontSize: '1.4rem', fontWeight: 400, letterSpacing: '-0.01em' }}>
             {project.title}
           </h2>
           <Link
             to={`/projects/${project.slug}`}
-            className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-black transition-colors flex-shrink-0 mt-1"
+            className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-plum transition-colors flex-shrink-0 mt-1"
           >
             View project <ArrowRight size={13} />
           </Link>
@@ -338,7 +338,7 @@ export default function Projects() {
           transition={{ duration: 0.6 }}
         >
           <h2
-            className="text-gray-900 mb-3"
+            className="font-serif text-gray-900 mb-3"
             style={{ fontSize: '1.35rem', fontWeight: 400, letterSpacing: '-0.01em' }}
           >
             Projects &amp; Case studies
@@ -366,10 +366,10 @@ export default function Projects() {
               href={`#project-${project.slug}`}
               className="group grid gap-1 sm:grid-cols-[12rem_1fr] sm:gap-6"
             >
-              <span className="block text-gray-900 group-hover:underline underline-offset-4" style={{ fontSize: '0.92rem', fontWeight: 500 }}>
+              <span className="block text-ink group-hover:text-plum group-hover:underline underline-offset-4" style={{ fontSize: '0.92rem', fontWeight: 500 }}>
                 {project.title}
               </span>
-              <span className="block text-gray-500 leading-relaxed group-hover:text-gray-700 transition-colors" style={{ fontSize: '0.82rem' }}>
+              <span className="block text-gray-500 leading-relaxed group-hover:text-plum transition-colors" style={{ fontSize: '0.82rem' }}>
                 {project.description}
               </span>
             </a>
@@ -395,7 +395,7 @@ export default function Projects() {
               className={`px-4 py-1.5 rounded-full border transition-colors ${
                 selectedTags.includes(kw)
                   ? 'bg-black text-white border-black'
-                  : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400 hover:text-gray-900'
+                  : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400 hover:text-plum'
               }`}
               style={{ fontSize: '0.8rem' }}
             >
@@ -426,7 +426,7 @@ export default function Projects() {
             </p>
             <button
               onClick={() => setSearchParams({})}
-              className="text-sm text-black underline underline-offset-4"
+              className="text-sm text-plum hover:text-plum-lt transition-colors underline underline-offset-4"
             >
               Clear filter
             </button>
@@ -446,7 +446,7 @@ export default function Projects() {
           className="mb-12"
         >
           <h2
-            className="text-gray-900 mb-3"
+            className="font-serif text-gray-900 mb-3"
             style={{ fontSize: '1.35rem', fontWeight: 400, letterSpacing: '-0.01em' }}
           >
             Skills &amp; Tools
@@ -523,7 +523,7 @@ export default function Projects() {
           transition={{ duration: 0.6, delay: 0.1 }}
         >
           <h2
-            className="text-gray-900 mb-8"
+            className="font-serif text-gray-900 mb-8"
             style={{
               fontSize: 'clamp(1.6rem, 3.5vw, 2.4rem)',
               fontWeight: 300,

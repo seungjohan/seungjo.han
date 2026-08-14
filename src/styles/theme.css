@@ -1,32 +1,44 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ─── Site palette ────────────────────────────────────────────────────────────
-   Sampled from the painted portrait on /about, which was the only object on the
-   site with any personality and was doing nothing where it sat. A canvas sample
-   of its dominant values gave a warm umber (#604830), a sage mid-tone and a warm
-   near-black (#181818). Those became the system.
+   Neutral greys, one accent, and that is the whole system.
+
+   This replaces a warm palette sampled from the painted portrait on /about,
+   which produced a brown accent (#604830), a warm near-black and beige
+   hairlines. The owner disliked it, twice: first reporting that the white
+   background "looks lil light brownish" (it was #ffffff — the warmth came from
+   the ink and the rules around it), then plainly. The warmth was never only the
+   accent, so removing the accent alone would not have fixed it.
 
    Rules this encodes:
-   - Paper is never #ffffff. Every reference site worth copying sits on a tinted
-     white; pure white was the one thing ours did that none of them did.
-   - --umber is THE accent and it is rationed. Three roles only: the eyebrow
-     rule, project roles, and hover/active states. The moment it appears in a
-     fourth place it stops being a highlight and becomes a theme.
+   - Every grey is neutral. No warm cast, no cool cast. If a colour looks warm on
+     this site it is either the accent or the painting, and both are deliberate.
+   - There is exactly ONE accent: purple. It means "a reader acted or can act" —
+     selection, links, hover and active states. Nothing decorative is purple.
+   - Labels and roles carry no colour. They are --ink-2 grey and are separated by
+     size and case instead. This is what --umber used to do.
    - --ink-2 replaces gray-400 for text. gray-400 measured ~2.5:1 on white and
-     failed WCAG AA in 16 places. --ink-2 is 7.0:1 on --paper.
+     failed WCAG AA in 16 places. --ink-2 is 6.3:1 on --paper.
+   - Paper is #ffffff, settled by the owner. The old header claimed "paper is
+     never #ffffff"; that rule is retired, not merely overridden.
    ─────────────────────────────────────────────────────────────────────────── */
 :root {
-  /* Background is white for now, by the owner's call. The rest of the palette
-     still comes from the portrait, so the accent and the ink stay warm against
-     it. If the hairlines ever read as dirty on pure white, --rule is the knob;
-     if the whole thing ever wants to warm up, --paper goes back to #faf8f4. */
   --paper: #ffffff;
-  --paper-2: #f4f3f1;
-  --ink: #1a1a18;
-  --ink-2: #5b554b;
-  --rule: #e2ddd2;
-  --umber: #604830;
-  --umber-lt: #8a6a44;
+  --paper-2: #f5f5f7;
+  --ink: #16161a;
+  --ink-2: #5f5f68;
+  --rule: #e4e4e8;
+  /* The accent, in three weights. --select is the highlight a reader makes by
+     dragging. --plum carries link text at 4.8:1 on --paper: it is #8C56D4 taken
+     unmodified from the owner's chosen palette, and it is the only one of that
+     palette's four colours that can carry text at all (the other three measure
+     1.1:1, 1.5:1 and 2.2:1). --plum-lt is the hover and deliberately DARKER,
+     not lighter, because there is no headroom above --plum before legibility
+     goes. If --plum ever reads too light, darker options holding the same hue:
+     #8330b8 6.8:1, #7628a8 8.0:1, #6b2fa0 8.3:1, #5f1f8f 10.1:1. */
+  --select: #eae0f7;
+  --plum: #8c56d4;
+  --plum-lt: #6b2fa0;
 
   --font-size: 16px;
   --background: #ffffff;
@@ -107,14 +119,14 @@
 
 @theme inline {
   /* Site palette -> Tailwind utilities: bg-paper, text-ink, text-ink-2,
-     border-rule, text-umber, and font-serif / font-sans. */
+     border-rule, text-plum, and font-serif / font-sans. */
   --color-paper: var(--paper);
   --color-paper-2: var(--paper-2);
   --color-ink: var(--ink);
   --color-ink-2: var(--ink-2);
   --color-rule: var(--rule);
-  --color-umber: var(--umber);
-  --color-umber-lt: var(--umber-lt);
+  --color-plum: var(--plum);
+  --color-plum-lt: var(--plum-lt);
   --font-serif: var(--font-serif-stack);
   --font-sans: var(--font-sans-stack);
 
@@ -159,11 +171,14 @@
 }
 
 @layer base {
-  /* Was #7c3aed — a purple belonging to no system, inherited from a shadcn
-     scaffold and the only chroma anywhere on the site. Now the site accent. */
+  /* Purple, by the owner's call, and now the site's only accent. Briefly
+     #7c3aed (a shadcn violet), then brown, which was legible as a system but
+     too quiet to register as a highlight and part of a warmth the owner did not
+     want. --select is light enough to take --ink on top and purple enough to
+     read as deliberate. */
   ::selection {
-    background: var(--umber);
-    color: var(--paper);
+    background: var(--select);
+    color: var(--ink);
   }
 
   * {

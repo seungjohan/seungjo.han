@@ -60,7 +60,7 @@ export default function About() {
       {/* ── Text ── */}
       <div>
         <h1
-          className="text-gray-900 mb-1"
+          className="font-serif text-gray-900 mb-1"
           style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 400, letterSpacing: '-0.02em' }}
         >
           Seungjo Han
@@ -75,7 +75,7 @@ export default function About() {
           </p>
           {aboutSections.map((section) => (
             <section key={section.title} className="space-y-3">
-              <h2 className="text-gray-900" style={{ fontSize: '1.15rem', fontWeight: 400 }}>
+              <h2 className="font-serif text-gray-900" style={{ fontSize: '1.15rem', fontWeight: 400 }}>
                 {section.title}
               </h2>
               <p>{section.body}</p>

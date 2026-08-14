@@ -92,7 +92,7 @@ export default function ProjectCase() {
     return (
       <div className="max-w-2xl mx-auto px-6 py-24 text-center">
         <p className="text-gray-500 mb-4">Project not found.</p>
-        <Link to="/projects" className="text-black underline underline-offset-4 text-sm">
+        <Link to="/projects" className="text-plum hover:text-plum-lt transition-colors underline underline-offset-4 text-sm">
           ← Back to Projects
         </Link>
       </div>
@@ -106,7 +106,7 @@ export default function ProjectCase() {
         <Link
           to="/projects"
           className="inline-flex items-center gap-1.5 text-sm text-gray-500
-                     hover:text-black transition-colors"
+                     hover:text-plum transition-colors"
         >
           <ArrowLeft size={14} /> Back to Projects
         </Link>
@@ -129,7 +129,7 @@ export default function ProjectCase() {
 
           {/* Title */}
           <h1
-            className="text-gray-900 mb-4"
+            className="font-serif text-gray-900 mb-4"
             style={{
               fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
               fontWeight: 400,
@@ -178,7 +178,7 @@ export default function ProjectCase() {
                   href={project.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-sm text-gray-900 underline underline-offset-4 hover:text-gray-500 transition-colors"
+                  className="inline-flex items-center gap-1.5 text-sm text-plum underline underline-offset-4 hover:text-plum-lt transition-colors"
                 >
                   {project.url}
                   <ExternalLink size={13} />
@@ -302,7 +302,7 @@ export default function ProjectCase() {
             {prev ? (
               <Link to={`/projects/${prev.slug}`} className="group max-w-[45%]">
                 <span className="block text-xs uppercase tracking-wider text-gray-500 mb-1">Previous</span>
-                <span className="block text-gray-900 group-hover:underline underline-offset-4" style={{ fontSize: '0.95rem' }}>
+                <span className="block text-ink group-hover:text-plum group-hover:underline underline-offset-4" style={{ fontSize: '0.95rem' }}>
                   {prev.title}
                 </span>
               </Link>
@@ -312,7 +312,7 @@ export default function ProjectCase() {
             {next && (
               <Link to={`/projects/${next.slug}`} className="group max-w-[45%] text-right">
                 <span className="block text-xs uppercase tracking-wider text-gray-500 mb-1">Next</span>
-                <span className="block text-gray-900 group-hover:underline underline-offset-4" style={{ fontSize: '0.95rem' }}>
+                <span className="block text-ink group-hover:text-plum group-hover:underline underline-offset-4" style={{ fontSize: '0.95rem' }}>
                   {next.title}
                 </span>
               </Link>

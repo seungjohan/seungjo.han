@@ -141,7 +141,7 @@ export default function Layout() {
                 className={`transition-colors text-sm ${
                   isActive(to, exact)
                     ? 'text-ink'
-                    : 'text-ink-2 hover:text-umber'
+                    : 'text-ink-2 hover:text-plum'
                 }`}
               >
                 {label}
@@ -152,7 +152,7 @@ export default function Layout() {
 
             <button
               onClick={() => setSearchOpen(true)}
-              className="text-ink-2 hover:text-umber transition-colors p-1"
+              className="text-ink-2 hover:text-plum transition-colors p-1"
               aria-label="Search"
               title="Search (⌘K)"
             >
@@ -161,7 +161,7 @@ export default function Layout() {
 
             <button
               onClick={copyLink}
-              className="text-ink-2 hover:text-umber transition-colors p-1"
+              className="text-ink-2 hover:text-plum transition-colors p-1"
               aria-label="Copy link"
               title="Copy link"
             >
@@ -173,21 +173,21 @@ export default function Layout() {
           <div className="flex md:hidden items-center gap-3">
             <button
               onClick={() => setSearchOpen(true)}
-              className="text-ink-2 hover:text-umber transition-colors p-1"
+              className="text-ink-2 hover:text-plum transition-colors p-1"
               aria-label="Search"
             >
               <Search size={18} />
             </button>
             <button
               onClick={copyLink}
-              className="text-ink-2 hover:text-umber transition-colors p-1"
+              className="text-ink-2 hover:text-plum transition-colors p-1"
               aria-label="Copy link"
             >
               <Link2 size={18} />
             </button>
             <button
               onClick={() => setMobileOpen(v => !v)}
-              className="text-ink-2 hover:text-umber transition-colors p-1"
+              className="text-ink-2 hover:text-plum transition-colors p-1"
               aria-label="Menu"
             >
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
@@ -271,7 +271,7 @@ export default function Layout() {
                       key={to}
                       to={to}
                       onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}
-                      className="text-ink-2 hover:text-umber transition-colors"
+                      className="text-ink-2 hover:text-plum transition-colors"
                       style={{ fontSize: '0.875rem' }}
                     >
                       {label}
@@ -295,7 +295,7 @@ export default function Layout() {
                       href={href}
                       target={external ? '_blank' : undefined}
                       rel={external ? 'noopener noreferrer' : undefined}
-                      className="text-ink-2 hover:text-umber transition-colors"
+                      className="text-ink-2 hover:text-plum transition-colors"
                       style={{ fontSize: '0.875rem' }}
                     >
                       {label}
